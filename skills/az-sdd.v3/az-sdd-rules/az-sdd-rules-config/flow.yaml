@@ -1,0 +1,368 @@
+# SDD 流程定义
+# 定义各个阶段之间的流转关系和触发条件
+
+# 主流程（完整开发周期）
+main_flow:
+  name: 主流程
+  description: 从需求到发布的完整流程
+  stages:
+    - id: init
+      name: 项目初始化
+      skill: az-sdd-init
+      next:
+        - spec
+      description: 建立项目档案目录结构
+
+    - id: spec
+      name: 功能规范
+      skill: az-sdd-spec
+      next:
+        - arch
+        - coding
+      description: 编写功能规范，AI 提取技术约束
+
+    - id: arch
+      name: 技术规范（可选）
+      skill: az-sdd-arch
+      next:
+        - coding
+      description: 为复杂技术决策创建独立文档
+      required: false
+      trigger_hint: 当功能涉及多个模块、架构变更或新技术引入时
+
+    - id: coding
+      name: 代码实现
+      skill: az-sdd-coding
+      next:
+        - test
+      description: 按照规范实现代码
+
+    - id: test
+      name: 测试验收
+      skill: az-sdd-test
+      next:
+        - track
+      description: 执行测试 + 用户确认 + 状态更新（合并了原 confirm 职责）
+
+# 快速流程（小型功能/修复）
+quick_flow:
+  name: 快速流程
+  description: 适用于小型功能或紧急修复
+  stages:
+    - spec
+    - coding
+    - test
+
+# 迭代流程（优化改进）
+iteration_flow:
+  name: 迭代流程
+  description: 基于用户反馈的优化改进
+  stages:
+    - feedback
+    - spec
+    - coding
+    - test
+    - track
+
+# 流程选择规则
+flow_selection:
+  rules:
+    - condition: "功能涉及多个模块或需要架构变更"
+      flow: main_flow
+      note: "建议使用完整流程，可能需要 az-sdd-arch"
+
+    - condition: "功能有一定复杂度，但不涉及架构"
+      flow: main_flow
+      note: "使用主流程，简单模式下跳过 az-sdd-arch"
+
+    - condition: "单一功能点，1-2天能完成"
+      flow: quick_flow
+      note: "使用快速流程"
+
+    - condition: "基于用户反馈的优化"
+      flow: iteration_flow
+      note: "使用迭代流程，从反馈开始"
+
+  default: main_flow
+
+# 简单模式 vs 独立模式
+spec_modes:
+  simple:
+    name: 简单模式
+    description: 技术约束直接写在功能规范中
+    when: |
+      适用于：单一功能、无复杂技术决策、不涉及多个模块
+    output: |
+      输出文件：az-sdd/spec/{ID}-{NAME}.spec.md
+
+  explicit:
+    name: 独立模式
+    description: 为复杂技术决策创建独立技术规范
+    when: |
+      适用于：功能涉及多个模块、需要架构变更、引入新技术
+    output: |
+      输出文件：
+      - az-sdd/spec/{ID}-{NAME}.spec.md
+      - az-sdd/arch/{ID}-{NAME}.arch.md
+    next_skill: az-sdd-arch
+
+# SKILL 之间的流转引导
+navigation:
+  suggestions:
+    az-sdd-init:
+      next: az-sdd-spec
+      message: "建议下一步：使用 /az-sdd-spec 描述你的功能需求"
+
+    az-sdd-spec:
+      next: coding
+      branch:
+        - condition: "功能简单，无复杂技术决策"
+          next: az-sdd-coding
+          message: "功能规范已创建。这个功能比较简单，可以直接开始实现。"
+        - condition: "功能复杂，涉及多模块或架构"
+          next: az-sdd-arch
+          message: "功能规范已创建。检测到此功能涉及复杂技术决策，建议使用 /az-sdd-arch 创建独立技术规范。"
+
+    az-sdd-arch:
+      next: az-sdd-coding
+      message: "技术规范已创建，可以开始实现代码了。使用 /az-sdd-coding 开始"
+
+    az-sdd-coding:
+      next: az-sdd-test
+      message: "代码实现完成，建议下一步：使用 /az-sdd-test 执行测试并验收"
+
+    az-sdd-test:
+      next: az-sdd-track
+      message: "功能测试验收完成！建议使用 /az-sdd-track 更新项目状态"
+
+    az-sdd-track:
+      next: null
+      message: "状态已更新。如需继续开发新功能，请使用 /az-sdd-spec"
+
+    az-sdd-feedback:
+      next: az-sdd-spec
+      message: "反馈已记录。建议下一步：根据反馈内容使用 /az-sdd-spec 更新规范"
+
+  skip_conditions:
+    spec_to_coding:
+      - "功能非常简单明确，无需详细规范"
+      - "用户明确说'不需要写规范，直接做'"
+
+    skip_arch:
+      - "不涉及技术方案变更"
+      - "不涉及新的技术依赖"
+      - "功能简单，无复杂技术决策"
+      - "用户选择简单模式"
+
+# 编码任务文档规则
+# 每次 coding 触发时均创建任务计划文件
+coding_task_doc:
+  name: 编码任务计划
+  path: az-sdd/coding/{TIMESTAMP}-plan.coding.md
+  required_when: "每次触发 az-sdd-coding 时"
+  auto_generated: true
+
+  # 文件命名规则
+  naming:
+    pattern: "{TIMESTAMP}-plan.coding.md"
+    timestamp_format: "%Y%m%d_%H%M%S"
+    example: "20260426_143052-plan.coding.md"
+
+  # 文档必须包含的内容
+  required_sections:
+    - name: 任务目标
+      description: "本次编码任务要达成的目标"
+      mandatory: true
+
+    - name: 执行计划
+      description: "分解的任务步骤和执行顺序"
+      mandatory: true
+
+    - name: 功能实现前趋图
+      description: "展示涉及功能的依赖关系，用于看清完整依赖链路"
+      mandatory: true
+      include_completed: true
+
+    - name: 编码进度
+      description: "实时更新每个步骤的执行状态、耗时、遇到的问题"
+      mandatory: true
+      auto_update: true
+
+  # 前趋图规则
+  precedence_graph:
+    must_include_all: true  # 必须包含所有涉及的功能（含已完成）
+    show_status: true       # 显示每个节点的状态
+    show_dependencies: true # 显示依赖连线
+
+  # 状态过滤规则
+  status_filter:
+    for_display: all                    # 前趋图显示所有状态
+    for_execution:
+      - draft     # 草稿 - 需要编码
+      - approved  # 已批准 - 需要编码
+      - developing # 开发中 - 继续编码
+    skip:
+      - testing   # 测试中
+      - acceptance # 待验收
+      - completed # 已完成
+      - released # 已发布
+
+  # 文档模板
+  template: |
+    # 编码任务计划
+
+    ## 基本信息
+    - 任务ID：{TASK_ID}
+    - 计划生成时间：{TIMESTAMP}
+    - 涉及功能：{N} 个
+    - 状态：🟡 执行中
+
+    ---
+
+    ## 一、任务目标
+
+    > 本次编码任务要达成的目标
+
+    - [ ] {功能1}：{目标描述}
+    - [ ] {功能2}：{目标描述}
+
+    ---
+
+    ## 二、执行计划
+
+    ### 步骤分解
+    | 步骤 | 内容 | 依赖 | 状态 |
+    |------|------|------|------|
+    | 1 | 数据模型设计 | - | ⏳ 待开始 |
+    | 2 | CLI 核心命令 | 1 | ⏳ 待开始 |
+    | 3 | 业务逻辑实现 | 2 | ⏳ 待开始 |
+    | 4 | 单元测试编写 | 3 | ⏳ 待开始 |
+
+    ---
+
+    ## 三、功能实现前趋图
+
+    > ⚠️ 前趋图包含所有涉及的功能（含已完成），用于看清完整依赖关系
+
+    ```
+    [0001] 用户注册    ────────┐  状态：已发布 ✓
+    [0002] 用户登录    ────────┼─────┐  状态：已批准
+    [0003] 任务列表    ──────────────┼─────┐  状态：草稿
+    ```
+
+    ---
+
+    ## 四、编码进度
+
+    ### 执行日志
+    | 时间 | 功能 | 步骤 | 状态 | 耗时 |
+    |------|------|------|------|------|
+    | 10:30:00 | 0002 用户登录 | 开始执行 | ✅ | - |
+
+    ### 当前状态
+    - 当前步骤：步骤 2 - CLI 核心命令
+    - 进行中功能：0002 用户登录
+    - 整体进度：25%
+
+    ---
+
+    *最后更新：{TIMESTAMP}*
+
+  # 编码完成后的动作
+  post_coding_actions:
+    - name: 更新功能规范状态
+      description: "将涉及的功能规范状态从\"开发中\"更新为\"测试中\""
+      files_to_update:
+        - "az-sdd/spec/{ID}-{NAME}.spec.md"
+        - "az-sdd/SPEC.md"
+      prompt_user: false  # 自动执行
+
+    - name: 提示开始测试
+      description: "告知用户 coding 完成，可以开始 test 流程"
+      message: "✅ 编码任务完成！\n\n涉及功能：{功能列表}\n状态已更新为：测试中\n\n下一步：使用 /az-sdd-test 开始测试流程"
+
+# 批量开发计划文档（兼容旧版本）
+batch_plan_doc:
+  name: 批量开发计划
+  path: az-sdd/coding.md
+  required_when: "用户要求开发多个功能时（批量模式）"
+  deprecated: true
+  note: "建议使用 coding_task_doc，新项目请使用新格式"
+
+# 代码目录规则
+code_directory:
+  name: 代码实现目录
+  path: code/
+  mandatory: true
+
+  description: |
+    强制规定：所有代码文件必须统一放在 `code/` 目录下，
+    禁止将代码文件放入 `az-sdd/` 目录。
+
+  rules:
+    - "代码实现文件必须放在 `code/` 目录下"
+    - "测试代码（单元测试、集成测试）放在 `code/tests/` 下"
+    - "禁止在 `az-sdd/` 目录下创建代码文件"
+    - "保持 `az-sdd/` 仅包含规范文档和配置文件"
+
+  structure: |
+    {workspace}/
+    ├── az-sdd/           # 规范档案目录（仅文档）
+    │   ├── spec/         # 功能规范
+    │   ├── arch/         # 技术规范
+    │   └── test/         # 测试档案（用例、报告、手册）
+    │
+    └── code/             # 代码实现文件（统一存放位置）
+        ├── main.py        # 主入口
+        ├── models/        # 数据模型
+        ├── cli/           # CLI 命令
+        ├── services/      # 业务逻辑
+        └── tests/         # 自动化测试
+
+  rationale: |
+    目的：保持规范档案与代码实现分离，
+    便于规范管理、代码审查和技术债务清理。
+
+# AI 自动分析规则
+ai_analysis:
+  extract_tech_constraints:
+    - pattern: "保存.*数据"
+      tech_type: data_storage
+      question: "数据需要持久化存储吗？用什么方式存？"
+
+    - pattern: "登录|验证|身份"
+      tech_type: authentication
+      question: "需要什么样的认证方式？"
+
+    - pattern: "调用.*接口|对接|集成"
+      tech_type: external_api
+      question: "需要调用哪些外部服务？"
+
+    - pattern: "导出.*文件|导入|上传"
+      tech_type: file_operation
+      question: "支持什么文件格式？有大小限制吗？"
+
+    - pattern: "实时|即时|推送"
+      tech_type: realtime
+      question: "对响应时间有什么要求？"
+
+    - pattern: "批量|大量|定时"
+      tech_type: batch_processing
+      question: "数据量级是多少？执行频率？"
+
+  complexity_check:
+    - factor: "模块数量"
+      threshold: 1
+      above: "建议创建独立技术规范"
+
+    - factor: "外部依赖数量"
+      threshold: 2
+      above: "建议创建独立技术规范"
+
+    - factor: "涉及架构变更"
+      boolean: true
+      if_true: "必须创建独立技术规范"
+
+    - factor: "新技术引入"
+      boolean: true
+      if_true: "建议创建独立技术规范"

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coding 演进与 Spec 理念</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/white.css">
+    <style>
+        .reveal {
+            font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+        }
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .reveal h1 {
+            font-size: 2.2em;
+        }
+        .reveal h2 {
+            font-size: 1.6em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .reveal h3 {
+            font-size: 1.3em;
+            color: #3498db;
+        }
+        .reveal p, .reveal li {
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+        .reveal .slides section {
+            text-align: left;
+        }
+        .reveal .slides section[data-align="center"] {
+            text-align: center;
+        }
+        .reveal code {
+            background: #f8f8f8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+        .reveal pre {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 0.7em;
+            box-shadow: none;
+            border: 1px solid #ddd;
+        }
+        .reveal pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .reveal table {
+            font-size: 0.75em;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .reveal table th, .reveal table td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .reveal table th {
+            background: #3498db;
+            color: white;
+        }
+        .reveal table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .reveal ul {
+            margin-left: 0;
+            padding-left: 1.5em;
+        }
+        .reveal li {
+            margin: 8px 0;
+        }
+        .reveal .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .reveal .quote {
+            font-style: italic;
+            color: #7f8c8d;
+            border-left: 4px solid #3498db;
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+        .title-slide h1 {
+            color: #3498db;
+            font-size: 2.5em;
+        }
+        .title-slide h3 {
+            color: #7f8c8d;
+            font-weight: normal;
+        }
+        .section-slide h2 {
+            color: #fff;
+            font-size: 2em;
+        }
+        .reveal .controls {
+            color: #3498db;
+        }
+        .reveal .progress {
+            color: #3498db;
+        }
+        .two-col {
+            display: flex;
+            gap: 30px;
+        }
+        .two-col > div {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+<!-- 封面 -->
+<section class="title-slide" data-align="center">
+    <h1>AI Coding 演进与 Spec 理念</h1>
+    <h3>理论篇 · 演讲稿</h3>
+    <br>
+    <p>约 30 分钟</p>
+</section>
+
+<!-- 课程概述 -->
+<section data-align="center">
+    <h2>课程概述</h2>
+    <ul>
+        <li>梳理 AI Coding 的<strong>三个发展阶段</strong></li>
+        <li>理解每个阶段的<strong>解决的问题</strong>和<strong>局限性</strong></li>
+        <li>重点介绍第三阶段的核心概念——<strong>Spec 规范驱动开发</strong></li>
+    </ul>
+    <br>
+    <p class="quote">"AI 到底是怎么改变我们写代码的方式的？"</p>
+</section>
+
+<!-- AI Coding 三阶段概览 -->
+<section data-align="center">
+    <h2>一、AI Coding 的三阶段</h2>
+    <table>
+        <tr><th>阶段</th><th>时间</th><th>代表工具</th><th>核心能力</th><th>局限性</th></tr>
+        <tr><td>辅助编程</td><td>2019-2022</td><td>Copilot</td><td>代码补全</td><td>单点代码</td></tr>
+        <tr><td>对话编程</td><td>2022-2024</td><td>ChatGPT</td><td>自然语言生成</td><td>无项目理解</td></tr>
+        <tr><td>规范驱动</td><td>2024-</td><td>OpenSpec</td><td>规范约束</td><td>需要前期投入</td></tr>
+    </table>
+</section>
+
+<!-- 第一阶段 -->
+<section>
+    <h2>1.1 第一阶段：AI 辅助编程（2019-2022）</h2>
+    <h3>故事背景</h3>
+    <p>2019 年，GitHub 推出了 Copilot 的技术预览版。写 HTTP 请求封装函数时，第三行代码就开始自动补全，包括异常处理。</p>
+    <p class="highlight">感受：AI 好像真的懂我在写什么。</p>
+    <h3>代表工具</h3>
+    <ul>
+        <li>GitHub Copilot、Tabnine、Kite</li>
+    </ul>
+</section>
+
+<section>
+    <h3>核心交互方式</h3>
+    <p>IDE 插件，代码补全。你写函数名、注释，AI 自动补全剩余代码。</p>
+    <h3>解决了什么问题</h3>
+    <p><strong>效率问题</strong>——重复代码不用再手动敲了。</p>
+    <pre><code># 我只需要写这几行：
+def get_user
+# AI 自动补全：
+def get_user(user_id: int) -> dict:
+    """Get user by ID."""
+    return db.query(f"SELECT * FROM users WHERE id = {user_id}")</code></pre>
+</section>
+
+<section>
+    <h3>局限性</h3>
+    <ul>
+        <li><strong>只能生成单点代码片段</strong>——AI 不知道函数在项目中的角色</li>
+        <li><strong>无全局理解能力</strong>——上下文只有当前编辑的文件</li>
+        <li><strong>复杂逻辑帮不上忙</strong>——需要先把逻辑设计好</li>
+    </ul>
+    <br>
+    <p class="quote">AI 是个好助手，但只是个助手。</p>
+</section>
+
+<!-- 第二阶段 -->
+<section>
+    <h2>1.2 第二阶段：AI 对话编程（2022-2024）</h2>
+    <h3>故事背景</h3>
+    <p>2022 年 11 月 ChatGPT 上线。可以用自然语言描述需求，AI 给出完整实现方案。</p>
+    <p class="highlight">原来编程可以用自然语言。</p>
+    <h3>代表工具</h3>
+    <p>ChatGPT、Claude、Cursor、Copilot Chat</p>
+</section>
+
+<section>
+    <h3>核心交互方式</h3>
+    <p>对话窗口，自然语言描述需求。你可以"告诉"AI 你要做什么，而不是手动写代码。</p>
+    <h3>解决了什么问题</h3>
+    <p><strong>设计问题</strong>——你不需要从第一行代码开始写起了。</p>
+    <pre><code>帮我实现远程车窗控制功能：
+1. 支持四门独立升降控制
+2. 支持防夹手功能
+3. 支持限位停止
+4. 状态变化时实时上报云端</code></pre>
+</section>
+
+<section>
+    <h3>比第一阶段强在哪里</h3>
+    <table>
+        <tr><th>维度</th><th>第一阶段</th><th>第二阶段</th></tr>
+        <tr><td>生成粒度</td><td>单函数</td><td>功能模块</td></tr>
+        <tr><td>理解能力</td><td>代码前缀</td><td>自然语言描述</td></tr>
+        <tr><td>迭代方式</td><td>重写</td><td>对话修改</td></tr>
+    </table>
+</section>
+
+<section>
+    <h3>局限性</h3>
+    <ul>
+        <li><strong>上下文窗口有限</strong>——AI 只记得最近 N 条对话</li>
+        <li><strong>多文件协作能力弱</strong>——不理解文件间的依赖关系</li>
+        <li><strong>缺乏项目规范约束</strong>——每次对话独立，代码风格可能不一致</li>
+        <li><strong>自然语言有歧义性</strong>——"发送车门状态"可能有多种理解</li>
+    </ul>
+    <br>
+    <p class="quote">AI 是个聪明的助手，但它不懂你的项目。</p>
+</section>
+
+<!-- 第三阶段 -->
+<section>
+    <h2>1.3 第三阶段：AI 规范驱动编程（2024-）</h2>
+    <h3>故事背景</h3>
+    <p>2024年中，TBox项目有5个开发人员同时工作，问题很快出现：</p>
+    <ul>
+        <li>开发者A的CAN信号ID是0x201，开发者B定义的是0x301，<strong>ID冲突</strong></li>
+        <li>每个人对"远程控制"的理解都<strong>不一样</strong></li>
+        <li>三个月后，同一个功能有<strong>三种不同实现</strong></li>
+    </ul>
+    <p class="highlight">需要一个统一的东西来约束AI。</p>
+</section>
+
+<section>
+    <h3>核心理念</h3>
+    <p>不再是"告诉 AI 要做什么"，而是<strong>"先让 AI 理解我们要做什么、有什么约束、交付标准是什么"</strong>。</p>
+    <pre><code>需求描述 → 规范文档(Spec) → 技术约束 → 代码实现 → 测试验收</code></pre>
+    <h3>核心升级</h3>
+    <p>AI 不仅生成代码，还能理解项目规范、遵循技术约束、维护状态。</p>
+</section>
+
+<!-- 各阶段对比 -->
+<section>
+    <h2>二、各阶段的问题与解决</h2>
+    <h3>痛点对比</h3>
+    <table>
+        <tr><th>维度</th><th>第一阶段</th><th>第二阶段</th><th>第三阶段</th></tr>
+        <tr><td><strong>输入形式</strong></td><td>代码前缀</td><td>自然语言需求</td><td>结构化规范文档</td></tr>
+        <tr><td><strong>生成粒度</strong></td><td>单函数/单文件</td><td>功能模块</td><td>完整功能</td></tr>
+        <tr><td><strong>上下文范围</strong></td><td>当前编辑文件</td><td>最近N条消息</td><td>完整项目规范</td></tr>
+        <tr><td><strong>一致性保证</strong></td><td>无保证</td><td>依赖prompt质量</td><td>规范强制约束</td></tr>
+        <tr><td><strong>测试</strong></td><td>无</td><td>手动补充</td><td>规范内置测试用例</td></tr>
+        <tr><td><strong>协作</strong></td><td>无</td><td>无</td><td>多人共享规范</td></tr>
+    </table>
+</section>
+
+<section>
+    <h3>第二阶段痛点：多人协作</h3>
+    <div class="two-col">
+        <div>
+            <p>5个开发者分别描述"车窗控制"，得到<strong>5套不同设计方案</strong>：</p>
+            <ul>
+                <li>信号ID各不相同</li>
+                <li>字节序定义不一致</li>
+                <li>没有测试用例</li>
+            </ul>
+        </div>
+        <div>
+            <p>第三阶段<strong>解决思路</strong>：</p>
+            <ul>
+                <li>规范文档统一规定CAN信号ID、周期、字节序</li>
+                <li>规范内置测试用例</li>
+                <li>记录状态追踪</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 为什么需要 Spec -->
+<section class="section-slide" data-background-color="#3498db">
+    <h2>三、为什么需要 Spec？</h2>
+</section>
+
+<section>
+    <h2>3.1 自然语言的歧义性问题</h2>
+    <p><strong>"远程开锁"</strong>在TBox开发中，可能有几种理解？</p>
+    <ul>
+        <li>车主手机APP远程解锁车门</li>
+        <li>4S店技师近场诊断时解锁OBD接口</li>
+        <li>车队管理员解锁运营车辆</li>
+        <li>二手车交易时的解锁权限变更</li>
+        <li>交警/保险公司应急解锁</li>
+        <li>车辆休眠后的唤醒解锁</li>
+    </ul>
+    <p class="highlight">同一功能描述，在汽车行业可能有完全不同的业务上下文。</p>
+</section>
+
+<section>
+    <h3>Spec通过精确定义功能边界来消除歧义</h3>
+    <pre><code>## 功能边界
+
+### 做什么
+- 支持车主APP远程解锁车门（限定距离：无限制）
+- 支持蓝牙近场解锁（距离车辆5米内）
+- 解锁成功后车辆进入ready状态
+
+### 不做什么
+- 不支持4S店远程解锁（需走诊断CAN总线）
+- 不支持应急解锁（将由紧急救援模块处理）
+- 不支持营运车队远程强制解锁
+
+### 权限约束
+- 仅车主持有解锁权限
+- 解锁记录需同步至云端
+- 单日解锁次数上限：10次</code></pre>
+</section>
+
+<section>
+    <h2>3.2 多人协作的认知对齐</h2>
+    <p>最糟糕的情况：产品提了一个需求，5个开发人员各自开发，集成时发现——</p>
+    <ul>
+        <li>开发者A的"远程空调"包含了座椅加热</li>
+        <li>开发者B的"远程空调"只有制冷和制热</li>
+        <li>开发者C的"远程空调"还有除雾功能</li>
+        <li>CAN报文里三个不同的信号定义，ID各不相同</li>
+    </ul>
+    <br>
+    <p class="highlight">Spec作为唯一的真实来源，所有人基于同一份文档工作。</p>
+</section>
+
+<section>
+    <h3>Spec统一CAN信号定义</h3>
+    <pre><code>## CAN信号定义（空调控制）
+
+### 空调控制信号：AC_CTRL_0x123
+| 信号名   | 字节位置  | 位定义   | 值范围  | 说明        |
+|----------|----------|---------|--------|-------------|
+| ac_power | 0[0]     | 1bit    | 0/1    | 空调电源状态 |
+| ac_mode  | 0[1-3]   | 3bit    | 0-4    | 0:关闭 1:制冷 2:制热 3:自动 4:除雾 |
+| ac_temp  | 1[0-7]   | 8bit    | 16-30  | 目标温度(℃) |
+| fan_speed| 2[0-5]   | 6bit    | 0-7    | 风扇转速等级 |</code></pre>
+</section>
+
+<section>
+    <h2>3.3 测试用例缺失</h2>
+    <p>AI生成的代码，在第二阶段只能手动写测试用例。但汽车行业的测试不是那么简单：</p>
+    <ul>
+        <li>不能"随便测测"，TBox是要上车的，出了bug可能涉及人身安全</li>
+        <li>不能只测功能，还要测CAN通信、诊断协议、故障注入</li>
+        <li>不能只测"正常情况"，还要测"极端环境"（低温启动、高温休眠）</li>
+    </ul>
+    <br>
+    <p><strong>Spec内置测试用例</strong>，AI生成代码后自动运行验收。</p>
+</section>
+
+<section>
+    <h3>Spec内置测试用例</h3>
+    <pre><code>## 测试用例
+
+| 用例编号 | 用例名称               | 测试类型   | 验证结果 |
+|----------|----------------------|-----------|----------|
+| MT001    | 远程解锁命令下发成功    | HIL自动化  | 待验证   |
+| MT002    | 信号超时（500ms无响应） | HIL自动化  | 待验证   |
+| MT003    | 车内CAN总线故障时安全策略 | 人工测试 | 待验证   |
+| MT004    | 低温-40℃环境解锁功能   | 环境测试   | 待验证   |
+| MT005    | 高频解锁请求（10次/分钟）| 自动化    | 待验证   |</code></pre>
+</section>
+
+<section>
+    <h2>3.4 大型项目的维护性</h2>
+    <p>半年后，这些问题出现了：</p>
+    <ul>
+        <li>第一个功能是谁开发的、原始需求是什么，<strong>没人记得了</strong></li>
+        <li>AI当时为什么这样定义CAN信号ID，<strong>不清楚</strong></li>
+        <li>新需求来了不知道怎么和现有CAN信号<strong>兼容</strong></li>
+        <li>有bug不敢改，<strong>怕影响其他功能</strong></li>
+        <li>客户要做GB/T32960认证，<strong>不知道哪些代码需要审查</strong></li>
+    </ul>
+</section>
+
+<section>
+    <h3>Spec文档记录所有设计决策</h3>
+    <p>Spec文档记录了：</p>
+    <ul>
+        <li>CAN信号定义</li>
+        <li>故障诊断协议</li>
+        <li>安全策略</li>
+        <li>行业标准合规性</li>
+    </ul>
+    <br>
+    <p>新人可以通过阅读Spec快速理解TBox的功能架构，而不是去读那几千行没有注释的C代码。</p>
+</section>
+
+<!-- Spec 规范核心组成 -->
+<section class="section-slide" data-background-color="#2ecc71">
+    <h2>四、Spec 规范的核心组成</h2>
+</section>
+
+<section>
+    <h2>4.1 功能边界</h2>
+    <p>回答一个问题：<strong>这个功能做什么、不做什么？</strong></p>
+    <pre><code>## 功能边界
+
+### 核心功能
+1. 车主APP远程解锁车门
+2. 蓝牙近场解锁（距离车辆5米内）
+3. 解锁成功后整车进入ready状态
+
+### 边界情况处理
+- 车辆处于碰撞报警状态时，拒绝解锁
+- 网络信号弱时，解锁请求超时时间延长至3秒
+- 单日解锁次数超过10次时，触发风控审核
+
+### 不包含的功能
+- 4S店诊断模式解锁
+- 营运车队强制调度解锁
+- 远程鸣笛/闪灯</code></pre>
+</section>
+
+<section>
+    <h2>4.2 技术约束</h2>
+    <p>回答问题：<strong>用什么协议、有什么通信要求、安全策略？</strong></p>
+    <pre><code>## 技术约束
+
+### 通信协议
+- TBox与云平台：MQTT over TLS 1.2
+- TBox与车载CAN：HS-CAN 500kbps（符合ISO 11898）
+- 近场解锁：BLE 4.2
+
+### CAN信号定义
+- 车门状态信号：DOOR_STATUS_0x101（周期100ms）
+- 解锁命令信号：DOOR_UNLOCK_0x102（事件触发）
+- TBox心跳信号：TBOX_HEARTBEAT_0x100（周期1s）
+
+### 安全约束
+- 命令使用AES-256加密
+- OTA升级需双重签名验证
+- 解锁记录完整上云，不可篡改
+
+### 实时性要求
+- 云端命令下发到CAN信号输出：<500ms
+- 近场解锁响应时间：<200ms</code></pre>
+</section>
+
+<section>
+    <h2>4.3 验收标准</h2>
+    <p>回答问题：<strong>怎么算做完了？</strong></p>
+    <pre><code>## 验收标准
+
+### 功能验收
+- [ ] 车主APP可远程解锁车门
+- [ ] 解锁命令成功触达CAN总线
+- [ ] 云端日志记录完整
+
+### 行业标准要求
+- [ ] 符合GB/T 32960（新能源汽车远程服务与管理）
+- [ ] 通过EMC测试（电磁兼容性）
+
+### 性能要求
+- 云端到CAN信号输出延迟：<500ms
+- 支持100并发解锁请求
+
+### 可靠性要求
+- -40℃～+85℃环境下功能正常
+- 连续1000次解锁操作无故障</code></pre>
+</section>
+
+<section>
+    <h2>4.4 状态追踪</h2>
+    <p>回答问题：<strong>这个功能现在在什么阶段？</strong></p>
+    <pre><code>## 状态
+
+| 状态       | 值     |
+|------------|--------|
+| 当前状态   | 开发中 |
+| 创建时间   | 2024-06-01 |
+| 最后更新   | 2024-06-15 |
+| 阻塞问题   | 无     |</code></pre>
+</section>
+
+<!-- 从 Spec 到代码的流程 -->
+<section class="section-slide" data-background-color="#9b59b6">
+    <h2>五、从 Spec 到代码的流程</h2>
+</section>
+
+<section>
+    <h2>5.1 标准流程</h2>
+    <pre><code>需求描述 → Spec 规范 → 技术审核 → 代码实现 → 测试验收 → 状态更新
+    ↓         ↓       ↓          ↓           ↓
+  用户      AI+用户   产品+技术    AI+规范     规范+测试</code></pre>
+</section>
+
+<section>
+    <h2>5.2 流程详解</h2>
+    <div class="two-col">
+        <div>
+            <h3>第一步：需求描述</h3>
+            <p>用户用自然语言描述需求</p>
+            <h3>第二步：Spec 规范</h3>
+            <p>AI提取功能边界和技术约束，生成规范文档</p>
+            <h3>第三步：技术审核</h3>
+            <p>技术负责人审核确认CAN信号定义等</p>
+        </div>
+        <div>
+            <h3>第四步：代码实现</h3>
+            <p>AI按照规范文档生成代码，不会擅自决定CAN信号ID</p>
+            <h3>第五步：测试验收</h3>
+            <p>运行规范文档中内置的测试用例验证</p>
+            <h3>第六步：状态更新</h3>
+            <p>更新规范文档中的状态字段</p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>5.3 为什么这个流程能解决问题？</h2>
+    <table>
+        <tr><th>我们之前提到的问题</th><th>解决方案</th></tr>
+        <tr><td>自然语言歧义性</td><td>Spec 精确定义功能边界，消除歧义</td></tr>
+        <tr><td>多人认知不一致</td><td>统一规范文档，所有人基于同一份文档工作</td></tr>
+        <tr><td>测试用例缺失</td><td>Spec 内置验收测试用例</td></tr>
+        <tr><td>技术债务累积</td><td>Spec 记录技术约束，新功能必须遵循</td></tr>
+        <tr><td>流程不透明</td><td>状态机追踪，每个阶段清晰可见</td></tr>
+        <tr><td>代码不一致</td><td>AI 严格按规范生成，强制一致性</td></tr>
+    </table>
+</section>
+
+<!-- 总结与练习 -->
+<section class="section-slide" data-background-color="#e67e22">
+    <h2>六、总结与练习</h2>
+</section>
+
+<section>
+    <h2>关键知识点回顾</h2>
+    <h3>第一部分：AI Coding 三阶段</h3>
+    <table>
+        <tr><th>阶段</th><th>时间</th><th>代表工具</th><th>核心能力</th><th>局限</th></tr>
+        <tr><td>辅助编程</td><td>2019-2022</td><td>Copilot</td><td>代码补全</td><td>单点代码</td></tr>
+        <tr><td>对话编程</td><td>2022-2024</td><td>ChatGPT</td><td>自然语言生成</td><td>无项目理解</td></tr>
+        <tr><td>规范驱动</td><td>2024-</td><td>OpenSpec</td><td>规范约束</td><td>需要前期投入</td></tr>
+    </table>
+</section>
+
+<section>
+    <h3>第二部分：为什么需要 Spec</h3>
+    <ol>
+        <li>消除自然语言的歧义性</li>
+        <li>统一多人协作的认知</li>
+        <li>内置测试用例保证质量</li>
+        <li>记录设计决策便于维护</li>
+    </ol>
+    <h3>第三部分：Spec 核心组成</h3>
+    <ol>
+        <li>功能边界（做什么、不做什么）</li>
+        <li>技术约束（技术栈、API 规范、安全要求）</li>
+        <li>验收标准（测试用例、性能要求）</li>
+        <li>状态追踪（当前阶段、阻塞问题）</li>
+    </ol>
+</section>
+
+<section>
+    <h2>思考题</h2>
+    <ol>
+        <li><strong>在你的项目中，是否遇到过AI生成代码与预期不一致的问题？原因是什么？</strong><br>
+        <small>提示：可能是自然语言歧义性，可能是缺乏规范约束，也可能是CAN信号定义不明确</small></li>
+        <br>
+        <li><strong>如果让你为一个TBox的"远程空调控制功能"编写Spec，你会关注哪些方面？</strong><br>
+        <small>提示：功能边界——做什么不做什么；CAN信号定义；故障安全策略；行业标准符合性</small></li>
+        <br>
+        <li><strong>Spec规范相比普通需求文档，在TBox开发中最大的区别是什么？</strong><br>
+        <small>提示：精确的CAN信号定义、故障诊断协议、安全约束、行业标准合规性</small></li>
+    </ol>
+</section>
+
+<!-- Q&A -->
+<section class="title-slide" data-align="center" data-background-color="#34495e">
+    <h1 style="color: white;">Q&A</h1>
+    <h3 style="color: #bdc3c7;">约 5 分钟</h3>
+</section>
+
+<!-- 延伸阅读 -->
+<section>
+    <h2>延伸阅读</h2>
+    <ul>
+        <li>AZ-SDD 项目介绍：<code>az-sdd.v3/README.md</code></li>
+        <li>SDD 规则详解：<code>az-sdd.v3/az-sdd-rules/SDD规则.md</code></li>
+        <li>功能规范模板：<code>az-sdd.v3/az-sdd-spec/references/spec.template.md</code></li>
+    </ul>
+    <br>
+    <p class="quote">下节课我们会讲<strong>实战篇</strong>，会详细介绍 AZ-SDD 的 SKILL 体系、状态机设计，以及如何用这套流程完成一个小型功能的完整开发。</p>
+    <br>
+    <p><strong>谢谢大家！</strong></p>
+</section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            controls: true,
+            progress: true,
+            center: false,
+            transition: 'slide',
+            width: 1280,
+            height: 720,
+            margin: 0.1
+        });
+    </script>
+</body>
+</html>

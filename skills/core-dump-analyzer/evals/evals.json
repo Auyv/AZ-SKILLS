@@ -1,0 +1,40 @@
+{
+  "skill_name": "core-dump-analyzer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我分析这个 core dump:\n- core 文件: /tmp/test.core\n- 可执行文件: /tmp/my_app\n- so 库目录: /tmp/lib/release",
+      "expected_output": "应该检查文件是否存在，如果文件不存在则提示用户；如果文件存在则执行 GDB 分析并生成报告",
+      "criteria": [
+        "检查 core dump 文件是否存在",
+        "检查可执行文件是否存在",
+        "如果文件缺失，提示用户补充",
+        "使用 ARM GDB 执行分析"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 2,
+      "prompt": "分析段错误，core dump 在 /data/core.123456.my_service.11.core，可执行文件在 /data/my_service，库在 /data/lib",
+      "expected_output": "应该检查文件并尝试使用 WSL/Linux GDB 分析，如果 GDB 不可用则提供备选方案",
+      "criteria": [
+        "验证所有文件路径",
+        "使用 ARM GDB 进行分析",
+        "GDB 不可用时提供备选方案",
+        "生成 Markdown 报告"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "prompt": "coredump分析",
+      "expected_output": "提示用户需要提供更多信息（core dump 路径、可执行文件路径、库路径）",
+      "criteria": [
+        "识别到用户意图是分析 core dump",
+        "提示用户提供必要的文件路径",
+        "说明需要哪些文件"
+      ],
+      "pass_score": 2
+    }
+  ]
+}

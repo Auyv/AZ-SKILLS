@@ -1,0 +1,214 @@
+# SDD 状态定义
+# 所有 SKILL 必须引用此文件定义的状态
+
+states:
+  - id: draft
+    name: 草稿
+    icon: "📋"
+    description: 规范文档已创建，待审核
+    color: gray
+
+  - id: reviewing
+    name: 审核中
+    icon: "👁️"
+    description: 规范正在审核，等待确认
+    color: yellow
+
+  - id: approved
+    name: 已批准
+    icon: "✅"
+    description: 规范审核通过，可以开始开发
+    color: green
+
+  - id: developing
+    name: 开发中
+    icon: "🔨"
+    description: 正在按照规范实现
+    color: blue
+
+  - id: testing
+    name: 测试中
+    icon: "🧪"
+    description: 代码编写完成，正在测试验证
+    color: orange
+
+  - id: acceptance
+    name: 待验收
+    icon: "🎯"
+    description: 测试完成，等待用户验收确认
+    color: purple
+
+  - id: completed
+    name: 已完成
+    icon: "✅"
+    description: 用户验收通过
+    color: green
+
+  - id: released
+    name: 已发布
+    icon: "🚀"
+    description: 功能已正式发布
+    color: green
+
+  - id: blocked
+    name: 阻塞
+    icon: "🚧"
+    description: 遇到阻塞问题，需要解决
+    color: red
+
+# 状态转换规则
+transitions:
+  draft:
+    - reviewing      # 提交审核
+    - blocked       # 发现问题
+
+  reviewing:
+    - approved      # 审核通过
+    - draft         # 审核拒绝，返回修改
+    - blocked       # 发现阻塞问题
+
+  approved:
+    - developing    # 开始开发
+
+  developing:
+    - testing       # 开发完成，开始测试
+    - blocked       # 发现问题
+
+  testing:
+    - acceptance    # 测试通过，等待验收
+    - developing    # 测试失败，返回开发
+    - blocked       # 发现严重问题
+
+  acceptance:
+    - completed     # 验收通过
+    - developing    # 验收不通过，返回开发
+
+  completed:
+    - released      # 正式发布
+
+# 状态可回退吗？
+# 默认不允许回退，但 acceptance -> developing 是允许的（验收不通过）
+allow_backward:
+  - [acceptance, developing]
+
+# 全局状态查询
+query_rules:
+  # 查询"进行中"的状态
+  in_progress:
+    - reviewing
+    - developing
+    - testing
+    - acceptance
+
+  # 查询"已完成"的状态
+  done:
+    - completed
+    - released
+
+  # 查询"异常"的状态
+  abnormal:
+    - blocked
+
+# 状态同步更新规则
+# 当任何功能的状态发生变化时，必须同步更新以下文件
+sync_rules:
+  description: |
+    每次执行完流程、功能状态发生变化时，必须同步更新所有相关文档，
+    防止出现文档内容不一致。
+
+  files_to_update:
+    - name: SPEC.md
+      path: az-sdd/SPEC.md
+      description: 功能规范索引目录，更新功能列表中的状态列
+      mandatory: true
+
+    - name: coding.md
+      path: az-sdd/coding.md
+      description: 批量开发计划文档，更新当前编码进度情况
+      mandatory: false
+      condition: "仅在批量开发模式时存在"
+
+    - name: ARCH.md
+      path: az-sdd/ARCH.md
+      description: 技术规范索引目录，更新技术规范状态列
+      mandatory: true
+
+    - name: FEEDBACK.md
+      path: az-sdd/FEEDBACK.md
+      description: 用户反馈索引目录，更新反馈处理状态列
+      mandatory: true
+      condition: "仅当存在反馈记录时"
+
+    - name: track.md
+      path: az-sdd/track.md
+      description: 工作状态追踪记录，记录状态变更历史
+      mandatory: true
+
+  # 同步更新的触发时机
+  trigger_points:
+    - skill: az-sdd-spec
+      triggers:
+        - "规范创建时（draft）"
+        - "状态变更时（draft → reviewing → approved）"
+      files:
+        - SPEC.md
+        - track.md
+
+    - skill: az-sdd-coding
+      triggers:
+        - "开始开发时（approved → developing）"
+        - "开发完成时（developing → testing）"
+        - "测试通过时（testing → acceptance）"
+      files:
+        - SPEC.md
+        - coding.md
+        - track.md
+
+    - skill: az-sdd-test
+      triggers:
+        - "验收通过时（acceptance → completed）"
+      files:
+        - SPEC.md
+        - coding.md
+        - track.md
+
+    - skill: az-sdd-track
+      triggers:
+        - "任何状态变更时"
+        - "发布时（completed → released）"
+      files:
+        - SPEC.md
+        - ARCH.md
+        - FEEDBACK.md
+        - track.md
+
+  # 同步更新检查清单
+  checklist:
+    - name: 状态列一致性
+      check: "SPEC.md 中该功能的状态列是否与规范文件中的当前状态一致"
+
+    - name: 进度情况实时性
+      check: "coding.md 中的当前编码进度是否反映最新执行状态"
+
+    - name: 技术规范关联
+      check: "ARCH.md 中的技术规范状态是否与对应功能规范状态一致"
+
+    - name: 反馈处理追踪
+      check: "FEEDBACK.md 中相关反馈的处理状态是否已更新"
+
+    - name: 历史记录完整性
+      check: "track.md 中是否已记录本次状态变更（时间、原因、变更前后状态）"
+
+  # 常见不一致问题及处理
+  common_issues:
+    - symptom: "SPEC.md 显示已发布，但规范文件仍是草稿"
+      cause: "未同步更新"
+      fix: "立即同步所有相关文件"
+
+    - symptom: "coding.md 显示已完成，但 SPEC.md 还是开发中"
+      cause: "批量开发计划与索引目录不同步"
+      fix: "更新 SPEC.md 和 coding.md 使其一致"
+
+    - symptom: "ARCH.md 状态超前于 SPEC.md"
+      cause: "技术规范先于功能规范完成"
+      fix: "确保技术规范状态不超过对应功能规范状态"

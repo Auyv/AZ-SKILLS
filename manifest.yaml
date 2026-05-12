@@ -1,0 +1,80 @@
+last_sync: '2026-05-12T14:14:05.277667'
+skills:
+- description: 规范驱动开发流程（SDD）
+  name: az-sdd
+  platforms:
+    claude_code: az-sdd
+    cline: az-sdd
+    hermes: az-sdd
+  sub_skills:
+  - az-sdd-spec
+  - az-sdd-coding
+  - az-sdd-test
+  - az-sdd-init
+  - az-sdd-track
+  - az-sdd-rules
+  - az-sdd-arch
+  - az-sdd-next
+  - az-sdd-feedback
+  version: '3.0'
+- description: 问题排查记录追踪工具
+  name: issue-tracker
+  platforms:
+    claude_code: issue-tracker
+    cline: issue-tracker
+    hermes: issue-tracker
+  version: '1.2'
+- description: Skill 创建工具
+  name: az-skill-creator
+  platforms:
+    claude_code: auto-skill-creator
+    cline: az-skill-creator
+    hermes: az-skill-creator
+  version: '1.0'
+- description: PDF 转 Markdown 工具
+  name: az-pdf2md
+  platforms:
+    claude_code: az-pdf2md
+    cline: az-pdf2md
+    hermes: az-pdf2md
+  version: '1.0'
+- description: ARM core dump 分析工具
+  name: core-dump-analyzer
+  platforms:
+    claude_code: core-dump-analyzer
+    cline: core-dump-analyzer
+    hermes: core-dump-analyzer
+  version: '1.0'
+- description: 网络调试工具
+  name: network-debug
+  platforms:
+    claude_code: network-debug
+    cline: network-debug
+    hermes: network-debug
+  version: '1.0'
+- description: Docker 镜像构建工具
+  name: docker-image-build
+  platforms:
+    claude_code: docker-image-build
+    cline: docker-image-build
+    hermes: docker-image-build
+  version: '1.0'
+- description: 跨 AI 工具的 Skill 统一管理与同步方案
+  name: cross-platform-skill-sync
+  platforms:
+    claude_code: cross-platform-skill-sync
+    cline: cross-platform-skill-sync
+    hermes: cross-platform-skill-sync
+  version: '1.0'
+source_dir: skills
+sync_mode: incremental
+sync_targets:
+- enabled: true
+  name: hermes
+  path: C:/Users/jpz/.hermes/skills
+- enabled: true
+  name: cline
+  path: C:/Users/jpz/.agents/skills
+- enabled: true
+  name: claude_code
+  path: C:/Users/jpz/.claude/skills

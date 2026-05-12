@@ -1,0 +1,48 @@
+{
+  "skill_name": "az-sdk-pdf2md",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我把 C:\\docs\\azure-sdk-java.pdf 转成MD",
+      "expected_output": "在 C:\\docs\\ 目录下生成 azure-sdk-java.md，包含完整的标题层级、代码块、参数表格，无乱码无格式错乱",
+      "criteria": [
+        "路径验证通过，确认文件存在",
+        "依赖自动检测并安装缺失包",
+        "MD文件生成在PDF同级目录，与PDF同名",
+        "标题层级规范（#/##/###）",
+        "接口代码包裹在对应语言的代码块中",
+        "参数表格格式完整可读",
+        "无页码、水印、页眉页脚等冗余内容",
+        "输出转换结果摘要（成功/失败、文件路径）"
+      ],
+      "pass_score": 6
+    },
+    {
+      "id": 2,
+      "prompt": "批量转换：C:\\docs\\sdk1.pdf, C:\\docs\\sdk2.pdf, C:\\docs\\sdk3.pdf",
+      "expected_output": "分别生成 sdk1.md、sdk2.md、sdk3.md，输出每个文件的转换状态和统计报告",
+      "criteria": [
+        "逗号分隔路径正确解析为3个独立路径",
+        "每个PDF独立转换，互不影响",
+        "每个MD文件在对应PDF的同级目录",
+        "输出包含每个文件的成功/失败状态",
+        "输出总计：成功N个、失败N个",
+        "失败文件有具体错误原因说明"
+      ],
+      "pass_score": 5
+    },
+    {
+      "id": 3,
+      "prompt": "转换扫描版PDF：C:\\scans\\api-doc-scan.pdf",
+      "expected_output": "生成可读的 api-doc-scan.md，扫描件中的文字被正确识别",
+      "criteria": [
+        "检测到PDF为扫描件（图片型）",
+        "启用OCR处理模式",
+        "输出MD文档中文字可读、无大面积乱码",
+        "表格结构尽可能保留",
+        "告知用户使用了OCR模式及可能的识别误差"
+      ],
+      "pass_score": 4
+    }
+  ]
+}
