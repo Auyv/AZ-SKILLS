@@ -34,6 +34,8 @@ DEFAULT_TARGETS = {
     "hermes": "C:/Users/jpz/.hermes/skills",
     "cline": "C:/Users/jpz/.agents/skills",
     "claude_code": "C:/Users/jpz/.claude/skills",
+    "opencode": "C:/Users/jpz/.config/opencode/skills",
+    "openclaw": "C:/Users/jpz/.openclaw/skills",
 }
 
 # ========== 颜色输出 ==========
@@ -291,7 +293,7 @@ def main():
         """
     )
     parser.add_argument('--full', action='store_true', help='全量同步（包含所有 skills）')
-    parser.add_argument('--to', choices=['hermes', 'cline', 'claude_code'], help='指定同步目标')
+    parser.add_argument('--to', choices=['hermes', 'cline', 'claude_code', 'opencode', 'openclaw'], help='指定同步目标')
     parser.add_argument('--list', action='store_true', help='仅列出当前状态')
     parser.add_argument('--dry-run', action='store_true', help='模拟运行，不实际复制')
     parser.add_argument('--manifest', default=str(MANIFEST_PATH), help=f'Manifest 文件路径 (默认: {MANIFEST_PATH})')
@@ -315,7 +317,7 @@ def main():
 
     if args.to:
         # 同步到指定目标
-        target_labels = {"hermes": "Hermes", "cline": "Cline", "claude_code": "Claude Code"}
+        target_labels = {"hermes": "Hermes", "cline": "Cline", "claude_code": "Claude Code", "opencode": "OpenCode", "openclaw": "OpenClaw"}
         result = syncer.sync_to(args.to, full=args.full)
         info(f"\n结果: 成功 {result['success']}, 跳过 {result['skipped']}, 失败 {result['failed']}")
     else:

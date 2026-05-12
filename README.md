@@ -53,6 +53,8 @@ python3 sync_skills.py
 python3 sync_skills.py --to cline      # 只同步到 Cline
 python3 sync_skills.py --to hermes      # 只同步到 Hermes
 python3 sync_skills.py --to claude_code # 只同步到 Claude Code
+python3 sync_skills.py --to opencode    # 只同步到 OpenCode
+python3 sync_skills.py --to openclaw    # 只同步到 OpenClaw
 ```
 
 ### 4. 全量同步
@@ -79,6 +81,7 @@ skills:
       hermes: az-sdd               # Hermes 中使用的名称
       cline: az-sdd                # Cline 中使用的名称
       claude_code: az-sdd          # Claude Code 中使用的名称
+      opencode: az-sdd             # OpenCode 中使用的名称
 
 sync_targets:
   - name: hermes
@@ -133,8 +136,10 @@ pip install pyyaml
 | Hermes (奔霄) | `C:/Users/jpz/.hermes/skills` | ✓ |
 | Cline | `C:/Users/jpz/.agents/skills` | ✓ |
 | Claude Code | `C:/Users/jpz/.claude/skills` | ✓ |
+| OpenCode | `C:/Users/jpz/.config/opencode/skills` | ✓ |
+| OpenClaw | `C:/Users/jpz/.openclaw/skills` | ✓ |
 
 ---
 
-**文档版本**：v1.0
+**文档版本**：v1.1
 **更新日期**：2026-05-08
