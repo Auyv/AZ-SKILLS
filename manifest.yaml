@@ -1,64 +1,70 @@
-source_dir: skills
+last_sync: '2026-05-13T09:07:33.493374'
 skills:
-- name: az-sdd
-  description: 规范驱动开发流程（SDD）
-  version: '3.0'
+- description: 规范驱动开发流程（SDD）
+  name: az-sdd.v3
   sub_skills:
-  - az-sdd-spec
-  - az-sdd-coding
-  - az-sdd-test
-  - az-sdd-init
-  - az-sdd-track
-  - az-sdd-rules
-  - az-sdd-arch
-  - az-sdd-next
-  - az-sdd-feedback
-- name: issue-tracker
-  description: 问题排查记录追踪工具
+    - az-sdd-spec
+    - az-sdd-coding
+    - az-sdd-test
+    - az-sdd-init
+    - az-sdd-track
+    - az-sdd-rules
+    - az-sdd-arch
+    - az-sdd-next
+    - az-sdd-feedback
+  version: '3.0'
+- description: 鸿泉测试技能
+  name: hq_tester_skills
+  sub_skills:
+    - hq_adb_srtget
+    - hq_adb_srtset
+  version: '1.0'
+- description: 问题排查记录追踪工具
+  name: issue-tracker
   version: '1.2'
-- name: az-skill-creator
-  description: Skill 创建工具
+- description: Skill 创建工具
+  name: az-skill-creator
   version: '1.0'
-- name: az-pdf2md
-  description: PDF 转 Markdown 工具
+- description: PDF 转 Markdown 工具
+  name: az-pdf2md
   version: '1.0'
-- name: core-dump-analyzer
-  description: ARM core dump 分析工具
+- description: ARM core dump 分析工具
+  name: core-dump-analyzer
   version: '1.0'
-- name: network-debug
-  description: 网络调试工具
+- description: 网络调试工具
+  name: network-debug
   version: '1.0'
-- name: docker-image-build
-  description: Docker 镜像构建工具
+- description: Docker 镜像构建工具
+  name: docker-image-build
   version: '1.0'
-- name: cross-platform-skill-sync
-  description: 跨 AI 工具的 Skill 统一管理与同步方案
+- description: 跨 AI 工具的 Skill 统一管理与同步方案
+  name: cross-platform-skill-sync
   version: '1.0'
-- name: auto-skill-creator
-  description: 自动技能创建技能。当用户在对话中表达满意（如"good"、"搞定"、"可以了"等）时，自动询问用户是否将对话过程创建为新技能，并在用户同意后调用
+- description: 自动技能创建技能。当用户在对话中表达满意（如"good"、"搞定"、"可以了"等）时，自动询问用户是否将对话过程创建为新技能，并在用户同意后调用
     az-skill-creator 创建技能。同时收集对话中的负向反馈生成 FAQ。
+  name: auto-skill-creator
   version: '1.0'
-- name: hq_adb_srtget
-  description: 通过ADB工具快速设置CTP终端内置SRT系统属性，支持srt参数配置，可配合`adb_helper`技能实现全链路设备调试
+- description: 通过ADB工具快速设置CTP终端内置SRT系统属性，支持srt参数配置，可配合`adb_helper`技能实现全链路设备调试
+  name: hq_adb_srtget
   version: '1.0'
-- name: hq_adb_srtset
-  description: 通过ADB工具快速查询CTP终端内置SRT系统属性，支持单个/批量获取设备唯一标识、软硬件版本、SIM卡信息等核心参数，可配合`adb_helper`技能实现全链路设备调试
+- description: 通过ADB工具快速查询CTP终端内置SRT系统属性，支持单个/批量获取设备唯一标识、软硬件版本、SIM卡信息等核心参数，可配合`adb_helper`技能实现全链路设备调试
+  name: hq_adb_srtset
   version: '1.0'
-sync_targets:
-- name: hermes
-  path: C:/Users/jpz/.hermes/skills
-  enabled: true
-- name: cline
-  path: C:/Users/jpz/.agents/skills
-  enabled: true
-- name: claude_code
-  path: C:/Users/jpz/.claude/skills
-  enabled: true
-- name: opencode
-  path: C:/Users/jpz/.config/opencode/skills
-  enabled: true
-- name: openclaw
-  path: C:/Users/jpz/.openclaw/skills
-  enabled: true
+source_dir: skills
 sync_mode: incremental
-last_sync: null
+sync_targets:
+- enabled: true
+  name: hermes
+  path: C:/Users/jpz/.hermes/skills
+- enabled: true
+  name: cline
+  path: C:/Users/jpz/.agents/skills
+- enabled: true
+  name: claude_code
+  path: C:/Users/jpz/.claude/skills
+- enabled: true
+  name: opencode
+  path: C:/Users/jpz/.config/opencode/skills
+- enabled: true
+  name: openclaw
+  path: C:/Users/jpz/.openclaw/skills

@@ -178,17 +178,13 @@ class SkillSyncer:
         skipped_count = 0
         failed_count = 0
 
-        for skill in skills:
-            # 全量模式：直接同步
-            # 增量模式：只同步 manifest 中定义且平台匹配的
-            platform_config = None
-            for s in self.manifest.get('skills', []):
-                if s['name'] == skill:
-                    platform_config = s.get('platforms', {}).get(target_name)
-                    break
+        manifest_names = {s['name'] for s in self.manifest.get('skills', [])}
 
-            if not full and platform_config is None:
-                info(f"  - {skill} (未配置此平台，跳过)")
+        for skill in skills:
+            # 增量模式：只同步 manifest 中注册的 skill
+            # 全量模式：所有目录都同步
+            if not full and skill not in manifest_names:
+                info(f"  - {skill} (未在 manifest 中注册，跳过)")
                 skipped_count += 1
                 continue
 
@@ -196,14 +192,6 @@ class SkillSyncer:
                 success_count += 1
             else:
                 failed_count += 1
-
-        # 全量同步模式下，同步所有 skills
-        if full:
-            for skill in skills:
-                if self._sync_skill_to_target(skill, target_path, target_name):
-                    success_count += 1
-                else:
-                    failed_count += 1
 
         return {
             "success": success_count,
