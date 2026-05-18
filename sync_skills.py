@@ -3,12 +3,16 @@
 AZ-SKILLS 同步脚本
 用于将 AZ-SKILLS 中的 skill 同步到各 AI 工具的 skills 目录
 
+同步逻辑：
+- 每个 skill 的 targets 列表决定同步到哪些目标
+- sync_targets.enabled 全局开关决定目标是否启用
+
 用法:
-    python sync_skills.py                    # 交互模式
-    python sync_skills.py --full             # 全量同步
+    python sync_skills.py                    # 同步所有 skill
     python sync_skills.py --list            # 仅列出状态
     python sync_skills.py --to cline         # 只同步到 cline
     python sync_skills.py --dry-run          # 模拟运行，不实际复制
+    python sync_skills.py --skill az-sdd.v3  # 只同步指定 skill
 """
 
 import os
@@ -24,19 +28,7 @@ import yaml
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
 MANIFEST_PATH = SCRIPT_DIR / "manifest.yaml"
-
-# 源目录（相对于 manifest.yaml 位置）
-# 实际路径 = manifest.yaml所在目录 / source_dir
 SKILLS_SOURCE_SUBDIR = "skills"
-
-# 默认同步目标（Windows 路径）
-DEFAULT_TARGETS = {
-    "hermes": "C:/Users/jpz/.hermes/skills",
-    "cline": "C:/Users/jpz/.agents/skills",
-    "claude_code": "C:/Users/jpz/.claude/skills",
-    "opencode": "C:/Users/jpz/.config/opencode/skills",
-    "openclaw": "C:/Users/jpz/.openclaw/skills",
-}
 
 # ========== 颜色输出 ==========
 
@@ -86,18 +78,24 @@ class SkillSyncer:
         with open(self.manifest_path, 'w', encoding='utf-8') as f:
             yaml.dump(self.manifest, f, allow_unicode=True, default_flow_style=False)
 
-    def _get_target_path(self, target_name: str) -> Optional[Path]:
-        """获取目标路径"""
-        # 优先使用 manifest 中定义的路径
+    def _get_target_config(self, target_name: str) -> Optional[Dict]:
+        """获取目标配置"""
         targets = self.manifest.get('sync_targets', [])
         for t in targets:
-            if t.get('name') == target_name and t.get('enabled', True):
-                return Path(t['path'])
+            if t.get('name') == target_name:
+                return t
+        return None
 
-        # 回退到默认路径
-        if target_name in DEFAULT_TARGETS:
-            return Path(DEFAULT_TARGETS[target_name])
-
+    def _get_target_path(self, target_name: str) -> Optional[Path]:
+        """获取目标路径"""
+        config = self._get_target_config(target_name)
+        if not config:
+            return None
+        if not config.get('enabled', True):
+            return None
+        path_str = config.get('path', '')
+        if path_str:
+            return Path(path_str).expanduser()
         return None
 
     def _get_source_skills(self) -> List[str]:
@@ -112,8 +110,8 @@ class SkillSyncer:
                 skills.append(item.name)
         return sorted(skills)
 
-    def _sync_skill_to_target(self, skill_name: str, target_path: Path, target_label: str) -> bool:
-        """同步单个 skill 到目标目录"""
+    def _sync_skill_to_target(self, skill_name: str, target_path: Path, target_name: str) -> bool:
+        """同步单个 skill 到目标目录（使用符号链接）"""
         src = self.source_dir / skill_name
         dest = target_path / skill_name
 
@@ -121,99 +119,103 @@ class SkillSyncer:
             warning(f"  源 skill 不存在: {src}")
             return False
 
-        # 检查是否需要同步（通过比较修改时间）
-        need_sync = True
-        if dest.exists():
-            src_mtime = max(f.stat().st_mtime for f in src.rglob('*') if f.is_file()) if any(src.rglob('*')) else 0
-            dest_mtime = max(f.stat().st_mtime for f in dest.rglob('*') if f.is_file()) if any(dest.rglob('*')) else 0
-            need_sync = src_mtime > dest_mtime
-
-        if not need_sync:
-            info(f"  = {skill_name} (已是最新)")
-            return True
-
         if self.dry_run:
-            info(f"  → {skill_name} (模拟复制)")
+            info(f"  → {skill_name} (模拟创建符号链接)")
             return True
 
-        # 执行同步
+        # 执行同步：创建符号链接
         try:
-            # 删除目标（如果是增量模式但目标存在）
-            if dest.exists():
-                shutil.rmtree(dest)
+            # 删除已存在的目标
+            if dest.exists() or dest.is_symlink():
+                if dest.is_symlink():
+                    dest.unlink()
+                else:
+                    shutil.rmtree(dest)
 
-            # 复制目录
-            shutil.copytree(src, dest)
+            # 创建符号链接
+            dest.symlink_to(src)
             success(f"  ✓ {skill_name}")
             return True
         except Exception as e:
             error(f"  ✗ {skill_name}: {e}")
             return False
 
-    def sync_to(self, target_name: str, full: bool = False) -> Dict[str, int]:
-        """同步到指定目标"""
-        target_path = self._get_target_path(target_name)
-        if not target_path:
-            error(f"未找到目标配置: {target_name}")
-            return {"success": 0, "skipped": 0, "failed": 0}
+    def _get_az_skills_path(self, target_path: Path) -> Path:
+        """获取 az-skills 子文件夹路径"""
+        return target_path / "az-skills"
 
-        if not target_path.exists():
-            warning(f"目标目录不存在，将创建: {target_path}")
-            if not self.dry_run:
-                target_path.mkdir(parents=True, exist_ok=True)
-
-        info(f"\n{'='*50}")
-        info(f"同步目标: {target_name}")
-        info(f"源目录: {self.source_dir}")
-        info(f"目标目录: {target_path}")
-        info(f"模式: {'全量' if full else '增量'}")
-        info(f"{'='*50}")
-
-        skills = self._get_source_skills()
-        if not skills:
-            warning("没有找到需要同步的 skill")
-            return {"success": 0, "skipped": 0, "failed": 0}
-
-        success_count = 0
-        skipped_count = 0
-        failed_count = 0
-
-        manifest_names = {s['name'] for s in self.manifest.get('skills', [])}
-
-        for skill in skills:
-            # 增量模式：只同步 manifest 中注册的 skill
-            # 全量模式：所有目录都同步
-            if not full and skill not in manifest_names:
-                info(f"  - {skill} (未在 manifest 中注册，跳过)")
-                skipped_count += 1
-                continue
-
-            if self._sync_skill_to_target(skill, target_path, target_name):
-                success_count += 1
-            else:
-                failed_count += 1
-
-        return {
-            "success": success_count,
-            "skipped": skipped_count,
-            "failed": failed_count
-        }
-
-    def sync_all(self, full: bool = False) -> Dict[str, int]:
-        """同步到所有已配置的目标"""
+    def sync_all(self) -> Dict[str, int]:
+        """同步所有 skill 到各自的目标"""
         header("\n🚀 AZ-SKILLS 同步开始")
 
         total = {"success": 0, "skipped": 0, "failed": 0}
+        skills = self._get_source_skills()
 
-        targets = self.manifest.get('sync_targets', [])
-        for target in targets:
-            if not target.get('enabled', True):
+        if not skills:
+            warning("没有找到需要同步的 skill")
+            return total
+
+        # 收集所有需要同步的目标
+        targets_to_sync = set()
+        for skill_info in self.manifest.get('skills', []):
+            skill_name = skill_info['name']
+            if skill_name not in skills:
+                continue
+            for target_name in skill_info.get('targets', []):
+                config = self._get_target_config(target_name)
+                if config and config.get('enabled', True):
+                    targets_to_sync.add(target_name)
+
+        # 先清空所有目标下的 az-skills 子文件夹
+        for target_name in targets_to_sync:
+            target_path = self._get_target_path(target_name)
+            if target_path:
+                az_skills_path = self._get_az_skills_path(target_path)
+                if not self.dry_run:
+                    if az_skills_path.exists():
+                        shutil.rmtree(az_skills_path)
+                    az_skills_path.mkdir(parents=True, exist_ok=True)
+
+        # 按目标分组统计
+        target_stats = {}
+
+        for skill_info in self.manifest.get('skills', []):
+            skill_name = skill_info['name']
+            if skill_name not in skills:
+                info(f"  - {skill_name} (源目录中不存在，跳过)")
+                total["skipped"] += 1
                 continue
 
-            result = self.sync_to(target['name'], full=full)
-            total["success"] += result["success"]
-            total["skipped"] += result["skipped"]
-            total["failed"] += result["failed"]
+            targets = skill_info.get('targets', [])
+
+            for target_name in targets:
+                # 检查目标是否启用
+                config = self._get_target_config(target_name)
+                if not config or not config.get('enabled', True):
+                    continue
+
+                target_path = self._get_target_path(target_name)
+                if not target_path:
+                    continue
+
+                # 使用 az-skills 子文件夹
+                az_skills_path = self._get_az_skills_path(target_path)
+
+                # 初始化目标统计
+                if target_name not in target_stats:
+                    target_stats[target_name] = {"success": 0, "failed": 0}
+
+                # 执行同步到 az-skills 子文件夹
+                if self._sync_skill_to_target(skill_name, az_skills_path, target_name):
+                    target_stats[target_name]["success"] += 1
+                    total["success"] += 1
+                else:
+                    target_stats[target_name]["failed"] += 1
+                    total["failed"] += 1
+
+        # 显示每个目标的统计
+        for target_name, stats in sorted(target_stats.items()):
+            info(f"  {target_name}: 成功 {stats['success']}, 失败 {stats['failed']}")
 
         # 更新同步时间
         if not self.dry_run:
@@ -228,6 +230,124 @@ class SkillSyncer:
 
         return total
 
+    def sync_to_target(self, target_name: str) -> Dict[str, int]:
+        """同步到指定目标"""
+        config = self._get_target_config(target_name)
+        if not config:
+            error(f"未找到目标配置: {target_name}")
+            return {"success": 0, "skipped": 0, "failed": 0}
+
+        if not config.get('enabled', True):
+            warning(f"目标 {target_name} 未启用")
+            return {"success": 0, "skipped": 0, "failed": 0}
+
+        target_path = self._get_target_path(target_name)
+        if not target_path:
+            error(f"未找到目标路径: {target_name}")
+            return {"success": 0, "skipped": 0, "failed": 0}
+
+        if not target_path.exists():
+            warning(f"目标目录不存在，将创建: {target_path}")
+            if not self.dry_run:
+                target_path.mkdir(parents=True, exist_ok=True)
+
+        # 在目标目录下创建 az-skills 子文件夹
+        az_skills_path = self._get_az_skills_path(target_path)
+
+        # 先清空 az-skills 子文件夹
+        if az_skills_path.exists():
+            if not self.dry_run:
+                shutil.rmtree(az_skills_path)
+        if not self.dry_run:
+            az_skills_path.mkdir(parents=True, exist_ok=True)
+
+        info(f"\n{'='*50}")
+        info(f"同步目标: {target_name}")
+        info(f"源目录: {self.source_dir}")
+        info(f"目标目录: {az_skills_path}")
+        info(f"{'='*50}")
+
+        success_count = 0
+        failed_count = 0
+
+        # 获取该目标需要同步的 skills
+        target_skills = []
+        for skill_info in self.manifest.get('skills', []):
+            skill_name = skill_info['name']
+            targets = skill_info.get('targets', [])
+            if target_name in targets:
+                target_skills.append(skill_name)
+
+        for skill in target_skills:
+            if self._sync_skill_to_target(skill, az_skills_path, target_name):
+                success_count += 1
+            else:
+                failed_count += 1
+
+        info(f"\n结果: 成功 {success_count}, 跳过 0, 失败 {failed_count}")
+        return {
+            "success": success_count,
+            "skipped": 0,
+            "failed": failed_count
+        }
+
+    def sync_skill(self, skill_name: str) -> Dict[str, int]:
+        """同步指定 skill"""
+        info(f"\n同步 skill: {skill_name}")
+
+        # 检查源是否存在
+        src = self.source_dir / skill_name
+        if not src.exists():
+            error(f"源 skill 不存在: {src}")
+            return {"success": 0, "skipped": 0, "failed": 0}
+
+        # 获取该 skill 的目标列表
+        skill_info = None
+        for s in self.manifest.get('skills', []):
+            if s['name'] == skill_name:
+                skill_info = s
+                break
+
+        if not skill_info:
+            error(f"未在 manifest 中找到 skill: {skill_name}")
+            return {"success": 0, "skipped": 0, "failed": 0}
+
+        targets = skill_info.get('targets', [])
+        if not targets:
+            warning(f"skill {skill_name} 没有配置 targets")
+            return {"success": 0, "skipped": 0, "failed": 0}
+
+        success_count = 0
+        failed_count = 0
+
+        for target_name in targets:
+            config = self._get_target_config(target_name)
+            if not config or not config.get('enabled', True):
+                continue
+
+            target_path = self._get_target_path(target_name)
+            if not target_path:
+                continue
+
+            # 确保目录存在
+            if not target_path.exists():
+                if not self.dry_run:
+                    target_path.mkdir(parents=True, exist_ok=True)
+
+            # 使用 az-skills 子文件夹
+            az_skills_path = self._get_az_skills_path(target_path)
+            if not az_skills_path.exists():
+                if not self.dry_run:
+                    az_skills_path.mkdir(parents=True, exist_ok=True)
+
+            info(f"  → {target_name}: {az_skills_path}")
+            if self._sync_skill_to_target(skill_name, az_skills_path, target_name):
+                success_count += 1
+            else:
+                failed_count += 1
+
+        return {"success": success_count, "skipped": 0, "failed": failed_count}
+
     def list_status(self):
         """列出当前状态"""
         header("\n📋 AZ-SKILLS 状态概览")
@@ -237,26 +357,36 @@ class SkillSyncer:
         # 列出源 skills
         skills = self._get_source_skills()
         info(f"\n源 skill 列表 ({len(skills)} 个):")
+
+        manifest_skills = {s['name']: s for s in self.manifest.get('skills', [])}
         for skill in skills:
-            skill_info = next((s for s in self.manifest.get('skills', []) if s['name'] == skill), None)
+            skill_info = manifest_skills.get(skill)
             desc = skill_info.get('description', '-') if skill_info else '(未在 manifest 中)'
+            targets = skill_info.get('targets', []) if skill_info else []
             info(f"  • {skill}: {desc}")
+            if targets:
+                info(f"    同步目标: {', '.join(targets)}")
 
         # 列出目标状态
         info("\n同步目标状态:")
         targets = self.manifest.get('sync_targets', [])
         for target in targets:
             name = target['name']
-            path = Path(target['path'])
+            path = Path(target['path']).expanduser() if target.get('path') else None
             enabled = "✓" if target.get('enabled', True) else "✗"
-            exists = "存在" if path.exists() else "不存在"
 
-            # 统计已同步的 skill 数量
-            if path.exists():
-                synced = len([d for d in path.iterdir() if d.is_dir()])
-                info(f"  [{enabled}] {name}: {exists} ({synced}/{len(skills)}) 个 skill")
+            # 使用 az-skills 子文件夹
+            az_skills_path = self._get_az_skills_path(path) if path else None
+            exists = "存在" if az_skills_path and az_skills_path.exists() else "不存在"
+
+            # 统计该目标应同步的 skill 数量
+            target_skills = [s for s in self.manifest.get('skills', []) if name in s.get('targets', [])]
+
+            if az_skills_path and az_skills_path.exists():
+                synced = len([d for d in az_skills_path.iterdir() if d.is_symlink()])
+                info(f"  [{enabled}] {name}: {az_skills_path} ({synced}/{len(target_skills)}) 个 skill")
             else:
-                info(f"  [{enabled}] {name}: {exists}")
+                info(f"  [{enabled}] {name}: {path} (az-skills 子文件夹不存在)")
 
         # 最后同步时间
         last_sync = self.manifest.get('last_sync')
@@ -269,19 +399,19 @@ class SkillSyncer:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="AZ-SKILLS 同步脚本 - 跨 AI 工具的 skill 同步工具",
+        description="AZ-SKILLS 同步脚本 - 基于 targets 配置的跨工具同步",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  python sync_skills.py              # 交互模式，同步到所有目标
-  python sync_skills.py --full       # 全量同步
+  python sync_skills.py              # 同步所有 skill
   python sync_skills.py --to cline   # 只同步到 cline
+  python sync_skills.py --skill az-sdd.v3  # 只同步指定 skill
   python sync_skills.py --list       # 仅列出状态
   python sync_skills.py --dry-run    # 模拟运行，不实际复制
         """
     )
-    parser.add_argument('--full', action='store_true', help='全量同步（包含所有 skills）')
     parser.add_argument('--to', choices=['hermes', 'cline', 'claude_code', 'opencode', 'openclaw'], help='指定同步目标')
+    parser.add_argument('--skill', help='指定同步的 skill 名称')
     parser.add_argument('--list', action='store_true', help='仅列出当前状态')
     parser.add_argument('--dry-run', action='store_true', help='模拟运行，不实际复制')
     parser.add_argument('--manifest', default=str(MANIFEST_PATH), help=f'Manifest 文件路径 (默认: {MANIFEST_PATH})')
@@ -303,14 +433,90 @@ def main():
         syncer.list_status()
         return
 
+    if args.skill:
+        # 同步指定 skill
+        result = syncer.sync_skill(args.skill)
+        info(f"\n结果: 成功 {result['success']}, 跳过 {result['skipped']}, 失败 {result['failed']}")
+        if not syncer.dry_run:
+            syncer.manifest['last_sync'] = datetime.now().isoformat()
+            syncer._save_manifest()
+        return
+
     if args.to:
         # 同步到指定目标
-        target_labels = {"hermes": "Hermes", "cline": "Cline", "claude_code": "Claude Code", "opencode": "OpenCode", "openclaw": "OpenClaw"}
-        result = syncer.sync_to(args.to, full=args.full)
-        info(f"\n结果: 成功 {result['success']}, 跳过 {result['skipped']}, 失败 {result['failed']}")
+        result = syncer.sync_to_target(args.to)
+        if not syncer.dry_run:
+            syncer.manifest['last_sync'] = datetime.now().isoformat()
+            syncer._save_manifest()
+        return
+
+    # 无参数时，进入交互式菜单
+    _interactive_menu(syncer)
+
+def _interactive_menu(syncer: SkillSyncer):
+    """交互式菜单选择同步目标"""
+    targets = syncer.manifest.get('sync_targets', [])
+    enabled_targets = [t for t in targets if t.get('enabled', True)]
+
+    if not enabled_targets:
+        error("没有已启用的同步目标")
+        return
+
+    header("\n🎯 选择同步目标")
+    info("输入序号选择（多个用空格分隔），或输入 'a' 全选，'q' 退出\n")
+
+    for i, t in enumerate(enabled_targets, 1):
+        name = t['name']
+        path = syncer._get_target_path(name)
+        path_str = str(path) if path else "(未配置)"
+        exists = "✓" if path and path.exists() else "✗"
+
+        # 统计该目标应同步的 skill 数量
+        target_skills = [s for s in syncer.manifest.get('skills', []) if name in s.get('targets', [])]
+        info(f"  [{i}] {name}: {path_str} [{exists}] ({len(target_skills)} skills)")
+
+    print()
+    try:
+        choice = input("请选择 > ").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return
+
+    if choice == 'q':
+        return
+
+    if choice == 'a':
+        selected = enabled_targets
     else:
-        # 同步到所有目标
-        syncer.sync_all(full=args.full)
+        try:
+            indices = [int(x) for x in choice.split()]
+            selected = [enabled_targets[i-1] for i in indices if 1 <= i <= len(enabled_targets)]
+        except (ValueError, IndexError):
+            error("无效输入")
+            return
+
+    if not selected:
+        error("未选择任何目标")
+        return
+
+    header(f"\n开始同步到 {len(selected)} 个目标")
+    total = {"success": 0, "skipped": 0, "failed": 0}
+
+    for target in selected:
+        result = syncer.sync_to_target(target['name'])
+        total["success"] += result["success"]
+        total["skipped"] += result["skipped"]
+        total["failed"] += result["failed"]
+
+    if not syncer.dry_run:
+        syncer.manifest['last_sync'] = datetime.now().isoformat()
+        syncer._save_manifest()
+
+    header("\n" + "="*50)
+    success(f"同步完成! 成功: {total['success']}, 跳过: {total['skipped']}, 失败: {total['failed']}")
+    if syncer.dry_run:
+        warning(" (模拟模式，未实际复制)")
+    header("="*50)
 
 if __name__ == "__main__":
     main()

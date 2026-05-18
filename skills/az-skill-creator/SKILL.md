@@ -32,7 +32,7 @@ outputs:
   - name: skill_directory
     type: directory
     description: 完整的技能目录结构
-    path: "{skills_base_path}/{skill-name}/"
+    path: "{skills_base_path}/{skill_name}/"
   - name: skill_md
     type: file
     description: SKILL.md 主文档
