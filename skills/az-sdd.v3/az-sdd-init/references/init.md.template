@@ -5,34 +5,32 @@
 | 字段 | 内容 |
 |------|------|
 | 项目名称 | {PROJECT_NAME} |
-| 项目描述 | {PROJECT_DESC} |
-| 项目定位 | {PROJECT_POSITION} |
 | 创建日期 | {CURRENT_DATE} |
 | 项目类型 | {PROJECT_TYPE} |
+| 项目说明来源 | {AGENTS_PATH} |
 
-## 项目定位
+## 项目说明
 
-{PROJECT_VALUES}
+项目背景、定位、目标用户、仓库约定和 AZ-SDD 使用规则以项目根目录 `AGENTS.md` 为准。
 
-## 目标用户
+本文件仅作为 AZ-SDD 档案入口，不重复维护 AGENTS.md 中的长文本说明。
 
-{PROJECT_TARGET}
-
-## 技术栈
+## 技术栈摘要
 
 {TECH_STACK}
 
-## 里程碑规划
+## 档案入口
 
-| 阶段 | 目标 | 预计时间 | 状态 |
-|------|------|---------|------|
-| - | - | - | - |
+- 工作状态记录：`az-sdd/track.md`
+- 功能规范索引：`az-sdd/SPEC.md`
+- 技术规范索引：`az-sdd/ARCH.md`
+- 用户反馈索引：`az-sdd/FEEDBACK.md`
 
 ## 目录结构说明
 
 ```
 az-sdd/
-├── init.md          本文件，项目基本信息
+├── init.md          本文件，SDD 档案入口
 ├── track.md         工作状态记录
 ├── SPEC.md          功能规范索引
 ├── ARCH.md          技术规范索引

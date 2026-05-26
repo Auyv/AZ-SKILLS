@@ -19,7 +19,8 @@ description: |-
 ```
 1. 检查当前工作目录
 2. 检查 az-sdd/ 目录是否已存在
-3. 检测项目类型（package.json, requirements.txt, go.mod 等）
+3. 检查项目根目录是否存在 AGENTS.md
+4. 检测项目类型（package.json, requirements.txt, go.mod 等）
 ```
 
 ### Step 2: 根据环境执行
@@ -56,17 +57,16 @@ description: |-
 - {PROJECT_NAME}: 从工程文件或目录名
 - {TECH_STACK}: 从依赖文件
 - {CURRENT_DATE}: 自动获取 (YYYY-MM-DD)
+- {AGENTS_PATH}: 项目根目录下的 AGENTS.md
 
 **需要询问的字段**：
-- 项目描述（可选）
-- 项目定位（可选）
-- 目标用户（可选）
+- 仅当 AGENTS.md 不存在或缺少项目说明时，询问项目描述/定位/目标用户
 
 ### Step 5: 创建目录结构
 
 ```
 az-sdd/
-├── init.md          # 项目基本信息
+├── init.md          # SDD 档案入口，引用 AGENTS.md 的项目说明
 ├── track.md         # 工作状态记录
 ├── SPEC.md          # 功能规范索引
 ├── ARCH.md          # 技术规范索引
@@ -82,7 +82,10 @@ az-sdd/
 
 ### Step 6: 初始化文件
 
-使用 templates/init.md 和 templates/track.md 初始化文件。
+1. 如果项目根目录没有 AGENTS.md，先创建 AGENTS.md，并写入项目说明与 AZ-SDD 使用约定。
+2. 如果 AGENTS.md 已存在，不复制其已有内容到 az-sdd/init.md；只在缺少 AZ-SDD 约定时追加一个简短章节。
+3. 使用 templates/init.md 和 templates/track.md 初始化文件。
+4. az-sdd/init.md 只保留项目档案入口、关键元数据和 AGENTS.md 引用，避免与 AGENTS.md 重复维护项目背景、定位、目标用户等长文本。
 
 ### Step 7: 输出结果
 
@@ -91,7 +94,7 @@ az-sdd/
 
 📁 目录结构：
 az-sdd/
-├── init.md           项目基本信息
+├── init.md           SDD 档案入口（项目说明见 AGENTS.md）
 ├── track.md          工作状态记录
 ├── SPEC.md           功能规范索引
 ├── ARCH.md           技术规范索引
@@ -116,5 +119,7 @@ az-sdd/
 | 情况 | 处理方式 |
 |------|---------|
 | az-sdd/ 已存在 | 询问是否重建或更新 |
+| AGENTS.md 已存在 | 保留原内容，只追加缺失的 AZ-SDD 约定 |
+| AGENTS.md 不存在 | 创建 AGENTS.md 作为项目说明和规则的单一来源 |
 | 权限不足 | 提示错误，结束 |
 | 磁盘空间不足 | 提示错误，结束 |

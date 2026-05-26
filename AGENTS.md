@@ -67,3 +67,4 @@ python manifest_update.py --auto
 - 同步基于 mtime 比较，只在源文件较新时复制。`--full` 跳过增量检查。
 - `manifest_update.py` 跳过 `template/`、`templates/` 目录及名称为 `skill-name` 的技能（模板占位符）。
 - 写入中间文件时使用 `./.claude_tmp` 而非 `.claude/plans/`（az-sdd 约定）。
+- 生成或修改 Windows `.bat` 脚本时，必须强制使用 `CRLF` 换行符，避免 `cmd.exe` 解析异常。
