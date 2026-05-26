@@ -1,0 +1,75 @@
+# 编译输出目录
+/build/
+/output/
+/dist/
+
+# sdk文件
+/sdk/
+
+# IDE 相关文件
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*.scvd
+*.uvoptx
+*.uvguix.*
+
+
+# 编译产物
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+*.out
+
+# 调试文件
+*.map
+*.lst
+*.hex
+*.bin
+*.pyc
+
+# 中间文件
+*.i
+*.ii
+*.s
+*.asm
+*.lst
+
+# 日志文件
+*.log
+logs/
+*.txt
+
+# 临时文件
+*.tmp
+*.temp
+*~
+.#*
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 工程特定配置
+/project/mdk/__build/
+/project/mdk/DebugConfig/
+/project/mdk/Listings/
+/project/mdk/Objects/
+/project/mdk/JLinkSettings.ini
+.local/
+
+
+# AI
+CLAUDE.md
+AGENTS.md
+.claude/
+.agents/
+.claude_tmp/
+.ai_tmp/
