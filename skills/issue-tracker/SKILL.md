@@ -132,6 +132,45 @@ issue-tracker/
 4. 读取和写入中文文件统一使用 UTF-8。
 5. 脚本返回 JSON。回复用户时提取关键字段，不要把完整 JSON 原样倾倒给用户。
 
+---
+
+## WSL 路径陷阱（重要）
+
+`issue_tracker.py` 中 `DEFAULT_ROOT` 硬编码为 Windows 反斜线路径 `C:\\JPZ_Workspace\\...`。在 WSL 环境下运行 Python 时，此类路径会被 Python 的 `pathlib.Path` 当作**相对路径**处理，导致文件被写到技能目录内部而非知识库。
+
+**表现**：创建的文件在 `/home/jpz/.hermes/skills/.../C:\JPZ_Workspace\...` 下，而不是知识库中。
+
+**预防**：在 WSL 下执行时，必须使用 `--root` 参数传入 WSL 格式绝对路径：
+```bash
+python3 scripts/issue_tracker.py create \
+  --root "/mnt/c/JPZ_Workspace/笔记仓库-jpz/hq-jpz/奔霄-note/问题排查记录" \
+  ...
+```
+
+**应急处理**：若文件被错误写入技能目录，用以下命令救出：
+```bash
+# 1. 找到错误路径
+ls -la "/home/jpz/.hermes/skills/note-taking/issue-tracker-execution/"
+# 2. 移动到正确位置
+cp -r "<错误路径>/<问题目录>" \
+      "/mnt/c/JPZ_Workspace/笔记仓库-jpz/hq-jpz/奔霄-note/问题排查记录/"
+
+# 3. 清理错误位置
+rm -rf "<错误路径>"
+```
+
+---
+
+## 常见执行错误
+
+| 错误 | 原因 | 正确做法 |
+|------|------|----------|
+| 创建单一 AZ排查记录.md 文件 | 未按规范执行，模仿了旧格式 | 严格使用 scripts/issue_tracker.py |
+| 跳过 skill_view 直接创建 | 沿用旧习惯，未加载技能文档 | 必须先加载 skill_view(issue-tracker) |
+| 目录结构缺少排查记录子目录 | 未仔细阅读规范 | 按 01/02/03/04 固定结构 |
+| Windows 绝对路径被当作相对路径 | WSL 下 `C:\...` 路径被 pathlib 视为相对路径 | WSL 下使用 /mnt/c/ 前缀的绝对路径 |
+| 脚本显示成功但文件不在预期目录 | 上一条错误的直接后果 | 先检查文件实际位置，再手动 mv 到正确路径 |
+
 ## 动作判定
 
 | 动作 | 触发表达 | 脚本命令 |

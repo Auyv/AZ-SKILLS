@@ -135,3 +135,66 @@ $process.WaitForExit()
 & adb shell "srtget 187"
 ```
 
+---
+
+## SRT 属性设置（srtset）
+
+当用户提到"ctp属性配置"、"设置srt属性"、"修改设备属性"时，使用以下命令格式：
+
+### 设置 int 类型属性
+```bash
+adb shell srtset [id] [int_value]
+```
+
+### 设置 string 类型属性
+```bash
+adb shell srtset [id] str [string_value]
+```
+
+### 返回格式
+**成功应答（Int类型）：**
+```
+[type] id=[id], result:[ret], value=[值]
+```
+
+**成功应答（String）：**
+```
+Str id=[id], ret:[ret], value=[值]
+```
+
+**失败应答：**
+```
+Error, id=[id], result:[错误码]
+```
+
+### 常用设置属性 ID
+
+| ID | 属性名称 | 类型 | 说明 |
+|----|---------|------|------|
+| 8 | 基础apn | String | mcu端基础apn |
+| 366 | apn0 | String | mpu端apn0 |
+| 371 | apn1 | String | mpu端apn1 |
+| 376 | apn2 | String | mpu端apn2 |
+| 185 | 设备模式 | UInt8 | 0:正常模式; 1:厂内模式 |
+
+### 设置示例
+
+```bash
+# 设置 int 类型属性
+adb shell srtset 546 1
+
+# 设置 string 类型属性（APN）
+adb shell srtset 366 str cmnet
+```
+
+### 常见问题排查
+
+1. **提示"no devices/emulators found"**
+   - 检查USB线是否为数据传输线
+   - 确认设备已开启开发者选项和USB调试
+   - 执行 `adb kill-server && adb start-server` 重启ADB服务
+
+2. **返回结果乱码**
+   - Windows PowerShell 执行前运行：`[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
+   - 推荐使用 Git Bash / WSL 环境执行
+
