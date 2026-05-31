@@ -293,15 +293,15 @@ batch_plan_doc:
 code_directory:
   name: 代码实现目录
   path: code/
-  mandatory: true
+  mandatory: false
 
   description: |
-    强制规定：所有代码文件必须统一放在 `code/` 目录下，
-    禁止将代码文件放入 `az-sdd/` 目录。
+    新项目推荐将代码文件放在 `code/` 目录下；已有项目沿用原有语言/框架结构。
+    强制要求是禁止将业务代码放入 `az-sdd/` 目录。
 
   rules:
-    - "代码实现文件必须放在 `code/` 目录下"
-    - "测试代码（单元测试、集成测试）放在 `code/tests/` 下"
+    - "新项目推荐将代码实现文件放在 `code/` 目录下"
+    - "已有项目沿用原有源码和测试目录"
     - "禁止在 `az-sdd/` 目录下创建代码文件"
     - "保持 `az-sdd/` 仅包含规范文档和配置文件"
 
@@ -312,7 +312,7 @@ code_directory:
     │   ├── arch/         # 技术规范
     │   └── test/         # 测试档案（用例、报告、手册）
     │
-    └── code/             # 代码实现文件（统一存放位置）
+    └── code/             # 新项目推荐代码目录
         ├── main.py        # 主入口
         ├── models/        # 数据模型
         ├── cli/           # CLI 命令

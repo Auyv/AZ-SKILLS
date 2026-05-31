@@ -22,13 +22,88 @@ import argparse
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional
-import yaml
+try:
+    import yaml
+except ModuleNotFoundError:
+    yaml = None
 
 # ========== 配置 ==========
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
 MANIFEST_PATH = SCRIPT_DIR / "manifest.yaml"
 SKILLS_SOURCE_SUBDIR = "skills"
+
+
+def _simple_yaml_load_manifest(text: str) -> dict:
+    """Parse this repository's manifest.yaml when PyYAML is unavailable."""
+    data = {"skills": [], "sync_targets": []}
+    section = None
+    current = None
+
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip()
+        stripped = line.strip()
+
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        if not line.startswith(" ") and stripped.endswith(":"):
+            section = stripped[:-1]
+            continue
+
+        if stripped.startswith("- "):
+            item = stripped[2:]
+            if ":" in item:
+                key, value = item.split(":", 1)
+                key = key.strip()
+                value = value.strip()
+                current = {key: [] if key == "targets" and not value else _simple_yaml_value(value)}
+                if section in ("skills", "sync_targets"):
+                    data[section].append(current)
+            else:
+                if current is not None:
+                    current.setdefault("targets", []).append(_simple_yaml_value(item))
+            continue
+
+        if not line.startswith(" ") and ":" in stripped:
+            key, value = stripped.split(":", 1)
+            data[key] = value.strip().strip("'\"")
+            continue
+
+        if current is not None and ":" in stripped:
+            key, value = stripped.split(":", 1)
+            key = key.strip()
+            value = value.strip()
+            current[key] = [] if key == "targets" and not value else _simple_yaml_value(value)
+
+    return data
+
+
+def _simple_yaml_value(value: str):
+    value = value.strip().strip("'\"")
+    if value.lower() == "true":
+        return True
+    if value.lower() == "false":
+        return False
+    return value
+
+
+def _simple_yaml_dump_manifest(manifest: dict) -> str:
+    lines = [f"last_sync: '{manifest.get('last_sync', '')}'", "skills:"]
+    for skill in manifest.get("skills", []):
+        lines.append(f"- name: {skill['name']}")
+        lines.append("  targets:")
+        for target in skill.get("targets", []):
+            lines.append(f"  - {target}")
+
+    lines.append("sync_targets:")
+    for target in manifest.get("sync_targets", []):
+        enabled = "true" if target.get("enabled", True) else "false"
+        lines.append(f"- enabled: {enabled}")
+        lines.append(f"  name: {target['name']}")
+        lines.append(f"  path: {target['path']}")
+
+    return "\n".join(lines) + "\n"
 
 # ========== 颜色输出 ==========
 
@@ -71,12 +146,17 @@ class SkillSyncer:
             sys.exit(1)
 
         with open(self.manifest_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
+            if yaml:
+                return yaml.safe_load(f)
+            return _simple_yaml_load_manifest(f.read())
 
     def _save_manifest(self):
         """保存 manifest.yaml"""
         with open(self.manifest_path, 'w', encoding='utf-8') as f:
-            yaml.dump(self.manifest, f, allow_unicode=True, default_flow_style=False)
+            if yaml:
+                yaml.dump(self.manifest, f, allow_unicode=True, default_flow_style=False)
+            else:
+                f.write(_simple_yaml_dump_manifest(self.manifest))
 
     def _get_target_config(self, target_name: str) -> Optional[Dict]:
         """获取目标配置"""
