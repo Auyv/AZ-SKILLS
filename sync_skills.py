@@ -11,6 +11,7 @@ AZ-SKILLS 同步脚本
     python sync_skills.py                    # 同步所有 skill
     python sync_skills.py --list            # 仅列出状态
     python sync_skills.py --to cline         # 只同步到 cline
+    python sync_skills.py --to codex         # 只同步到 codex
     python sync_skills.py --dry-run          # 模拟运行，不实际复制
     python sync_skills.py --skill az-sdd.v3  # 只同步指定 skill
 """
@@ -19,6 +20,7 @@ import os
 import sys
 import shutil
 import argparse
+import subprocess
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional
@@ -128,6 +130,67 @@ def success(msg): colorprint(msg, Colors.OKGREEN)
 def warning(msg): colorprint(msg, Colors.WARNING)
 def error(msg): colorprint(msg, Colors.FAIL)
 def header(msg): colorprint(msg, Colors.HEADER + Colors.BOLD)
+
+
+# ========== Windows 权限处理 ==========
+
+def _is_windows_admin() -> bool:
+    """Return whether the current process is elevated on Windows."""
+    if os.name != "nt":
+        return True
+
+    try:
+        import ctypes
+        return bool(ctypes.windll.shell32.IsUserAnAdmin())
+    except Exception:
+        return False
+
+
+def _relaunch_as_windows_admin() -> bool:
+    """Relaunch the current command through UAC and return whether it was started."""
+    if os.name != "nt":
+        return False
+
+    try:
+        import ctypes
+
+        def ps_quote(value: str) -> str:
+            return "'" + value.replace("'", "''") + "'"
+
+        script_path = str(Path(__file__).resolve())
+        python_args = " ".join(ps_quote(arg) for arg in [script_path, *sys.argv[1:]])
+        command = (
+            f"Set-Location -LiteralPath {ps_quote(str(SCRIPT_DIR))}; "
+            f"& {ps_quote(sys.executable)} {python_args}; "
+            "$exitCode = $LASTEXITCODE; "
+            "Write-Host ''; "
+            "Read-Host '执行结束，按 Enter 关闭窗口'; "
+            "exit $exitCode"
+        )
+        params = subprocess.list2cmdline([
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command",
+            command,
+        ])
+        result = ctypes.windll.shell32.ShellExecuteW(
+            None,
+            "runas",
+            "powershell.exe",
+            params,
+            str(SCRIPT_DIR),
+            1,
+        )
+        return result > 32
+    except Exception as exc:
+        error(f"自动申请管理员权限失败: {exc}")
+        return False
+
+
+def _sync_requires_elevation(args: argparse.Namespace) -> bool:
+    """Only real sync operations need elevation for Windows directory symlinks."""
+    return os.name == "nt" and not args.list and not args.dry_run and not args.no_elevate
 
 # ========== 核心逻辑 ==========
 
@@ -485,18 +548,28 @@ def main():
 示例:
   python sync_skills.py              # 同步所有 skill
   python sync_skills.py --to cline   # 只同步到 cline
+  python sync_skills.py --to codex   # 只同步到 codex
   python sync_skills.py --skill az-sdd.v3  # 只同步指定 skill
   python sync_skills.py --list       # 仅列出状态
   python sync_skills.py --dry-run    # 模拟运行，不实际复制
         """
     )
-    parser.add_argument('--to', choices=['hermes', 'cline', 'claude_code', 'opencode', 'openclaw'], help='指定同步目标')
+    parser.add_argument('--to', choices=['hermes', 'cline', 'claude_code', 'opencode', 'openclaw', 'codex'], help='指定同步目标')
     parser.add_argument('--skill', help='指定同步的 skill 名称')
     parser.add_argument('--list', action='store_true', help='仅列出当前状态')
     parser.add_argument('--dry-run', action='store_true', help='模拟运行，不实际复制')
+    parser.add_argument('--no-elevate', action='store_true', help='Windows 下不自动申请管理员权限')
     parser.add_argument('--manifest', default=str(MANIFEST_PATH), help=f'Manifest 文件路径 (默认: {MANIFEST_PATH})')
 
     args = parser.parse_args()
+
+    if _sync_requires_elevation(args) and not _is_windows_admin():
+        info("检测到 Windows 符号链接同步需要管理员权限，正在请求 UAC 授权...")
+        if _relaunch_as_windows_admin():
+            info("已启动管理员权限同步窗口，当前进程退出。")
+            return
+        error("未能获取管理员权限，请手动以管理员身份运行，或使用 --no-elevate 跳过自动提权。")
+        sys.exit(1)
 
     # 转换为 Path
     manifest_path = Path(args.manifest)
