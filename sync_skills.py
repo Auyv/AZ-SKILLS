@@ -254,19 +254,44 @@ class SkillSyncer:
         return sorted(skills)
 
     def _sync_skill_to_target(self, skill_name: str, target_path: Path, target_name: str) -> bool:
-        """同步单个 skill 到目标目录（使用符号链接）"""
+        """同步单个 skill 到目标目录。
+
+        - 如果 src 根下有 SKILL.md，按 skill_name 平铺到 target_path
+        - 如果 src 是聚合容器（根下无 SKILL.md），递归扫描子目录，
+          把每个含 SKILL.md 的子目录平铺到 target_path（用 child.name 命名）
+        """
         src = self.source_dir / skill_name
-        dest = target_path / skill_name
 
         if not src.exists():
             warning(f"  源 skill 不存在: {src}")
             return False
 
+        # 聚合容器：根下无 SKILL.md，递归展开子目录
+        if not (src / 'SKILL.md').exists():
+            sub_skills = sorted([
+                c for c in src.iterdir()
+                if c.is_dir() and (c / 'SKILL.md').exists()
+            ])
+            if not sub_skills:
+                warning(f"  {skill_name} 根下无 SKILL.md 且无含 SKILL.md 的子目录，跳过")
+                return False
+            info(f"  {skill_name} 是聚合容器，展开 {len(sub_skills)} 个子 skill:")
+            all_ok = True
+            for sub in sub_skills:
+                if not self._link_one(sub.name, sub, target_path):
+                    all_ok = False
+            return all_ok
+
+        return self._link_one(skill_name, src, target_path)
+
+    def _link_one(self, label: str, src: Path, target_path: Path) -> bool:
+        """创建单个 link（symlink；Windows 失败时 fallback 到 junction）。"""
+        dest = target_path / label
+
         if self.dry_run:
-            info(f"  → {skill_name} (模拟创建符号链接)")
+            info(f"  → {label} (模拟创建链接)")
             return True
 
-        # 执行同步：创建符号链接
         try:
             # 删除已存在的目标
             if dest.exists() or dest.is_symlink():
@@ -275,17 +300,80 @@ class SkillSyncer:
                 else:
                     shutil.rmtree(dest)
 
-            # 创建符号链接
-            dest.symlink_to(src)
-            success(f"  ✓ {skill_name}")
+            # 优先 symlink；Windows 用户模式无特权时 fallback 到 junction
+            try:
+                dest.symlink_to(src)
+            except (OSError, NotImplementedError) as sym_err:
+                if os.name == 'nt':
+                    r = subprocess.run(
+                        ['cmd', '/c', 'mklink', '/J', str(dest), str(src)],
+                        capture_output=True, text=True,
+                        encoding='gbk', errors='replace',
+                    )
+                    if r.returncode != 0:
+                        raise OSError(
+                            f"symlink 失败 ({sym_err})，junction 也失败: {r.stderr.strip()}"
+                        )
+                else:
+                    raise
+
+            success(f"  ✓ {label}")
             return True
         except Exception as e:
-            error(f"  ✗ {skill_name}: {e}")
+            error(f"  ✗ {label}: {e}")
             return False
 
-    def _get_az_skills_path(self, target_path: Path) -> Path:
-        """获取 az-skills 子文件夹路径"""
-        return target_path / "az-skills"
+    def _collect_target_labels(self, target_name: str) -> List[str]:
+        """收集 manifest 中 target_name 应同步的所有 skill 标签（含聚合容器展开）。
+
+        返回的 label 集合是 manifest **管理**的 skill 名，用于后续定向清理。
+        用户在目标目录里自建的 skill 不会被纳入此集合。
+        """
+        labels: List[str] = []
+        for skill_info in self.manifest.get('skills', []):
+            if target_name not in skill_info.get('targets', []):
+                continue
+            sn = skill_info['name']
+            src = self.source_dir / sn
+            if not src.exists():
+                continue
+            if (src / 'SKILL.md').exists():
+                labels.append(sn)
+            else:
+                # 聚合容器：展开子目录
+                for c in sorted(src.iterdir()):
+                    if c.is_dir() and (c / 'SKILL.md').exists():
+                        labels.append(c.name)
+        return labels
+
+    def _purge_managed_links(self, az_skills_path: Path, labels: List[str]) -> None:
+        """仅删除 az_skills_path 下属于 manifest 管理的旧 link，保留用户自建内容。
+
+        规则：仅当目录条目是 symlink/junction 且名称在 labels 集合内才删除；
+        普通目录、非管理内的条目、任何其它内容均不动。
+        """
+        if not az_skills_path.exists():
+            return
+        label_set = set(labels)
+        for entry in az_skills_path.iterdir():
+            if entry.name in label_set and (entry.is_symlink() or entry.is_junction()):
+                try:
+                    entry.unlink()
+                except Exception as e:
+                    warning(f"  清理旧 link 失败 {entry.name}: {e}")
+
+    def _get_az_skills_path(self, target_name: str, target_path: Path) -> Path:
+        """获取 skill 同步根目录。
+
+        大多数 target 默认聚合在 <target_path>/az-skills/ 子目录。
+        claude_code 等不支持聚合的 target 可在 sync_targets 里设
+        aggregate_subdir: '' 来直接平铺到 <target_path> 根。
+        """
+        config = self._get_target_config(target_name)
+        sub = config.get('aggregate_subdir', 'az-skills') if config else 'az-skills'
+        if sub:
+            return target_path / sub
+        return target_path
 
     def sync_all(self) -> Dict[str, int]:
         """同步所有 skill 到各自的目标"""
@@ -309,15 +397,16 @@ class SkillSyncer:
                 if config and config.get('enabled', True):
                     targets_to_sync.add(target_name)
 
-        # 先清空所有目标下的 az-skills 子文件夹
+        # 仅清掉 manifest 管理的旧 link，保留用户在目标目录里自建的 skill
         for target_name in targets_to_sync:
             target_path = self._get_target_path(target_name)
             if target_path:
-                az_skills_path = self._get_az_skills_path(target_path)
+                az_skills_path = self._get_az_skills_path(target_name, target_path)
                 if not self.dry_run:
-                    if az_skills_path.exists():
-                        shutil.rmtree(az_skills_path)
                     az_skills_path.mkdir(parents=True, exist_ok=True)
+                    self._purge_managed_links(
+                        az_skills_path, self._collect_target_labels(target_name)
+                    )
 
         # 按目标分组统计
         target_stats = {}
@@ -342,7 +431,7 @@ class SkillSyncer:
                     continue
 
                 # 使用 az-skills 子文件夹
-                az_skills_path = self._get_az_skills_path(target_path)
+                az_skills_path = self._get_az_skills_path(target_name, target_path)
 
                 # 初始化目标统计
                 if target_name not in target_stats:
@@ -394,15 +483,15 @@ class SkillSyncer:
             if not self.dry_run:
                 target_path.mkdir(parents=True, exist_ok=True)
 
-        # 在目标目录下创建 az-skills 子文件夹
-        az_skills_path = self._get_az_skills_path(target_path)
+        # 在目标目录下创建 az-skills 子文件夹（不强制清空整个目录以避免与运行中的进程冲突）
+        az_skills_path = self._get_az_skills_path(target_name, target_path)
 
-        # 先清空 az-skills 子文件夹
-        if az_skills_path.exists():
-            if not self.dry_run:
-                shutil.rmtree(az_skills_path)
+        # 仅清掉 manifest 管理的旧 link，保留用户在目标目录里自建的 skill
         if not self.dry_run:
             az_skills_path.mkdir(parents=True, exist_ok=True)
+            self._purge_managed_links(
+                az_skills_path, self._collect_target_labels(target_name)
+            )
 
         info(f"\n{'='*50}")
         info(f"同步目标: {target_name}")
@@ -478,7 +567,7 @@ class SkillSyncer:
                     target_path.mkdir(parents=True, exist_ok=True)
 
             # 使用 az-skills 子文件夹
-            az_skills_path = self._get_az_skills_path(target_path)
+            az_skills_path = self._get_az_skills_path(target_name, target_path)
             if not az_skills_path.exists():
                 if not self.dry_run:
                     az_skills_path.mkdir(parents=True, exist_ok=True)
@@ -518,8 +607,8 @@ class SkillSyncer:
             path = Path(target['path']).expanduser() if target.get('path') else None
             enabled = "✓" if target.get('enabled', True) else "✗"
 
-            # 使用 az-skills 子文件夹
-            az_skills_path = self._get_az_skills_path(path) if path else None
+            # 使用配置的聚合子文件夹（claude_code 等为平铺）
+            az_skills_path = self._get_az_skills_path(name, path) if path else None
             exists = "存在" if az_skills_path and az_skills_path.exists() else "不存在"
 
             # 统计该目标应同步的 skill 数量

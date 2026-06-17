@@ -8,7 +8,7 @@ description: |
   - 用户提到“开始排查”“继续排查”“今天的排查记录”
   - 用户提到“生成汇报”“总结汇报”“汇报材料”“导出报告”
   - 用户提到“查看问题记录”“最近的问题”“归档问题”
-version: 2.1.0
+version: 2.2.0
 inputs:
   required:
     - name: user_intent
@@ -51,15 +51,11 @@ outputs:
     path: "C:\\JPZ_Workspace\\笔记仓库-jpz\\hq-jpz\\奔霄-note\\问题排查记录\\{yyyy-MM-dd}·{project}·{title}\\"
   - name: detail_file
     type: file
-    description: 由模板生成的问题详情文件。
+    description: 由模板生成的问题详情文件（含"期望结果"和"验收标准"小节）。
     path: "{issue_directory}/01_问题详情.md"
-  - name: expected_file
-    type: file
-    description: 由模板生成的期望结果文件。
-    path: "{issue_directory}/02_期望结果.md"
   - name: daily_log_file
     type: file
-    description: 由模板生成的每日排查记录。
+    description: 由模板生成的每日排查记录；同一文件支持按"阶段 1/2/3..."多次追加。
     path: "{issue_directory}/03_排查记录/{date}.md"
   - name: report_file
     type: file
@@ -105,7 +101,6 @@ issue-tracker/
     issue_tracker.py
   templates/
     issue_detail.md
-    expected_result.md
     daily_log.md
     report.md
     report_placeholder.md
@@ -127,10 +122,12 @@ issue-tracker/
 ## 执行原则
 
 1. 创建、每日排查、生成汇报、列出记录、归档都优先调用 `scripts/issue_tracker.py`。
-2. 不要手写 `01_问题详情.md`、`02_期望结果.md`、`03_排查记录/{date}.md`、`04_总结汇报.md` 的结构。
-3. 如果用户只要求调整格式，直接修改 `templates/`，再运行脚本验证。
-4. 读取和写入中文文件统一使用 UTF-8。
-5. 脚本返回 JSON。回复用户时提取关键字段，不要把完整 JSON 原样倾倒给用户。
+2. 不要手写 `01_问题详情.md`、`03_排查记录/{date}.md`、`04_总结汇报.md` 的结构。
+3. 期望结果和验收标准已合并到 `01_问题详情.md` 末尾的两个小节，不再单独生成 `02_期望结果.md`。
+4. 排查记录同一文件内按"阶段 1/2/3..."追加，每天文件首次创建由 daily 子命令自动完成；后续追加需显式加 `--append`，脚本会读取现有阶段号 +1 并写入当前时间戳。
+5. 如果用户只要求调整格式，直接修改 `templates/`，再运行脚本验证。
+6. 读取和写入中文文件统一使用 UTF-8。
+7. 脚本返回 JSON。回复用户时提取关键字段，不要把完整 JSON 原样倾倒给用户。
 
 ---
 
@@ -170,6 +167,8 @@ rm -rf "<错误路径>"
 | 目录结构缺少排查记录子目录 | 未仔细阅读规范 | 按 01/02/03/04 固定结构 |
 | Windows 绝对路径被当作相对路径 | WSL 下 `C:\...` 路径被 pathlib 视为相对路径 | WSL 下使用 /mnt/c/ 前缀的绝对路径 |
 | 脚本显示成功但文件不在预期目录 | 上一条错误的直接后果 | 先检查文件实际位置，再手动 mv 到正确路径 |
+| `--root` 报 unrecognized arguments | argparse 子解析器要求顶层参数必须在子命令**之前** | 正确顺序：`issue_tracker.py --root <path> create --title ...`；`--root` 写在 `create` 之后会被 argparse 拒绝 |
+| `archive` 报 success 但归档目录不在 `项目集/{项目}/历史问题/`，文件"失踪" | `DEFAULT_ARCHIVE_ROOT = Path(r"C:\...")` 是 Windows 反斜杠路径，WSL 下 `pathlib` 把它当**相对路径**拼到 CWD；`shutil.move` 实际把目录移到 `{CWD}/C:\...\项目集/{项目}/历史问题/...` 这种畸形位置，脚本仍然"success"返回 | WSL 下执行 archive **必须**显式传 `--archive-root` 为 WSL 格式绝对路径，例：`--archive-root "/mnt/c/JPZ_Workspace/笔记仓库-jpz/hq-jpz/项目集"`；事后用 `find /mnt/c/Users -type d -name "{项目名}"` 验证文件位置，搜索"成功"后的实际目标目录 |
 
 ## 动作判定
 
@@ -211,8 +210,7 @@ python .\skills\issue-tracker\scripts\issue_tracker.py create `
 ```text
 {root}/
   {yyyy-MM-dd}·{项目名}·{问题描述}/
-    01_问题详情.md
-    02_期望结果.md
+    01_问题详情.md      （含期望结果 + 验收标准）
     03_排查记录/
     04_总结汇报.md
 ```
@@ -224,7 +222,7 @@ python .\skills\issue-tracker\scripts\issue_tracker.py create `
 优先使用用户给出的 `--issue-path`。没有路径时使用 `--query` 在问题记录根目录中匹配。
 
 ```powershell
-python .\skills\issue-tracker\scripts\issue_tracker.py daily `
+python .\\skills\\issue-tracker\\scripts\\issue_tracker.py daily `
   --query "问题关键词"
 ```
 
@@ -239,9 +237,16 @@ python .\skills\issue-tracker\scripts\issue_tracker.py daily `
 --verification-result "验证结果"
 --conclusion "结论"
 --next-plan "下一步计划"
+--append            # 当天文件已存在时追加新阶段（阶段号 = 现有最大 + 1）
 ```
 
-如果当天文件已存在，脚本不会覆盖，会返回现有路径。
+### 行为说明
+
+- **首次创建**：当天文件不存在，生成 `03_排查记录/{date}.md`，写入"阶段 1（HH:MM）"小节。
+- **追加（--append）**：当天文件已存在，扫描现有"## 阶段 N"标题，取最大 N + 1 作为新阶段号，在文件末尾追加"阶段 N+1（HH:MM）"小节。
+- **未加 --append 且文件已存在**：脚本返回 `existed=true` 并提示加 `--append`，不覆盖。
+
+如果当天文件已存在但需要整体重新生成（罕见），请先手动删除旧文件再调用 daily 子命令。
 
 ## generate_report
 
@@ -252,7 +257,9 @@ python .\skills\issue-tracker\scripts\issue_tracker.py report `
   --query "问题关键词"
 ```
 
-脚本会检查 `01_问题详情.md`、`02_期望结果.md`、`03_排查记录/*.md`。当前版本不会自动总结全文内容，只保证汇报结构统一；需要 AI 根据已有记录提炼事实时，先读取记录，再通过参数传入 5W2H 字段或生成后补充内容。
+脚本会检查 `01_问题详情.md`、`03_排查记录/*.md`。当前版本不会自动总结全文内容，只保证汇报结构统一；需要 AI 根据已有记录提炼事实时，先读取记录，再通过参数传入 5W2H 字段或生成后补充内容。
+
+> 旧规范的 `02_期望结果.md` 已合并到 `01_问题详情.md`；如果问题目录里仍残留 02 文件，脚本会忽略。
 
 不要直接改写汇报结构；如要改结构，修改 `templates/report.md`。
 
@@ -290,9 +297,8 @@ C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\项目集\{项目名}\历史问题\
 
 ## 模板维护规则
 
-- `templates/issue_detail.md`：问题详情格式
-- `templates/expected_result.md`：期望结果格式
-- `templates/daily_log.md`：每日排查记录格式
+- `templates/issue_detail.md`：问题详情格式（含期望结果 + 验收标准）
+- `templates/daily_log.md`：每日排查记录格式（同一文件按"阶段 N"追加）
 - `templates/report.md`：总结汇报格式
 - `templates/report_placeholder.md`：新建记录时的汇报占位文件
 - `templates/notification.txt`：企微通知文案

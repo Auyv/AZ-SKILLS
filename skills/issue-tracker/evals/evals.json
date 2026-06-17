@@ -1,13 +1,13 @@
 {
   "skill_name": "issue-tracker",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "evals": [
     {
       "id": 1,
       "category": "normal",
       "description": "用户提供完整问题信息，创建问题记录",
       "prompt": "记录一个问题：奔霄项目登录后首页白屏，反馈人张三，现象是 Chrome 下登录成功后页面空白，优先级 P1。",
-      "expected_output": "调用 scripts/issue_tracker.py create 创建形如 2026-05-26·WIT803-111·模组升级失败 的问题目录，基于 templates/ 生成 01_问题详情.md、02_期望结果.md、03_排查记录/、04_总结汇报.md，并预填已知字段。",
+      "expected_output": "调用 scripts/issue_tracker.py create 创建形如 2026-05-26·WIT803-111·模组升级失败 的问题目录，基于 templates/ 生成 01_问题详情.md（含期望结果+验收标准小节）、03_排查记录/、04_总结汇报.md，并预填已知字段。",
       "criteria": [
         "识别 create_issue 动作并调用脚本",
         "目录命名使用 YYYY-MM-DD·项目名·问题描述",
@@ -22,7 +22,7 @@
       "category": "normal",
       "description": "为已有问题创建当天排查记录",
       "prompt": "继续排查奔霄首页白屏这个问题，创建今天的排查记录。",
-      "expected_output": "调用 scripts/issue_tracker.py daily 定位唯一问题目录后，在 03_排查记录 下基于 templates/daily_log.md 创建当天 Markdown；若已存在则返回现有路径。",
+      "expected_output": "调用 scripts/issue_tracker.py daily 定位唯一问题目录后，在 03_排查记录 下基于 templates/daily_log.md 创建当天 Markdown（首次创建阶段 1）；若已存在则返回 existed=true，需加 --append 才会追加新阶段。",
       "criteria": [
         "识别 add_daily_log 动作并调用脚本",
         "优先定位已有问题目录",

@@ -1,4 +1,4 @@
-last_sync: '2026-06-01T09:00:38.135826'
+last_sync: '2026-06-17T09:00:35.251258'
 skills:
 - name: az-skill-creator
   targets:
@@ -50,6 +50,8 @@ skills:
   - codex
 - name: issue-tracker
   targets:
+  - hermes
+  - cline
   - claude_code
   - opencode
   - codex
@@ -65,7 +67,8 @@ sync_targets:
 - enabled: true
   name: cline
   path: ~/.agents/skills
-- enabled: true
+- aggregate_subdir: ''
+  enabled: true
   name: claude_code
   path: ~/.claude/skills
 - enabled: true

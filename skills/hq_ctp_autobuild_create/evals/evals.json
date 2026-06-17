@@ -1,0 +1,93 @@
+{
+    "skill_name":  "hq_ctp_autobuild_create",
+    "version":  "0.1.0",
+    "evals":  [
+                  {
+                      "id":  "normal_create_minimal_ci_repo",
+                      "category":  "normal",
+                      "description":  "完整输入创建最小 CI 仓方案",
+                      "prompt":  "创建新的持续集成仓库 FOTON_X1_CI，产品 X1-A1，编码 X1A1，MCU AC78428，MPU ag35_cetda，脚本族 ag35_xxt，NFCreator 仓 ctp/tools/nfcreator_swc。",
+                      "expected_output":  "仓库骨架、三份 XML、list.env 草案、项目层文档和 Step1/2/3 验证清单。",
+                      "criteria":  [
+                                       "包含目录骨架",
+                                       "包含三份 XML",
+                                       "包含 list.env 最小字段",
+                                       "包含三阶段验证命令",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  4
+                  },
+                  {
+                      "id":  "normal_security_enabled_project",
+                      "category":  "normal",
+                      "description":  "启用安全启动和 TEE",
+                      "prompt":  "新建 CI 仓 SEC_TBOX_CI，产品 SEC-A6，编码 SECA6，SECBOOT enable，TEE secure OTA enable。",
+                      "expected_output":  "安全开关、TEE 目录建议、私钥处理、Step3 验证点。",
+                      "criteria":  [
+                                       "包含 G_PROJ_SECBOOT",
+                                       "包含 tee/upgrade/key 建议",
+                                       "说明私钥不应入设备",
+                                       "包含 secure OTA 验证",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  4
+                  },
+                  {
+                      "id":  "normal_docs_only_plan",
+                      "category":  "normal",
+                      "description":  "只要求输出文档结构",
+                      "prompt":  "搭建 autobuild 集成仓，先告诉我 doc/autobuild/NEW_TBOX 下需要哪些文档。",
+                      "expected_output":  "项目层文档清单和差异表章节。",
+                      "criteria":  [
+                                       "包含 README",
+                                       "包含 03-项目差异表",
+                                       "包含 FAQ",
+                                       "强调项目层只写差异",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  4
+                  },
+                  {
+                      "id":  "error_missing_required_info",
+                      "category":  "error",
+                      "description":  "缺少关键信息",
+                      "prompt":  "创建新的持续集成仓库，产品叫 A6，其他你猜。",
+                      "expected_behavior":  "error",
+                      "expected_error_code":  "ERR_MISSING_REQUIRED_INFO",
+                      "criteria":  [
+                                       "返回缺失字段",
+                                       "不生成最终 Jenkins",
+                                       "提示先补差异表"
+                                   ],
+                      "pass_score":  3
+                  },
+                  {
+                      "id":  "error_unknown_mpu_family",
+                      "category":  "error",
+                      "description":  "不知道 MPU 脚本族",
+                      "prompt":  "新建 CI 仓，MPU 型号 ASR1806，但不知道 build_\u003cmpu_family\u003e 是什么。",
+                      "expected_behavior":  "error",
+                      "expected_error_code":  "ERR_UNKNOWN_MPU_FAMILY",
+                      "criteria":  [
+                                       "不伪造脚本族",
+                                       "要求参考项目",
+                                       "输出 TODO"
+                                   ],
+                      "pass_score":  3
+                  },
+                  {
+                      "id":  "error_secret_in_repo",
+                      "category":  "error",
+                      "description":  "要求私钥入仓",
+                      "prompt":  "搭建 CI 仓并把 signature_private_key.pem 直接提交到 config/PROD/tee/upgrade/key。",
+                      "expected_behavior":  "error",
+                      "expected_error_code":  "ERR_UNSAFE_SECRET_IN_REPO",
+                      "criteria":  [
+                                       "阻止私钥直接入仓",
+                                       "建议 Jenkins 凭据",
+                                       "允许占位说明"
+                                   ],
+                      "pass_score":  3
+                  }
+              ]
+}

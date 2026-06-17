@@ -1,0 +1,96 @@
+{
+    "skill_name":  "hq_ctp_autobuild_add_product",
+    "version":  "0.1.0",
+    "evals":  [
+                  {
+                      "id":  "normal_add_ac78428_product",
+                      "category":  "normal",
+                      "description":  "ac78428 仓新增同平台产品",
+                      "prompt":  "在 ac78428_asr1806 集成仓基于 YLB04-A6 新增产品 YLB04-B1，编码 2BXX，仍使用 ag35_cetda。",
+                      "expected_output":  "复制 config、创建 mcu/mpu XML、准备 NFCreator Images、验证 Step1/2/3、更新文档。",
+                      "criteria":  [
+                                       "说明复制 config",
+                                       "说明修改 list.env",
+                                       "说明新增两份 XML",
+                                       "说明 partition 兼容和迁移",
+                                       "包含三阶段验证",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  5
+                  },
+                  {
+                      "id":  "normal_add_k3_variant",
+                      "category":  "normal",
+                      "description":  "k3 仓新增 WIT803 产品",
+                      "prompt":  "在 k3_sim7805 里基于 WIT803-011 新增 WIT803-020，编码 2B20，需要 file_upload_app 和 can_log_app。",
+                      "expected_output":  "基于 011 复制，保持 sim7805，更新 XML/app 清单和 partition 状态。",
+                      "criteria":  [
+                                       "选择 011 基线",
+                                       "保持 G_PRODUCT_BUILD_MPU_MODEL=sim7805",
+                                       "提醒 G_PROJ_VENDOR_RW=disable",
+                                       "检查 partition_ini 或新模式",
+                                       "更新 README/03/05",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  5
+                  },
+                  {
+                      "id":  "normal_no_legacy_partition",
+                      "category":  "normal",
+                      "description":  "直接迁移新 partition 模式",
+                      "prompt":  "已有集成仓新增产品，但不想再使用 tools/batch_nfcreator/partition_ini/\u003cproduct\u003e，请给方案。",
+                      "expected_output":  "说明改用 NFCreator Images/\u003cCODE\u003e 并同步调整 pack_mcu_mpu.bat 检查逻辑。",
+                      "criteria":  [
+                                       "说明旧目录是兼容路径",
+                                       "说明新模式目录",
+                                       "提示修改脚本检查",
+                                       "提示迁移前验证 Step3",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  4
+                  },
+                  {
+                      "id":  "error_base_missing",
+                      "category":  "error",
+                      "description":  "基线产品不存在",
+                      "prompt":  "给已有集成仓新增产品 NEW，从 config/NO_SUCH_PRODUCT 复制。",
+                      "expected_behavior":  "error",
+                      "expected_error_code":  "ERR_BASE_PRODUCT_NOT_FOUND",
+                      "criteria":  [
+                                       "返回错误码",
+                                       "不创建新目录",
+                                       "要求选择已有产品"
+                                   ],
+                      "pass_score":  3
+                  },
+                  {
+                      "id":  "error_new_exists",
+                      "category":  "error",
+                      "description":  "新产品目录已存在",
+                      "prompt":  "新增产品 WIT803-011，但 config/WIT803-011 已存在。",
+                      "expected_behavior":  "error",
+                      "expected_error_code":  "ERR_NEW_PRODUCT_EXISTS",
+                      "criteria":  [
+                                       "阻止覆盖",
+                                       "要求确认更新或换名",
+                                       "提示先备份"
+                                   ],
+                      "pass_score":  3
+                  },
+                  {
+                      "id":  "error_partition_not_ready",
+                      "category":  "error",
+                      "description":  "partition 未准备",
+                      "prompt":  "新增产品 PROD-A1，编码 P1A1，但 NFCreator Images/P1A1 和 partition 目录都没有。",
+                      "expected_behavior":  "error",
+                      "expected_error_code":  "ERR_PARTITION_NOT_READY",
+                      "criteria":  [
+                                       "标记 Step1/Step3 阻断",
+                                       "说明新模式",
+                                       "说明旧兼容处理",
+                                       "不声称可出包"
+                                   ],
+                      "pass_score":  4
+                  }
+              ]
+}

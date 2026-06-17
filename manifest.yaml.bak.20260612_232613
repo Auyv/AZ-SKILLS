@@ -1,0 +1,81 @@
+last_sync: '2026-06-12T09:07:22.955421'
+skills:
+- name: az-skill-creator
+  targets:
+  - hermes
+  - cline
+  - claude_code
+  - opencode
+  - openclaw
+  - codex
+- name: auto-skill-creator
+  targets:
+  - hermes
+  - cline
+  - claude_code
+  - opencode
+  - openclaw
+  - codex
+- name: az-c-macro2ini-config
+  targets:
+  - cline
+  - claude_code
+  - opencode
+  - codex
+- name: az-pdf2md
+  targets:
+  - hermes
+  - cline
+  - claude_code
+  - opencode
+  - openclaw
+  - codex
+- name: az-sdd.v3
+  targets:
+  - cline
+  - claude_code
+  - opencode
+  - codex
+- name: core-dump-analyzer
+  targets:
+  - cline
+  - claude_code
+  - opencode
+  - codex
+- name: hq_tester_skills
+  targets:
+  - cline
+  - claude_code
+  - opencode
+  - codex
+- name: issue-tracker
+  targets:
+  - hermes
+  - cline
+  - claude_code
+  - opencode
+  - codex
+- name: docker-image-build
+  targets:
+  - claude_code
+  - opencode
+  - codex
+sync_targets:
+- enabled: true
+  name: hermes
+  path: ~/.hermes/skills
+- enabled: true
+  name: cline
+  path: ~/.agents/skills
+- enabled: true
+  name: claude_code
+  path: ~/.claude/skills
+- enabled: true
+  name: opencode
+  path: ~/.config/opencode/skills
+- enabled: true
+  name: openclaw
+  path: ~/.openclaw/skills
+- enabled: true
+  name: codex
+  path: ~/.codex/skills

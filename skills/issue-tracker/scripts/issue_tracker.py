@@ -137,7 +137,6 @@ def create_issue(args: argparse.Namespace) -> None:
 
     (issue_dir / "03_排查记录").mkdir(parents=True, exist_ok=False)
     write_new(issue_dir / "01_问题详情.md", render_template("issue_detail.md", data))
-    write_new(issue_dir / "02_期望结果.md", render_template("expected_result.md", data))
     write_new(issue_dir / "04_总结汇报.md", render_template("report_placeholder.md", data))
     notification = render_template("notification.txt", data)
 
@@ -147,7 +146,6 @@ def create_issue(args: argparse.Namespace) -> None:
         issue_directory=str(issue_dir),
         files=[
             str(issue_dir / "01_问题详情.md"),
-            str(issue_dir / "02_期望结果.md"),
             str(issue_dir / "03_排查记录"),
             str(issue_dir / "04_总结汇报.md"),
         ],
@@ -155,17 +153,49 @@ def create_issue(args: argparse.Namespace) -> None:
     )
 
 
+def count_phases(markdown: str) -> int:
+    """Scan a daily log file and return the highest existing phase number (0 if none)."""
+    return max([int(m) for m in re.findall(r"##\s*阶段\s*(\d+)", markdown)] + [0])
+
+
+def build_phase_section(data: dict[str, str]) -> str:
+    """Render a single phase block from the daily_log.md template (excludes file header)."""
+    template = read_template("daily_log.md")
+    body = template.split("---\n", 1)[1] if "---\n" in template else template
+    for key, value in data.items():
+        body = body.replace("{{" + key + "}}", value)
+    return re.sub(r"{{[^{}]+}}", PLACEHOLDER, body).rstrip() + "\n"
+
+
 def add_daily_log(args: argparse.Namespace) -> None:
     root = Path(args.root)
     issue_dir = find_issue(root, args.query, args.issue_path)
     date = args.date or datetime.now().strftime("%Y-%m-%d")
+    now = datetime.now().strftime("%H:%M")
     log_path = issue_dir / "03_排查记录" / f"{date}.md"
-    if log_path.exists():
-        emit("success", action="add_daily_log", issue_directory=str(issue_dir), daily_log_file=str(log_path), existed=True)
+
+    if log_path.exists() and not args.append:
+        emit(
+            "success",
+            action="add_daily_log",
+            issue_directory=str(issue_dir),
+            daily_log_file=str(log_path),
+            existed=True,
+            hint="当天排查记录已存在，需要追加新阶段请加 --append",
+        )
         return
+
+    if log_path.exists() and args.append:
+        existing = read_if_exists(log_path)
+        phase = count_phases(existing) + 1
+    else:
+        phase = 1
+        existing = ""
 
     data = {
         "date": date,
+        "phase": str(phase),
+        "phase_timestamp": now,
         "investigation_goal": args.investigation_goal or PLACEHOLDER,
         "analysis_process": args.analysis_process or PLACEHOLDER,
         "possible_cause": args.possible_cause or PLACEHOLDER,
@@ -174,8 +204,26 @@ def add_daily_log(args: argparse.Namespace) -> None:
         "conclusion": args.conclusion or PLACEHOLDER,
         "next_plan": args.next_plan or PLACEHOLDER,
     }
-    write_new(log_path, render_template("daily_log.md", data))
-    emit("success", action="add_daily_log", issue_directory=str(issue_dir), daily_log_file=str(log_path), existed=False)
+    section = build_phase_section(data)
+
+    if existing:
+        # 追加模式：在文件末尾追加分隔线 + 新阶段小节
+        separator = "\n\n---\n\n" if not existing.endswith("\n\n") else "\n---\n\n"
+        write_replace(log_path, existing.rstrip() + separator + section)
+    else:
+        # 首次创建：写入文件头（标题+说明）+ 第一个阶段
+        header = f"# 排查记录 - {date}\n\n> 同一文件内可按\"阶段 1/2/3...\"追加多次排查；每次追加会自动写入当前时间戳并生成新阶段小节。\n> 文件已存在时默认拒绝覆盖，需要追加新阶段请加 `--append`。\n\n---\n\n"
+        write_new(log_path, header + section)
+
+    emit(
+        "success",
+        action="add_daily_log",
+        issue_directory=str(issue_dir),
+        daily_log_file=str(log_path),
+        existed=False,
+        phase=phase,
+        phase_timestamp=now,
+    )
 
 
 def read_if_exists(path: Path) -> str:
@@ -287,6 +335,7 @@ def build_parser() -> argparse.ArgumentParser:
     daily.add_argument("--query")
     daily.add_argument("--issue-path")
     daily.add_argument("--date")
+    daily.add_argument("--append", action="store_true", help="当天记录已存在时，追加新阶段而不是拒绝")
     daily.add_argument("--investigation-goal")
     daily.add_argument("--analysis-process")
     daily.add_argument("--possible-cause")

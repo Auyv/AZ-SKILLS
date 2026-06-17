@@ -7,7 +7,7 @@ metadata: {
     "copaw": {
       "emoji": "",
       "category": "工具类",
-      "trigger_keywords": ["ctp设备信息", "查询srt属性", "获取设备信息", "获取终端号", "ICCID查询"],
+      "trigger_keywords": ["ctp设备信息", "查询srt属性", "获取设备信息", "获取终端号", "ICCID查询", "通过名称查询SRT属性"],
       "requires": {"adb_helper": ">=1.0.0"},
       "scope": "private",
       "auto_trigger": true
@@ -26,13 +26,26 @@ metadata: {
 - "查询设备 srt 属性"
 - "获取终端号"
 - "获取设备条码"
+- "查询 ICCID / IMEI / SIM卡状态 / 网络信号等自然语言描述的 SRT 属性"
 - 以及其他涉及 ctp 设备信息查询的场景
 
 ## 执行步骤
 
 1. **确保 ADB 服务正常运行**（以管理员权限启动 adb start-server）
-2. **执行 srtget 命令查询属性**
-3. **解析返回结果并格式化输出**
+2. **确定 SRT 属性 ID**
+   - 如果用户已提供明确 ID，直接使用该 ID。
+   - 如果用户只提供属性名称或自然语言描述，先查阅下方常用列表。
+   - 常用列表没有覆盖时，读取 `C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\鸿泉经验\SRT常用属性.md`，按“名称 / 说明 / 数据类型”匹配最相关的 `srt id`。
+   - 匹配到 ID 后，先向用户说明匹配依据，例如：`ICCID 对应 kSidBinSimIccid，srt id 为 306`。
+3. **执行 srtget 命令查询属性**
+4. **解析返回结果并格式化输出**
+
+## 自然语言属性查询规则
+
+- 优先精确匹配用户给出的关键词，如 `ICCID`、`IMEI`、`SIM卡状态`、`信号强度`、`终端号`。
+- 同一关键词匹配到多个候选 ID 时，不要猜测；列出候选项并请用户确认。
+- 本技能只负责查询或设置 SRT 属性，不扩展为通用文档检索技能；查表仅用于确定 `srtget` / `srtset` 所需 ID。
+- 示例：用户要求“通过 srt 系统查 iccid 的值”时，查表确认 `ICCID` 对应 `srt id 306`，然后执行 `adb shell srtget 306`。
 
 ## ADB 命令格式
 
@@ -197,4 +210,3 @@ adb shell srtset 366 str cmnet
 2. **返回结果乱码**
    - Windows PowerShell 执行前运行：`[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
    - 推荐使用 Git Bash / WSL 环境执行
-
