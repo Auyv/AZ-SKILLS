@@ -1,7 +1,7 @@
 ---
 title: 总结汇报（模板占位）
 type: report-template
-template_for: 奔霄-note/问题排查记录/<日期>·<项目编号>·<标题>/04_总结汇报.md
+template_for: 奔霄-note/问题排查记录/<日期>·<项目编号>·<标题>/03_总结汇报.md
 created: 2026-05-26
 updated: 2026-06-04
 ---
