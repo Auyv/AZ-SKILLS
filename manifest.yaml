@@ -1,82 +1,74 @@
-last_sync: '2026-06-18T09:00:16.239216'
-skills:
-- name: az-skill-creator
-  targets:
-  - hermes
-  - cline
-  - claude_code
-  - opencode
-  - openclaw
-  - codex
-- name: auto-skill-creator
-  targets:
-  - hermes
-  - cline
-  - claude_code
-  - opencode
-  - openclaw
-  - codex
-- name: az-c-macro2ini-config
-  targets:
-  - cline
-  - claude_code
-  - opencode
-  - codex
-- name: az-pdf2md
-  targets:
-  - hermes
-  - cline
-  - claude_code
-  - opencode
-  - openclaw
-  - codex
-- name: az-sdd.v3
-  targets:
-  - cline
-  - claude_code
-  - opencode
-  - codex
-- name: core-dump-analyzer
-  targets:
-  - cline
-  - claude_code
-  - opencode
-  - codex
-- name: hq_tester_skills
-  targets:
-  - cline
-  - claude_code
-  - opencode
-  - codex
-- name: issue-tracker
-  targets:
-  - hermes
-  - cline
-  - claude_code
-  - opencode
-  - codex
-- name: docker-image-build
-  targets:
-  - claude_code
-  - opencode
-  - codex
-sync_targets:
+last_sync: '2026-06-27T09:46:30.733435'
+agent_targets:
 - enabled: true
   name: hermes
   path: ~/.hermes/skills
+  skills:
+  - az-skill-creator
+  - auto-skill-creator
+  - az-pdf2md
+  - az-todo-tracker
+  - issue-tracker
 - enabled: true
   name: cline
   path: ~/.agents/skills
+  skills:
+  - az-skill-creator
+  - auto-skill-creator
+  - az-c-macro2ini-config
+  - az-pdf2md
+  - az-sdd.v3
+  - core-dump-analyzer
+  - hq_tester_skills
+  - issue-tracker
 - aggregate_subdir: ''
   enabled: true
   name: claude_code
   path: ~/.claude/skills
+  skills:
+  - az-skill-creator
+  - auto-skill-creator
+  - az-c-macro2ini-config
+  - az-pdf2md
+  - az-sdd.v3
+  - core-dump-analyzer
+  - hq_tester_skills
+  - issue-tracker
+  - docker-image-build
+  - az-keil-build
 - enabled: true
   name: opencode
   path: ~/.config/opencode/skills
+  skills:
+  - az-skill-creator
+  - auto-skill-creator
+  - az-c-macro2ini-config
+  - az-pdf2md
+  - az-sdd.v3
+  - core-dump-analyzer
+  - hq_tester_skills
+  - issue-tracker
+  - docker-image-build
+  - az-keil-build
 - enabled: true
   name: openclaw
   path: ~/.openclaw/skills
+  skills:
+  - az-skill-creator
+  - auto-skill-creator
+  - az-pdf2md
+  - issue-tracker
 - enabled: true
   name: codex
   path: ~/.codex/skills
+  skills:
+  - az-skill-creator
+  - auto-skill-creator
+  - az-c-macro2ini-config
+  - az-pdf2md
+  - az-sdd.v3
+  - core-dump-analyzer
+  - hq_tester_skills
+  - issue-tracker
+  - docker-image-build
+  - az-keil-build

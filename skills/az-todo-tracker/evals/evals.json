@@ -1,0 +1,117 @@
+{
+  "skill_name": "az-todo-tracker",
+  "version": "1.0.1",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "用户提供完整任务信息,创建任务记录",
+      "prompt": "记录代办事项:MCUD 性能测试 — 搭建测试服务进程,模拟实车环境下验证接口稳定性。负责人靳普诏,项目编号 MCUD,优先级中。",
+      "expected_output": "调用 scripts/task_tracker.py create,在 任务待办/ 下创建形如 2026-06-26·MCUD·MCUD 性能测试 — 搭建测试服务进程/ 的目录,基于 templates/ 生成 README.md(含 8 个标准小节 + 顶部信息表)、02_推进记录.md(占位)、03_总结汇报.md(占位)。",
+      "criteria": [
+        "识别 create_task 动作并调用脚本",
+        "目录命名使用 YYYY-MM-DD·项目编号·任务名",
+        "未重复追问已提供的信息",
+        "输出创建的目录和文件路径",
+        "返回 JSON 中含 files 列表"
+      ],
+      "pass_score": 5
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "为已有任务追加推进记录",
+      "prompt": "给 MCUD 性能测试任务追加一条推进:今天完成了 MCUD 接口协议分析,梳理出 5 个核心接口,下一步开始搭建测试服务进程骨架。",
+      "expected_output": "调用 scripts/task_tracker.py progress 定位唯一任务目录,在 02_推进记录.md 中写入阶段小节(自动写入当前日期 + 时间戳)。如已有阶段则需加 --append。",
+      "criteria": [
+        "识别 add_progress 动作并调用脚本",
+        "优先用 --query 定位已有任务目录",
+        "首次调用时不加 --append 也能成功",
+        "第二次调用必须检测到 existed=true 并提示加 --append",
+        "输出推进记录路径 + 阶段号 + 时间戳"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "更新任务状态从待启动到进行中",
+      "prompt": "MCUD 性能测试任务正式启动了,把状态从待启动改成进行中。",
+      "expected_output": "调用 scripts/task_tracker.py update,改 README.md 顶部信息表的'状态'字段为'进行中',并在第 8 节推进记录表追加一行。",
+      "criteria": [
+        "识别 update_task 动作并调用脚本",
+        "只改 README.md,不创建新文件",
+        "同步追加推进记录行(传 --append-progress-row)",
+        "返回 changes 列表说明改了什么"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "normal",
+      "description": "列出当前所有待办任务",
+      "prompt": "我现在有哪些待办任务?",
+      "expected_output": "调用 scripts/task_tracker.py list --limit 10,返回所有任务目录的状态、路径、是否有推进记录/总结汇报。",
+      "criteria": [
+        "识别 list_tasks 动作并调用脚本",
+        "用默认 limit=10(或显式指定 limit)",
+        "输出格式清晰(按修改时间倒序)",
+        "每条任务显示状态(从 README 顶部读取)"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "创建任务时缺少必填字段",
+      "prompt": "帮我记录一个任务。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_MISSING_REQUIRED_INFO",
+      "criteria": [
+        "识别信息不足",
+        "只追问缺失字段(title/project/owner)",
+        "不创建任何文件"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "追加推进记录时未加 --append,文件已有阶段",
+      "prompt": "给 MCUD 性能测试任务追加一条推进记录:今天做了 X。",
+      "expected_behavior": "warning",
+      "expected_output": "脚本返回 existed=true 提示加 --append,不覆盖已有阶段。",
+      "criteria": [
+        "不覆盖 02_推进记录.md 中已有阶段",
+        "返回 hint 提示加 --append",
+        "AI 收到 existed=true 后应主动再次调用并加 --append"
+      ],
+      "pass_score": 2
+    },
+    {
+      "id": 7,
+      "category": "error",
+      "description": "query 命中多个任务目录",
+      "prompt": "更新 MCUD 任务的状态为已完成。",
+      "expected_output": "如果任务待办根目录下有多个 MCUD 相关目录,返回 ERR_AMBIGUOUS_TASK 并列出所有候选;如果只有 1 个则正常更新。",
+      "criteria": [
+        "命中多个时报错并列出所有候选",
+        "AI 收到错误后应使用更精确关键词或 --task-path 重试"
+      ],
+      "pass_score": 2
+    },
+    {
+      "id": 8,
+      "category": "error",
+      "description": "WSL 下用 Windows 反斜杠路径导致文件写错位置",
+      "prompt": "(WSL 环境)用默认参数 python3 task_tracker.py create 创建任务,事后检查文件位置。",
+      "expected_output": "默认情况下 DEFAULT_ROOT 是 Windows 反斜杠,WSL 下会写到技能目录内部;正确做法是 --root 传 /mnt/c/... 绝对路径。",
+      "criteria": [
+        "识别 WSL 路径陷阱",
+        "演示问题表现(文件被写到 /home/jpz/.hermes/skills/.../C:\\.../)",
+        "给出正确做法:用 --root 传 WSL 格式绝对路径"
+      ],
+      "pass_score": 3
+    }
+  ]
+}
