@@ -1,0 +1,78 @@
+{
+    "skill_name":  "hq_ctp_autobuild_doc",
+    "version":  "0.1.0",
+    "evals":  [
+                  {
+                      "id":  "normal_ac78428_update",
+                      "category":  "normal",
+                      "description":  "更新 ac78428 项目文档",
+                      "prompt":  "更新 autobuild 文档，target_repo=C:/HQ_Workspace/YLB04_A6，output_dir=doc/autobuild/ac78428-asr1806。",
+                      "expected_output":  "更新 README、01-11 文档和变量表。",
+                      "criteria":  [
+                                       "README 包含项目定位",
+                                       "03 覆盖差异",
+                                       "06/07/09 写清入口",
+                                       "包含编码检查",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  4
+                  },
+                  {
+                      "id":  "normal_k3_multi_product",
+                      "category":  "normal",
+                      "description":  "生成 k3 多产品文档",
+                      "prompt":  "生成 k3-sim7805 集成仓文档，产品 WIT803-001 和 WIT803-011。",
+                      "expected_output":  "多产品 README、差异表、list.env 说明。",
+                      "criteria":  [
+                                       "列出两个产品",
+                                       "比较产品编码",
+                                       "识别 build_sim7805",
+                                       "说明 partition 兼容",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  4
+                  },
+                  {
+                      "id":  "normal_partition_compat",
+                      "category":  "normal",
+                      "description":  "补 partition 旧兼容说明",
+                      "prompt":  "目标仓有 tools/batch_nfcreator/partition_ini/\u003cproduct\u003e，更新文档时说明这是旧规则兼容路径。",
+                      "expected_output":  "09 文档包含兼容和迁移说明。",
+                      "criteria":  [
+                                       "说明旧兼容目录",
+                                       "说明迁移到 NFCreator Images",
+                                       "提示迁移前勿删除",
+                                       "生成或更新的项目文档包含时间属性和时效性说明"
+                                   ],
+                      "pass_score":  3
+                  },
+                  {
+                      "id":  "error_missing_template",
+                      "category":  "error",
+                      "description":  "模板不存在",
+                      "prompt":  "更新文档，template_dir=C:/not-exist/ctp_template。",
+                      "expected_behavior":  "error",
+                      "expected_error_code":  "ERR_TEMPLATE_MISSING",
+                      "criteria":  [
+                                       "返回错误码",
+                                       "不覆盖输出目录",
+                                       "提示修正路径"
+                                   ],
+                      "pass_score":  3
+                  },
+                  {
+                      "id":  "error_encoding",
+                      "category":  "error",
+                      "description":  "发现乱码",
+                      "prompt":  "现有文档包含 锛 鈥 �，请更新。",
+                      "expected_behavior":  "error",
+                      "expected_error_code":  "ERR_ENCODING_SUSPECTED",
+                      "criteria":  [
+                                       "指出乱码文件",
+                                       "不复制乱码",
+                                       "建议重写"
+                                   ],
+                      "pass_score":  3
+                  }
+              ]
+}

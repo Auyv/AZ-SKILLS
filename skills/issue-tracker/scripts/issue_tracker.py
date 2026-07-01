@@ -18,6 +18,11 @@ DEFAULT_ARCHIVE_ROOT = Path(r"C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\项目集
 INVALID_CHARS = r'<>:"/\|?*'
 PLACEHOLDER = "待补充。"
 ISSUE_DIR_SEPARATOR = "·"
+DETAIL_FILENAME = "01_问题详情.md"
+LOG_FILENAME = "02_排查记录.md"
+REPORT_FILENAME = "03_总结汇报.md"
+LEGACY_LOG_DIRNAME = "03_排查记录"
+LEGACY_REPORT_FILENAME = "04_总结汇报.md"
 
 
 class IssueTrackerError(Exception):
@@ -135,10 +140,9 @@ def create_issue(args: argparse.Namespace) -> None:
         "issue_directory": str(issue_dir),
     }
 
-    (issue_dir / "03_排查记录").mkdir(parents=True, exist_ok=False)
-    write_new(issue_dir / "01_问题详情.md", render_template("issue_detail.md", data))
-    write_new(issue_dir / "02_期望结果.md", render_template("expected_result.md", data))
-    write_new(issue_dir / "04_总结汇报.md", render_template("report_placeholder.md", data))
+    write_new(issue_dir / DETAIL_FILENAME, render_template("issue_detail.md", data))
+    write_new(issue_dir / LOG_FILENAME, render_template("daily_log_placeholder.md", data))
+    write_new(issue_dir / REPORT_FILENAME, render_template("report_placeholder.md", data))
     notification = render_template("notification.txt", data)
 
     emit(
@@ -146,26 +150,57 @@ def create_issue(args: argparse.Namespace) -> None:
         action="create_issue",
         issue_directory=str(issue_dir),
         files=[
-            str(issue_dir / "01_问题详情.md"),
-            str(issue_dir / "02_期望结果.md"),
-            str(issue_dir / "03_排查记录"),
-            str(issue_dir / "04_总结汇报.md"),
+            str(issue_dir / DETAIL_FILENAME),
+            str(issue_dir / LOG_FILENAME),
+            str(issue_dir / REPORT_FILENAME),
         ],
         notification=notification,
     )
+
+
+def count_phases(markdown: str) -> int:
+    """Scan a daily log file and return the highest existing phase number (0 if none)."""
+    return max([int(m) for m in re.findall(r"##\s*(?:\d{4}-\d{2}-\d{2}\s*)?阶段\s*(\d+)", markdown)] + [0])
+
+
+def build_phase_section(data: dict[str, str]) -> str:
+    """Render a single phase block from the daily_log.md template (excludes file header)."""
+    template = read_template("daily_log.md")
+    body = template.split("---\n", 1)[1] if "---\n" in template else template
+    for key, value in data.items():
+        body = body.replace("{{" + key + "}}", value)
+    return re.sub(r"{{[^{}]+}}", PLACEHOLDER, body).rstrip() + "\n"
 
 
 def add_daily_log(args: argparse.Namespace) -> None:
     root = Path(args.root)
     issue_dir = find_issue(root, args.query, args.issue_path)
     date = args.date or datetime.now().strftime("%Y-%m-%d")
-    log_path = issue_dir / "03_排查记录" / f"{date}.md"
-    if log_path.exists():
-        emit("success", action="add_daily_log", issue_directory=str(issue_dir), daily_log_file=str(log_path), existed=True)
+    now = datetime.now().strftime("%H:%M")
+    log_path = issue_dir / LOG_FILENAME
+
+    existing = read_if_exists(log_path)
+    has_phases = count_phases(existing) > 0
+    if has_phases and not args.append:
+        emit(
+            "success",
+            action="add_daily_log",
+            issue_directory=str(issue_dir),
+            daily_log_file=str(log_path),
+            existed=True,
+            hint="排查记录已存在阶段，需要追加新阶段请加 --append",
+        )
         return
+
+    if has_phases and args.append:
+        phase = count_phases(existing) + 1
+    else:
+        phase = 1
 
     data = {
         "date": date,
+        "phase": str(phase),
+        "phase_timestamp": now,
         "investigation_goal": args.investigation_goal or PLACEHOLDER,
         "analysis_process": args.analysis_process or PLACEHOLDER,
         "possible_cause": args.possible_cause or PLACEHOLDER,
@@ -174,8 +209,29 @@ def add_daily_log(args: argparse.Namespace) -> None:
         "conclusion": args.conclusion or PLACEHOLDER,
         "next_plan": args.next_plan or PLACEHOLDER,
     }
-    write_new(log_path, render_template("daily_log.md", data))
-    emit("success", action="add_daily_log", issue_directory=str(issue_dir), daily_log_file=str(log_path), existed=False)
+    section = build_phase_section(data)
+
+    if existing.strip():
+        # 追加模式：在文件末尾追加分隔线 + 新阶段小节
+        base = existing.rstrip()
+        if not has_phases:
+            base = re.sub(r"\n*暂无排查记录。\s*$", "", base).rstrip()
+        separator = "\n\n---\n\n" if not base.endswith("\n\n") else "\n---\n\n"
+        write_replace(log_path, base + separator + section)
+    else:
+        # 首次创建：写入文件头（标题+说明）+ 第一个阶段
+        header = "# 排查记录\n\n> 同一文件内可按\"阶段 1/2/3...\"追加多次排查；每次追加会自动写入当前时间戳并生成新阶段小节。\n> 文件已有阶段时默认拒绝覆盖，需要追加新阶段请加 `--append`。\n\n---\n\n"
+        write_new(log_path, header + section)
+
+    emit(
+        "success",
+        action="add_daily_log",
+        issue_directory=str(issue_dir),
+        daily_log_file=str(log_path),
+        existed=False,
+        phase=phase,
+        phase_timestamp=now,
+    )
 
 
 def read_if_exists(path: Path) -> str:
@@ -194,12 +250,14 @@ def extract_table_value(markdown: str, field: str) -> str:
 def generate_report(args: argparse.Namespace) -> None:
     root = Path(args.root)
     issue_dir = find_issue(root, args.query, args.issue_path)
-    detail = read_if_exists(issue_dir / "01_问题详情.md")
+    detail = read_if_exists(issue_dir / DETAIL_FILENAME)
     expected = read_if_exists(issue_dir / "02_期望结果.md")
-    logs = sorted((issue_dir / "03_排查记录").glob("*.md"))
-    log_text = "\n\n".join(f"### {p.stem}\n\n{read_if_exists(p)}" for p in logs)
+    new_log = issue_dir / LOG_FILENAME
+    legacy_logs = sorted((issue_dir / LEGACY_LOG_DIRNAME).glob("*.md")) if (issue_dir / LEGACY_LOG_DIRNAME).exists() else []
+    log_sources = [new_log] if new_log.exists() else legacy_logs
+    log_text = "\n\n".join(f"### {p.stem}\n\n{read_if_exists(p)}" for p in log_sources)
     source_empty = not detail.strip() and not expected.strip() and not log_text.strip()
-    summary = PLACEHOLDER if not log_text.strip() else "\n".join(f"- {p.stem}：见 `{p.name}`" for p in logs)
+    summary = PLACEHOLDER if not log_text.strip() else "\n".join(f"- {p.stem}：见 `{p.name}`" for p in log_sources)
 
     data = {
         "date": args.date or datetime.now().strftime("%Y-%m-%d"),
@@ -225,7 +283,8 @@ def generate_report(args: argparse.Namespace) -> None:
         "evidence_2": args.evidence_2 or "待补充关键日志",
         "evidence_3": args.evidence_3 or "待补充验证截图",
     }
-    report_path = issue_dir / "04_总结汇报.md"
+    legacy_report = issue_dir / LEGACY_REPORT_FILENAME
+    report_path = issue_dir / REPORT_FILENAME if (issue_dir / REPORT_FILENAME).exists() or not legacy_report.exists() else legacy_report
     write_replace(report_path, render_template("report.md", data))
     emit(
         "success",
@@ -246,8 +305,8 @@ def list_issues(args: argparse.Namespace) -> None:
                 "name": path.name,
                 "path": str(path),
                 "modified_at": datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S"),
-                "has_report": (path / "04_总结汇报.md").exists(),
-                "has_today_log": (path / "03_排查记录" / f"{today}.md").exists(),
+                "has_report": (path / REPORT_FILENAME).exists() or (path / LEGACY_REPORT_FILENAME).exists(),
+                "has_today_log": (path / LOG_FILENAME).exists() or (path / LEGACY_LOG_DIRNAME / f"{today}.md").exists(),
             }
         )
     emit("success", action="list_issues", issues=items)
@@ -287,6 +346,7 @@ def build_parser() -> argparse.ArgumentParser:
     daily.add_argument("--query")
     daily.add_argument("--issue-path")
     daily.add_argument("--date")
+    daily.add_argument("--append", action="store_true", help="当天记录已存在时，追加新阶段而不是拒绝")
     daily.add_argument("--investigation-goal")
     daily.add_argument("--analysis-process")
     daily.add_argument("--possible-cause")

@@ -24,6 +24,10 @@ inputs:
       type: string
       description: 要优化的现有技能路径（优化场景）
       default: null
+    - name: skills_base_path
+      type: string
+      description: 技能创建根目录；默认使用当前项目的 skills/ 目录
+      default: "./skills"
     - name: dialog_context
       type: string
       description: 对话上下文摘要（创建场景）
@@ -98,6 +102,12 @@ errors:
 - `pdf2md`（错误，缺少前缀）
 
 除非用户明确指定了其他前缀，否则默认使用 `az-` 前缀。
+
+### 创建位置
+
+默认把新技能创建在当前项目的 `skills/<skill-name>/` 下；不要默认写入全局技能目录（如 `$CODEX_HOME/skills`）。
+
+如果用户明确要求创建到全局目录或其他仓库，先复述目标路径并确认，确认后再写入。
 
 ### 访谈和研究
 

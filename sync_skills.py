@@ -4,8 +4,8 @@ AZ-SKILLS 同步脚本
 用于将 AZ-SKILLS 中的 skill 同步到各 AI 工具的 skills 目录
 
 同步逻辑：
-- 每个 skill 的 targets 列表决定同步到哪些目标
-- sync_targets.enabled 全局开关决定目标是否启用
+- agent_targets 列表定义每个 AI 工具目标及其 skills 列表
+- agent_targets.enabled 开关决定目标是否启用
 
 用法:
     python sync_skills.py                    # 同步所有 skill
@@ -38,9 +38,10 @@ SKILLS_SOURCE_SUBDIR = "skills"
 
 def _simple_yaml_load_manifest(text: str) -> dict:
     """Parse this repository's manifest.yaml when PyYAML is unavailable."""
-    data = {"skills": [], "sync_targets": []}
+    data = {"agent_targets": [], "skills": [], "sync_targets": []}
     section = None
     current = None
+    current_list_key = None
 
     for raw_line in text.splitlines():
         line = raw_line.rstrip()
@@ -51,6 +52,8 @@ def _simple_yaml_load_manifest(text: str) -> dict:
 
         if not line.startswith(" ") and stripped.endswith(":"):
             section = stripped[:-1]
+            current = None
+            current_list_key = None
             continue
 
         if stripped.startswith("- "):
@@ -59,12 +62,14 @@ def _simple_yaml_load_manifest(text: str) -> dict:
                 key, value = item.split(":", 1)
                 key = key.strip()
                 value = value.strip()
-                current = {key: [] if key == "targets" and not value else _simple_yaml_value(value)}
-                if section in ("skills", "sync_targets"):
+                current = {key: [] if key in ("targets", "skills") and not value else _simple_yaml_value(value)}
+                current_list_key = key if key in ("targets", "skills") and not value else None
+                if section in ("skills", "sync_targets", "agent_targets"):
                     data[section].append(current)
             else:
                 if current is not None:
-                    current.setdefault("targets", []).append(_simple_yaml_value(item))
+                    list_key = current_list_key or "targets"
+                    current.setdefault(list_key, []).append(_simple_yaml_value(item))
             continue
 
         if not line.startswith(" ") and ":" in stripped:
@@ -76,7 +81,8 @@ def _simple_yaml_load_manifest(text: str) -> dict:
             key, value = stripped.split(":", 1)
             key = key.strip()
             value = value.strip()
-            current[key] = [] if key == "targets" and not value else _simple_yaml_value(value)
+            current[key] = [] if key in ("targets", "skills") and not value else _simple_yaml_value(value)
+            current_list_key = key if key in ("targets", "skills") and not value else None
 
     return data
 
@@ -91,19 +97,19 @@ def _simple_yaml_value(value: str):
 
 
 def _simple_yaml_dump_manifest(manifest: dict) -> str:
-    lines = [f"last_sync: '{manifest.get('last_sync', '')}'", "skills:"]
-    for skill in manifest.get("skills", []):
-        lines.append(f"- name: {skill['name']}")
-        lines.append("  targets:")
-        for target in skill.get("targets", []):
-            lines.append(f"  - {target}")
-
-    lines.append("sync_targets:")
-    for target in manifest.get("sync_targets", []):
+    lines = [f"last_sync: '{manifest.get('last_sync', '')}'", "agent_targets:"]
+    for target in manifest.get("agent_targets", manifest.get("sync_targets", [])):
         enabled = "true" if target.get("enabled", True) else "false"
-        lines.append(f"- enabled: {enabled}")
+        if "aggregate_subdir" in target:
+            lines.append(f"- aggregate_subdir: '{target.get('aggregate_subdir', '')}'")
+            lines.append(f"  enabled: {enabled}")
+        else:
+            lines.append(f"- enabled: {enabled}")
         lines.append(f"  name: {target['name']}")
         lines.append(f"  path: {target['path']}")
+        lines.append("  skills:")
+        for skill in target.get("skills", []):
+            lines.append(f"  - {skill}")
 
     return "\n".join(lines) + "\n"
 
@@ -120,10 +126,13 @@ class Colors:
     BOLD = '\033[1m'
 
 def colorprint(text: str, color: str = ""):
-    if sys.stdout.isatty() and color:
-        print(f"{color}{text}{Colors.ENDC}")
-    else:
-        print(text)
+    output = f"{color}{text}{Colors.ENDC}" if sys.stdout.isatty() and color else text
+    try:
+        print(output)
+    except UnicodeEncodeError:
+        encoding = sys.stdout.encoding or "utf-8"
+        safe_output = output.encode(encoding, errors="replace").decode(encoding, errors="replace")
+        print(safe_output)
 
 def info(msg): colorprint(msg, Colors.OKCYAN)
 def success(msg): colorprint(msg, Colors.OKGREEN)
@@ -189,8 +198,8 @@ def _relaunch_as_windows_admin() -> bool:
 
 
 def _sync_requires_elevation(args: argparse.Namespace) -> bool:
-    """Only real sync operations need elevation for Windows directory symlinks."""
-    return os.name == "nt" and not args.list and not args.dry_run and not args.no_elevate
+    """Directory copy fallback allows Windows sync to run without UAC."""
+    return False
 
 # ========== 核心逻辑 ==========
 
@@ -217,17 +226,60 @@ class SkillSyncer:
         """保存 manifest.yaml"""
         with open(self.manifest_path, 'w', encoding='utf-8') as f:
             if yaml:
-                yaml.dump(self.manifest, f, allow_unicode=True, default_flow_style=False)
+                yaml.dump(self.manifest, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
             else:
                 f.write(_simple_yaml_dump_manifest(self.manifest))
 
+    def _get_agent_targets(self) -> List[Dict]:
+        """获取 target-centric 配置；兼容旧版 sync_targets。"""
+        return self.manifest.get('agent_targets') or self.manifest.get('sync_targets', [])
+
     def _get_target_config(self, target_name: str) -> Optional[Dict]:
         """获取目标配置"""
-        targets = self.manifest.get('sync_targets', [])
+        targets = self._get_agent_targets()
         for t in targets:
             if t.get('name') == target_name:
                 return t
         return None
+
+    def _get_target_skill_names(self, target_name: str) -> List[str]:
+        """获取指定 target 配置的 skills；兼容旧版 skills[].targets。"""
+        config = self._get_target_config(target_name)
+        if config and 'skills' in config:
+            return list(config.get('skills') or [])
+
+        skill_names = []
+        for skill_info in self.manifest.get('skills', []):
+            if target_name in skill_info.get('targets', []):
+                skill_names.append(skill_info['name'])
+        return skill_names
+
+    def _get_skill_targets(self, skill_name: str) -> List[str]:
+        """获取指定 skill 要同步到的 target 列表。"""
+        if self.manifest.get('agent_targets'):
+            return [
+                target.get('name')
+                for target in self._get_agent_targets()
+                if skill_name in target.get('skills', [])
+            ]
+
+        for skill_info in self.manifest.get('skills', []):
+            if skill_info.get('name') == skill_name:
+                return list(skill_info.get('targets', []))
+        return []
+
+    def _get_manifest_skill_names(self) -> List[str]:
+        """获取 manifest 管理的 skill 名称。"""
+        if self.manifest.get('agent_targets'):
+            names = []
+            seen = set()
+            for target in self._get_agent_targets():
+                for skill_name in target.get('skills', []):
+                    if skill_name not in seen:
+                        seen.add(skill_name)
+                        names.append(skill_name)
+            return names
+        return [s['name'] for s in self.manifest.get('skills', [])]
 
     def _get_target_path(self, target_name: str) -> Optional[Path]:
         """获取目标路径"""
@@ -254,20 +306,47 @@ class SkillSyncer:
         return sorted(skills)
 
     def _sync_skill_to_target(self, skill_name: str, target_path: Path, target_name: str) -> bool:
-        """同步单个 skill 到目标目录（使用符号链接）"""
+        """同步单个 skill 到目标目录。
+
+        - 如果 src 根下有 SKILL.md，按 skill_name 平铺到 target_path
+        - 如果 src 是聚合容器（根下无 SKILL.md），递归扫描子目录，
+          把每个含 SKILL.md 的子目录平铺到 target_path（用 child.name 命名）
+        """
         src = self.source_dir / skill_name
-        dest = target_path / skill_name
 
         if not src.exists():
             warning(f"  源 skill 不存在: {src}")
             return False
 
+        # 聚合容器：根下无 SKILL.md，递归展开子目录
+        if not (src / 'SKILL.md').exists():
+            sub_skills = sorted([
+                c for c in src.iterdir()
+                if c.is_dir() and (c / 'SKILL.md').exists()
+            ])
+            if not sub_skills:
+                warning(f"  {skill_name} 根下无 SKILL.md 且无含 SKILL.md 的子目录，跳过")
+                return False
+            info(f"  {skill_name} 是聚合容器，展开 {len(sub_skills)} 个子 skill:")
+            all_ok = True
+            for sub in sub_skills:
+                if not self._link_one(sub.name, sub, target_path):
+                    all_ok = False
+            return all_ok
+
+        return self._link_one(skill_name, src, target_path)
+
+    def _link_one(self, label: str, src: Path, target_path: Path) -> bool:
+        """创建单个同步项：优先 symlink，Windows 失败时尝试 junction，再回退为目录复制。"""
+        dest = target_path / label
+
         if self.dry_run:
-            info(f"  → {skill_name} (模拟创建符号链接)")
+            info(f"  → {label} (模拟同步)")
             return True
 
-        # 执行同步：创建符号链接
         try:
+            target_path.mkdir(parents=True, exist_ok=True)
+
             # 删除已存在的目标
             if dest.exists() or dest.is_symlink():
                 if dest.is_symlink():
@@ -275,17 +354,85 @@ class SkillSyncer:
                 else:
                     shutil.rmtree(dest)
 
-            # 创建符号链接
-            dest.symlink_to(src)
-            success(f"  ✓ {skill_name}")
+            link_errors = []
+
+            # 优先 symlink；Windows 用户模式无特权时 fallback 到 junction
+            try:
+                dest.symlink_to(src, target_is_directory=src.is_dir())
+            except (OSError, NotImplementedError) as sym_err:
+                link_errors.append(f"symlink 失败: {sym_err}")
+                if os.name == 'nt':
+                    r = subprocess.run(
+                        ['cmd', '/c', 'mklink', '/J', str(dest), str(src)],
+                        capture_output=True, text=True,
+                        encoding='gbk', errors='replace',
+                    )
+                    if r.returncode != 0:
+                        link_errors.append(f"junction 失败: {r.stderr.strip()}")
+                    else:
+                        success(f"  ✓ {label}")
+                        return True
+                else:
+                    link_errors.append("当前平台不支持 junction fallback")
+
+                shutil.copytree(src, dest)
+                warning(f"  ! {label}: 已回退为目录复制 ({'; '.join(link_errors)})")
+                return True
+
+            success(f"  ✓ {label}")
             return True
         except Exception as e:
-            error(f"  ✗ {skill_name}: {e}")
+            error(f"  ✗ {label}: {e}")
             return False
 
-    def _get_az_skills_path(self, target_path: Path) -> Path:
-        """获取 az-skills 子文件夹路径"""
-        return target_path / "az-skills"
+    def _collect_target_labels(self, target_name: str) -> List[str]:
+        """收集 manifest 中 target_name 应同步的所有 skill 标签（含聚合容器展开）。
+
+        返回的 label 集合是 manifest **管理**的 skill 名，用于后续定向清理。
+        用户在目标目录里自建的 skill 不会被纳入此集合。
+        """
+        labels: List[str] = []
+        for sn in self._get_target_skill_names(target_name):
+            src = self.source_dir / sn
+            if not src.exists():
+                continue
+            if (src / 'SKILL.md').exists():
+                labels.append(sn)
+            else:
+                # 聚合容器：展开子目录
+                for c in sorted(src.iterdir()):
+                    if c.is_dir() and (c / 'SKILL.md').exists():
+                        labels.append(c.name)
+        return labels
+
+    def _purge_managed_links(self, az_skills_path: Path, labels: List[str]) -> None:
+        """仅删除 az_skills_path 下属于 manifest 管理的旧 link，保留用户自建内容。
+
+        规则：仅当目录条目是 symlink/junction 且名称在 labels 集合内才删除；
+        普通目录、非管理内的条目、任何其它内容均不动。
+        """
+        if not az_skills_path.exists():
+            return
+        label_set = set(labels)
+        for entry in az_skills_path.iterdir():
+            if entry.name in label_set and (entry.is_symlink() or entry.is_junction()):
+                try:
+                    entry.unlink()
+                except Exception as e:
+                    warning(f"  清理旧 link 失败 {entry.name}: {e}")
+
+    def _get_az_skills_path(self, target_name: str, target_path: Path) -> Path:
+        """获取 skill 同步根目录。
+
+        大多数 target 默认聚合在 <target_path>/az-skills/ 子目录。
+        claude_code 等不支持聚合的 target 可在 sync_targets 里设
+        aggregate_subdir: '' 来直接平铺到 <target_path> 根。
+        """
+        config = self._get_target_config(target_name)
+        sub = config.get('aggregate_subdir', 'az-skills') if config else 'az-skills'
+        if sub:
+            return target_path / sub
+        return target_path
 
     def sync_all(self) -> Dict[str, int]:
         """同步所有 skill 到各自的目标"""
@@ -300,55 +447,47 @@ class SkillSyncer:
 
         # 收集所有需要同步的目标
         targets_to_sync = set()
-        for skill_info in self.manifest.get('skills', []):
-            skill_name = skill_info['name']
-            if skill_name not in skills:
-                continue
-            for target_name in skill_info.get('targets', []):
-                config = self._get_target_config(target_name)
-                if config and config.get('enabled', True):
-                    targets_to_sync.add(target_name)
+        for target in self._get_agent_targets():
+            target_name = target.get('name')
+            if target_name and target.get('enabled', True):
+                targets_to_sync.add(target_name)
 
-        # 先清空所有目标下的 az-skills 子文件夹
+        # 仅清掉 manifest 管理的旧 link，保留用户在目标目录里自建的 skill
         for target_name in targets_to_sync:
             target_path = self._get_target_path(target_name)
             if target_path:
-                az_skills_path = self._get_az_skills_path(target_path)
+                az_skills_path = self._get_az_skills_path(target_name, target_path)
                 if not self.dry_run:
-                    if az_skills_path.exists():
-                        shutil.rmtree(az_skills_path)
-                    az_skills_path.mkdir(parents=True, exist_ok=True)
+                    try:
+                        az_skills_path.mkdir(parents=True, exist_ok=True)
+                        self._purge_managed_links(
+                            az_skills_path, self._collect_target_labels(target_name)
+                        )
+                    except Exception as e:
+                        warning(f"  目标目录准备失败 {az_skills_path}: {e}")
 
         # 按目标分组统计
         target_stats = {}
 
-        for skill_info in self.manifest.get('skills', []):
-            skill_name = skill_info['name']
-            if skill_name not in skills:
-                info(f"  - {skill_name} (源目录中不存在，跳过)")
-                total["skipped"] += 1
+        for target in self._get_agent_targets():
+            target_name = target.get('name')
+            if not target_name or not target.get('enabled', True):
                 continue
 
-            targets = skill_info.get('targets', [])
+            target_path = self._get_target_path(target_name)
+            if not target_path:
+                continue
 
-            for target_name in targets:
-                # 检查目标是否启用
-                config = self._get_target_config(target_name)
-                if not config or not config.get('enabled', True):
+            az_skills_path = self._get_az_skills_path(target_name, target_path)
+            if target_name not in target_stats:
+                target_stats[target_name] = {"success": 0, "failed": 0}
+
+            for skill_name in self._get_target_skill_names(target_name):
+                if skill_name not in skills:
+                    info(f"  - {skill_name} (源目录中不存在，跳过)")
+                    total["skipped"] += 1
                     continue
 
-                target_path = self._get_target_path(target_name)
-                if not target_path:
-                    continue
-
-                # 使用 az-skills 子文件夹
-                az_skills_path = self._get_az_skills_path(target_path)
-
-                # 初始化目标统计
-                if target_name not in target_stats:
-                    target_stats[target_name] = {"success": 0, "failed": 0}
-
-                # 执行同步到 az-skills 子文件夹
                 if self._sync_skill_to_target(skill_name, az_skills_path, target_name):
                     target_stats[target_name]["success"] += 1
                     total["success"] += 1
@@ -389,20 +528,27 @@ class SkillSyncer:
             error(f"未找到目标路径: {target_name}")
             return {"success": 0, "skipped": 0, "failed": 0}
 
-        if not target_path.exists():
+        try:
+            target_exists = target_path.exists()
+        except Exception as e:
+            target_exists = True
+            warning(f"检查目标目录失败 {target_path}: {e}")
+
+        if not target_exists:
             warning(f"目标目录不存在，将创建: {target_path}")
-            if not self.dry_run:
-                target_path.mkdir(parents=True, exist_ok=True)
 
-        # 在目标目录下创建 az-skills 子文件夹
-        az_skills_path = self._get_az_skills_path(target_path)
+        # 在目标目录下创建 az-skills 子文件夹（不强制清空整个目录以避免与运行中的进程冲突）
+        az_skills_path = self._get_az_skills_path(target_name, target_path)
 
-        # 先清空 az-skills 子文件夹
-        if az_skills_path.exists():
-            if not self.dry_run:
-                shutil.rmtree(az_skills_path)
+        # 仅清掉 manifest 管理的旧 link，保留用户在目标目录里自建的 skill
         if not self.dry_run:
-            az_skills_path.mkdir(parents=True, exist_ok=True)
+            try:
+                az_skills_path.mkdir(parents=True, exist_ok=True)
+                self._purge_managed_links(
+                    az_skills_path, self._collect_target_labels(target_name)
+                )
+            except Exception as e:
+                warning(f"  目标目录准备失败 {az_skills_path}: {e}")
 
         info(f"\n{'='*50}")
         info(f"同步目标: {target_name}")
@@ -414,12 +560,7 @@ class SkillSyncer:
         failed_count = 0
 
         # 获取该目标需要同步的 skills
-        target_skills = []
-        for skill_info in self.manifest.get('skills', []):
-            skill_name = skill_info['name']
-            targets = skill_info.get('targets', [])
-            if target_name in targets:
-                target_skills.append(skill_name)
+        target_skills = self._get_target_skill_names(target_name)
 
         for skill in target_skills:
             if self._sync_skill_to_target(skill, az_skills_path, target_name):
@@ -445,19 +586,9 @@ class SkillSyncer:
             return {"success": 0, "skipped": 0, "failed": 0}
 
         # 获取该 skill 的目标列表
-        skill_info = None
-        for s in self.manifest.get('skills', []):
-            if s['name'] == skill_name:
-                skill_info = s
-                break
-
-        if not skill_info:
-            error(f"未在 manifest 中找到 skill: {skill_name}")
-            return {"success": 0, "skipped": 0, "failed": 0}
-
-        targets = skill_info.get('targets', [])
+        targets = self._get_skill_targets(skill_name)
         if not targets:
-            warning(f"skill {skill_name} 没有配置 targets")
+            error(f"未在 manifest 中找到 skill: {skill_name}")
             return {"success": 0, "skipped": 0, "failed": 0}
 
         success_count = 0
@@ -472,16 +603,8 @@ class SkillSyncer:
             if not target_path:
                 continue
 
-            # 确保目录存在
-            if not target_path.exists():
-                if not self.dry_run:
-                    target_path.mkdir(parents=True, exist_ok=True)
-
             # 使用 az-skills 子文件夹
-            az_skills_path = self._get_az_skills_path(target_path)
-            if not az_skills_path.exists():
-                if not self.dry_run:
-                    az_skills_path.mkdir(parents=True, exist_ok=True)
+            az_skills_path = self._get_az_skills_path(target_name, target_path)
 
             info(f"  → {target_name}: {az_skills_path}")
             if self._sync_skill_to_target(skill_name, az_skills_path, target_name):
@@ -501,33 +624,31 @@ class SkillSyncer:
         skills = self._get_source_skills()
         info(f"\n源 skill 列表 ({len(skills)} 个):")
 
-        manifest_skills = {s['name']: s for s in self.manifest.get('skills', [])}
+        manifest_skill_names = set(self._get_manifest_skill_names())
         for skill in skills:
-            skill_info = manifest_skills.get(skill)
-            desc = skill_info.get('description', '-') if skill_info else '(未在 manifest 中)'
-            targets = skill_info.get('targets', []) if skill_info else []
+            in_manifest = skill in manifest_skill_names
+            desc = '-' if in_manifest else '(未在 manifest 中)'
+            targets = self._get_skill_targets(skill) if in_manifest else []
             info(f"  • {skill}: {desc}")
             if targets:
                 info(f"    同步目标: {', '.join(targets)}")
 
         # 列出目标状态
         info("\n同步目标状态:")
-        targets = self.manifest.get('sync_targets', [])
+        targets = self._get_agent_targets()
         for target in targets:
             name = target['name']
             path = Path(target['path']).expanduser() if target.get('path') else None
             enabled = "✓" if target.get('enabled', True) else "✗"
 
-            # 使用 az-skills 子文件夹
-            az_skills_path = self._get_az_skills_path(path) if path else None
+            # 使用配置的聚合子文件夹（claude_code 等为平铺）
+            az_skills_path = self._get_az_skills_path(name, path) if path else None
             exists = "存在" if az_skills_path and az_skills_path.exists() else "不存在"
 
-            # 统计该目标应同步的 skill 数量
-            target_skills = [s for s in self.manifest.get('skills', []) if name in s.get('targets', [])]
-
             if az_skills_path and az_skills_path.exists():
-                synced = len([d for d in az_skills_path.iterdir() if d.is_symlink()])
-                info(f"  [{enabled}] {name}: {az_skills_path} ({synced}/{len(target_skills)}) 个 skill")
+                labels = self._collect_target_labels(name)
+                synced = len([label for label in labels if (az_skills_path / label).exists()])
+                info(f"  [{enabled}] {name}: {az_skills_path} ({synced}/{len(labels)}) 个 skill")
             else:
                 info(f"  [{enabled}] {name}: {path} (az-skills 子文件夹不存在)")
 
@@ -608,7 +729,7 @@ def main():
 
 def _interactive_menu(syncer: SkillSyncer):
     """交互式菜单选择同步目标"""
-    targets = syncer.manifest.get('sync_targets', [])
+    targets = syncer._get_agent_targets()
     enabled_targets = [t for t in targets if t.get('enabled', True)]
 
     if not enabled_targets:
@@ -625,7 +746,7 @@ def _interactive_menu(syncer: SkillSyncer):
         exists = "✓" if path and path.exists() else "✗"
 
         # 统计该目标应同步的 skill 数量
-        target_skills = [s for s in syncer.manifest.get('skills', []) if name in s.get('targets', [])]
+        target_skills = syncer._get_target_skill_names(name)
         info(f"  [{i}] {name}: {path_str} [{exists}] ({len(target_skills)} skills)")
 
     print()

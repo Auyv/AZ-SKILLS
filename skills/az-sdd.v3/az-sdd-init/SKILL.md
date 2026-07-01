@@ -65,6 +65,10 @@ description: |-
 **需要询问的字段**：
 - 仅当 AGENTS.md 不存在或缺少项目说明时，询问项目描述/定位/目标用户
 
+**语言约定**：
+- 新建或补充 AGENTS.md 时，默认使用中文描述项目背景、定位、目标用户和执行约定。
+- 专业术语、框架名、命令名、文件名、API 名称可保留英文；不要把这些术语硬翻译成不常用中文。
+
 ### Step 5: 创建目录结构
 
 ```
@@ -86,7 +90,7 @@ az-sdd/
 ### Step 6: 初始化文件
 
 1. 如果项目根目录没有 AGENTS.md，先创建 AGENTS.md，并写入项目说明与 AZ-SDD 使用约定。
-2. 如果 AGENTS.md 已存在，不复制其已有内容到 az-sdd/init.md；只在缺少 AZ-SDD 约定时追加一个简短章节。
+2. 如果 AGENTS.md 已存在，不复制其已有内容到 az-sdd/init.md；只在缺少 AZ-SDD 约定时追加一个中文优先的简短章节。
 3. 使用 templates/init.md 和 templates/track.md 初始化文件。
 4. az-sdd/init.md 只保留项目档案入口、关键元数据和 AGENTS.md 引用，避免与 AGENTS.md 重复维护项目背景、定位、目标用户等长文本。
 

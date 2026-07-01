@@ -24,16 +24,14 @@ python .\skills\issue-tracker\scripts\issue_tracker.py create `
 
 ```text
 {yyyy-MM-dd}·{项目名}·{问题描述}/
-01_问题详情.md
-02_期望结果.md
-03_排查记录/
-04_总结汇报.md
+01_问题详情.md          （含"期望结果"和"验收标准"小节）
+02_排查记录.md
+03_总结汇报.md
 ```
 
 对应模板：
 
 - `templates/issue_detail.md`
-- `templates/expected_result.md`
 - `templates/report_placeholder.md`
 
 ## 新增每日排查记录
@@ -50,7 +48,9 @@ python .\skills\issue-tracker\scripts\issue_tracker.py daily `
   --issue-path "C:\...\问题排查记录\20260526-1000.项目名.问题名"
 ```
 
-对应模板：`templates/daily_log.md`。
+对应模板：`templates/daily_log.md`，内容写入 `02_排查记录.md`。
+
+> 同一文件按日期和"阶段 1/2/3..."追加；已有阶段时加 `--append` 生成新阶段，否则脚本返回 `existed=true` 不覆盖。
 
 ## 生成总结汇报
 
@@ -98,9 +98,8 @@ C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\项目集\{项目名}\历史问题\
 
 不要直接在 `SKILL.md` 或脚本里改 Markdown 样式。只修改 `templates/` 中对应模板：
 
-- 问题详情：`templates/issue_detail.md`
-- 期望结果：`templates/expected_result.md`
-- 每日排查：`templates/daily_log.md`
+- 问题详情（含期望结果 + 验收标准）：`templates/issue_detail.md`
+- 每日排查（按"阶段 N"追加）：`templates/daily_log.md`
 - 总结汇报：`templates/report.md`
 - 企微通知：`templates/notification.txt`
 

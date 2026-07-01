@@ -11,15 +11,36 @@ AZ-SKILLS/
 ├── manifest.yaml       # 全局清单配置
 ├── sync_skills.py     # 同步脚本
 ├── README.md          # 说明文档
-└── skills/            # Skill 源码（唯一真相来源）
-    ├── az-sdd/
-    ├── issue-tracker/
-    ├── az-skill-creator/
-    ├── auto-skill-creator/
-    ├── az-pdf2md/
-    ├── core-dump-analyzer/
-    ├── network-debug/
-    └── docker-image-build/
+└── skills/            # Skill 源码（唯一真相来源，17 个）
+    ├── az-sdd.v3/               # 技能族容器（含 9 个子技能，无顶层 SKILL.md）
+    │   ├── az-sdd-init/         # SDD 初始化
+    │   ├── az-sdd-spec/         # SDD 规范编写
+    │   ├── az-sdd-arch/         # SDD 架构
+    │   ├── az-sdd-coding/       # SDD 编码
+    │   ├── az-sdd-test/         # SDD 人工测试
+    │   ├── az-sdd-next/         # SDD 流程导航
+    │   ├── az-sdd-rules/        # SDD 规范守卫
+    │   ├── az-sdd-track/        # SDD 状态追踪
+    │   └── az-sdd-feedback/     # SDD 反馈处理
+    ├── issue-tracker/           # 问题排查记录（事后）
+    ├── az-skill-creator/        # 技能创建（手动版）
+    ├── auto-skill-creator/      # 技能创建（自动触发版）
+    ├── az-pdf2md/               # PDF 转 Markdown
+    ├── core-dump-analyzer/      # ARM core dump 分析
+    ├── network-debug/           # 网络连接异常排查
+    ├── docker-image-build/      # Docker 镜像制作
+    ├── az-product-manager/      # 产品经理对话助手
+    ├── az-knowledge-base/       # 知识库管理与检索
+    ├── az-todo-tracker/         # 任务待办追踪（事前立项，2026-06-27 新增）
+    ├── az-keil-build/           # Keil 嵌入式构建工具链（2026-06-23 新增）
+    ├── az-c-macro2ini-config/   # C 宏定义转 ini 配置
+    ├── az-mpu-local-build/      # MPU 本地构建
+    ├── az-nmrj/                 # 牛马日志（nmrj 项目）
+    ├── hq_tester_skills/        # 鸿泉测试技能族
+    │   └── hq_adb_srtget/       # 通过 ADB 设置 SRT 属性
+    ├── hq_ctp_autobuild_add_product/  # CTP 自动出包 - 新增产品
+    ├── hq_ctp_autobuild_create/        # CTP 自动出包 - 创建
+    └── hq_ctp_autobuild_doc/           # CTP 自动出包 - 文档
 ```
 
 ---
@@ -138,6 +159,19 @@ pip install pyyaml
 | Claude Code | `C:/Users/jpz/.claude/skills` | ✓ |
 | OpenCode | `C:/Users/jpz/.config/opencode/skills` | ✓ |
 | OpenClaw | `C:/Users/jpz/.openclaw/skills` | ✓ |
+
+---
+
+## 🚀 在建项目
+
+| 项目 | 说明 | 文档 |
+|------|------|------|
+| **Skill 商店** | 内部 Skill 上传/下载/审核/积分平台（部署在用户闲置锐龙 7 Win11 办公电脑 WSL2） | [[项目集/skill商店/01-规范/README]] |
+|  └─ 功能规范 | spec-功能规范.md | [[项目集/skill商店/01-规范/spec-功能规范]] |
+|  └─ 架构 | arch-技术架构.md | [[项目集/skill商店/01-规范/arch-技术架构]] |
+|  └─ API 契约 | api-接口契约.md | [[项目集/skill商店/01-规范/api-接口契约]] |
+|  └─ 任务拆单 | task-开发任务拆单.md | [[项目集/skill商店/01-规范/task-开发任务拆单]] |
+|  └─ 验收用例 | test-验收用例.md | [[项目集/skill商店/01-规范/test-验收用例]] |
 
 ---
 
