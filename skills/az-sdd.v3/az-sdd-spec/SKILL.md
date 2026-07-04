@@ -3,12 +3,11 @@ name: az-sdd-spec
 version: 3.0.0
 description: |-
   基于 SDD（规范驱动开发）流程，编写功能规范文档（含技术约束）。
-  **触发场景**：当用户明确要求按 AZ-SDD/SDD 创建或修改规范，
-  或使用 "az-sdd spec"、"sdd spec"、"/az-sdd-spec"、
-  "创建功能规范"、"把需求写入 AZ-SDD spec"、"按规范驱动开发"时激活。
-  **批量模式**：当用户一次性发送多个功能需求时，自动进入拆分流程。
+  **触发场景**：仅当用户显式调用 "/az-sdd-spec"、"az-sdd spec"、"sdd spec"，
+  或明确要求按 AZ-SDD/SDD 创建、修改功能规范时激活。
+  **批量模式**：显式触发后，如用户一次性发送多个功能需求，则进入拆分流程。
   **不触发**：如果用户明确说"不需要规范"或"直接写代码"；
-  普通需求讨论若未提到 AZ-SDD/SDD，也不应自动创建规范。
+  普通需求讨论、产品讨论或继续开发若未显式调用 AZ-SDD/SDD，也不应自动创建规范。
 ---
 
 # AZ-SDD-SPEC
@@ -17,9 +16,9 @@ description: |-
 
 ## 日常使用边界
 
-- 仅在用户明确进入 AZ-SDD/SDD 流程时创建或修改规范。
+- 仅在用户显式调用 `/az-sdd-spec`、`az-sdd spec`、`sdd spec`，或明确进入 AZ-SDD/SDD 流程时创建或修改规范。
 - 默认使用 `standard` 模式；小改动可用 `lite`，复杂交付功能可用 `strict`。
-- 如果用户只是讨论需求，先澄清是否要写入 `az-sdd/spec/`，不要直接生成档案。
+- 如果用户只是讨论需求或产品方案，不要直接生成档案；只有用户显式要求进入 AZ-SDD/SDD 后才写入 `az-sdd/spec/`。
 - 执行前检查 `az-sdd/` 是否存在；不存在时提示先运行 `/az-sdd-init`。
 
 ## 两种处理模式
@@ -329,18 +328,15 @@ description: |-
 
 🎯 请进行规范审核：
 
-1. 生成规范总览页面（如尚未生成）：
-   python az-sdd-spec/references/generate-review-html.py {项目根目录路径}
+1. 查看 `az-sdd/SPEC.md` 中新增的功能清单和状态
 
-2. 双击打开：az-sdd/spec/references/spec-review.html
-
-3. 点击待审核的规范，用 VSCode 打开 .spec.md 文件
+2. 逐个打开对应的 `.spec.md` 文件
 
 4. 审核完成后：
    • 将文件中的状态改为"已审核"
    • 在文件末尾添加审核记录（审核人、审核时间、审核结果）
 
-5. 关闭浏览器时，页面会提醒您还有多少规范未审核
+5. 如需对外汇报或分享当前规范状态，使用 `/az-sdd-track` 生成项目汇报 HTML
 
 ────────────────────────────────────────────────────────
 
@@ -472,19 +468,11 @@ az-sdd/spec/{ID}-{MODULE}-{NAME}.spec.md
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Step 8.1: 生成规范总览页面
+### Step 8.1: 规范审查入口
 
-每次规范创建后，自动运行脚本生成规范总览 HTML：
+默认不生成 HTML 规范总览。规范审查以 `az-sdd/SPEC.md` 和具体 `.spec.md` 文件为准，避免在 spec 阶段消耗 token 维护额外报告。
 
-```bash
-python az-sdd-spec/references/generate-review-html.py {项目根目录路径}
-```
-
-此命令会：
-- 扫描 az-sdd/spec/ 目录下的所有 .spec.md 文件
-- 读取每个文件的状态
-- 生成 `az-sdd/spec/references/spec-review.html`，显示所有规范的列表
-- 审核人双击 spec-review.html 即可查看和审核规范
+如需对外汇报或分享规范状态，使用 `/az-sdd-track` 生成项目汇报 HTML；旧的 `generate-review-html.py` 仅作为手动辅助工具保留，不在主流程中自动调用。
 
 ### Step 9: 主动引导审核
 
@@ -501,23 +489,20 @@ python az-sdd-spec/references/generate-review-html.py {项目根目录路径}
 
 🎯 请进行规范审核：
 
-1. 生成规范总览页面（如尚未生成）：
-   python az-sdd-spec/references/generate-review-html.py {项目根目录路径}
+1. 查看 `az-sdd/SPEC.md` 中的功能状态
 
-2. 双击打开：az-sdd/spec/references/spec-review.html
-
-3. 点击待审核的规范，用 VSCode 打开 .spec.md 文件
+2. 打开对应的 `.spec.md` 文件
 
 4. 审核完成后：
    • 将文件中的状态改为"已审核"
    • 在文件末尾添加审核记录（审核人、审核时间、审核结果）
 
-5. 关闭浏览器时，页面会提醒您还有多少规范未审核
+5. 如需对外汇报或分享规范状态，使用 `/az-sdd-track` 生成项目汇报 HTML
 
 ────────────────────────────────────────────────────────
 
 💡 下一步：
-• 规范审核后 → /az-sdd-coding 开始实现
+• 规范审核后 → /az-sdd-coder 开始实现
 • 需要补充技术规范 → /az-sdd-arch
 ```
 

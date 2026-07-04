@@ -5,12 +5,16 @@
 project_structure:
   root: az-sdd
   files:
-    - name: init.md
+    - name: INIT.md
       description: 项目初始化信息
       required: true
 
-    - name: track.md
-      description: 工作状态追踪记录
+    - name: STATUS.md
+      description: 当前状态看板
+      required: true
+
+    - name: TRACK.md
+      description: 历史事件日志
       required: true
 
     - name: SPEC.md
@@ -41,6 +45,10 @@ project_structure:
         - reports      # 测试报告
         - manuals     # 操作手册
 
+    - name: reports
+      description: 面向汇报和分享的项目报告目录
+      pattern: "*.html"
+
     - name: feedback
       description: 用户反馈文档目录
       pattern: "FB-*.feedback.md"
@@ -70,6 +78,17 @@ feedback_file:
   seq_format: "NNNN"
   seq_start: 1
   reset_yearly: true
+  required_sections:
+    - 基本信息
+    - 反馈内容
+    - 影响评估
+    - 澄清记录
+    - 反馈处理计划
+    - 关联产物
+    - 处理记录
+    - 验证结果
+    - 闭环结论
+    - 经验沉淀
 
 # 测试文件命名
 test_file:

@@ -1,29 +1,28 @@
 ---
-name: az-sdd-coding
+name: az-sdd-coder
 version: 3.0.0
 description: |-
   基于 SDD（规范驱动开发）流程，执行代码编写任务。
-  **触发场景**：仅当用户明确要求按 AZ-SDD/SDD 流程开发，
-  或使用 "az-sdd coding"、"sdd coding"、"/az-sdd-coding"、
-  "按规范实现"、"按已批准 spec 开发"、"AZ-SDD 批量开发" 时激活。
-  **不触发**：用户只是普通地说"写代码"、"实现功能"、"修 bug"，
-  且没有提到 AZ-SDD/SDD、已批准规范或项目档案时，不应强行进入本流程。
+  **触发场景**：仅当用户显式调用 "/az-sdd-coder"、"az-sdd coder"、"sdd coder"，
+  或明确要求按 AZ-SDD/SDD 流程、已批准 spec 开发时激活。
+  **不触发**：普通"写代码"、"实现功能"、"修 bug"、"继续开发"或代码调整，
+  若未显式调用 AZ-SDD/SDD，不应读取或修改 `az-sdd/` 档案。
   **批量模式**：当用户要求开发多个功能时，自动检索未完成的功能规范，制定开发计划。
   **参数**：可选，功能编号如 "0001"。
   **前置条件**：对应的功能规范（spec）和技术规范（arch）应已完成。
 ---
 
-# AZ-SDD-CODING
+# AZ-SDD-CODER
 
 代码实现 - 按照规范实现功能代码，遵循 TDD + 可验证优先原则。
 
 ## 日常使用边界
 
-- 仅在用户明确要求按 AZ-SDD/SDD、已批准 spec 或 `/az-sdd-coding` 开发时使用。
+- 仅在用户显式调用 `/az-sdd-coder`、`az-sdd coder`、`sdd coder`，或明确要求按 AZ-SDD/SDD、已批准 spec 开发时使用。
 - 默认 `standard`：读取 spec、制定计划、实现、测试、更新状态。
 - `lite`：用于小改动，只要求最小 spec/checklist，不强制生成完整批量计划。
 - `strict`：用于多模块或交付型功能，必须检查 arch、测试、验收、状态同步。
-- 普通“写代码/修 bug”不应被本 skill 劫持。
+- 普通“写代码/修 bug/继续开发/代码调整”不应被本 skill 劫持。
 
 ## 核心原则
 
@@ -285,7 +284,7 @@ description: |-
 │  2. 更新 SPEC.md 功能列表中的状态列：                         │
 │     | {ID} | {NAME} | ... | 开发中 | ... |                   │
 │                                                              │
-│  3. 更新 track.md：                                          │
+│  3. 更新 STATUS.md，必要时追加 TRACK.md：                                          │
 │     - {DATE} 开发中 开始开发                                  │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
@@ -376,7 +375,7 @@ CLI 测试覆盖：
 │  2. 更新 SPEC.md 功能列表中的状态列：                         │
 │     | {ID} | {NAME} | ... | 测试中 | ... |                   │
 │                                                              │
-│  3. 更新 track.md：                                          │
+│  3. 更新 STATUS.md，必要时追加 TRACK.md：                                          │
 │     - {DATE} 测试中 开始自动化测试                            │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
@@ -435,180 +434,29 @@ CLI 测试覆盖：
 
 ---
 
-## 阶段 5：生成 HTML 汇报
+## 阶段 5：记录开发证据并更新状态
 
-### Step 5.1: 生成 HTML 报告
+### Step 5.1: 记录开发证据
 
-```
-测试全部通过后，生成 HTML 格式的开发汇报：
+coding 阶段不生成 HTML 报告。只把本次开发证据写入编码任务文档和相关 Markdown/索引文件，供 `/az-sdd-track` 统一汇总生成项目报告。
 
-文件位置：az-sdd/reports/{ID}-{NAME}-development-report.html
-```
+必须记录：
 
-**HTML 报告模板结构**：
+- 实现摘要：本次完成的功能点和主要修改范围
+- 自动化测试：测试命令、通过数量、失败项（如有）
+- 人工验收项：需要 `/az-sdd-tester` 验证的 MT 测试项
+- 遗留问题：阻塞、风险、后续任务
 
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>开发汇报 - {功能名称}</title>
-  <style>
-    /* 简洁现代的样式 */
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .header { border-bottom: 2px solid #4CAF50; padding-bottom: 10px; margin-bottom: 20px; }
-    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; }
-    .status-done { background: #4CAF50; color: white; }
-    .status-pending { background: #FFC107; color: #333; }
-    .status-failed { background: #F44336; color: white; }
-    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-    th { background: #f5f5f5; }
-    .test-pass { color: #4CAF50; }
-    .test-fail { color: #F44336; }
-    .clickable { color: #2196F3; text-decoration: none; cursor: pointer; }
-    .clickable:hover { text-decoration: underline; }
-    .summary-cards { display: flex; gap: 20px; margin: 20px 0; }
-    .card { flex: 1; padding: 20px; border-radius: 8px; background: #f9f9f9; }
-    .card h3 { margin: 0 0 10px 0; color: #333; }
-    .card .number { font-size: 32px; font-weight: bold; color: #4CAF50; }
-    .manual-list { background: #FFF3CD; padding: 15px; border-radius: 8px; margin: 15px 0; }
-    .manual-list h4 { margin: 0 0 10px 0; color: #856404; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>📋 开发汇报</h1>
-    <p><strong>功能名称：</strong>{功能名称}</p>
-    <p><strong>规范编号：</strong>{规范编号}</p>
-    <p><strong>开发时间：</strong>{TIMESTAMP}</p>
-  </div>
-
-  <div class="summary-cards">
-    <div class="card">
-      <h3>自动化测试</h3>
-      <div class="number">{PASS}/{TOTAL}</div>
-      <p>全部通过</p>
-    </div>
-    <div class="card">
-      <h3>CLI 命令</h3>
-      <div class="number">{N}</div>
-      <p>个可用</p>
-    </div>
-    <div class="card">
-      <h3>测试覆盖</h3>
-      <div class="number">{X}%</div>
-      <p>代码覆盖率</p>
-    </div>
-  </div>
-
-  <h2>1️⃣ 功能规范实现情况</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>规范编号</th>
-        <th>功能名称</th>
-        <th>模块</th>
-        <th>实现状态</th>
-        <th>验收标准</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>{ID}</td>
-        <td><a href="#" class="clickable" data-type="spec">{功能名称}</a></td>
-        <td>{模块}</td>
-        <td><span class="status-badge status-done">✅ 完成</span></td>
-        <td><a href="#" class="clickable" data-type="spec">{ID}-{NAME}.spec.md</a></td>
-      </tr>
-      <!-- 更多功能... -->
-    </tbody>
-  </table>
-
-  <h2>2️⃣ 测试用例及结果</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>测试用例</th>
-        <th>类型</th>
-        <th>测试结果</th>
-        <th>关联规范</th>
-        <th>测试详情</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>CLI: 用户注册 --help</td>
-        <td>自动化</td>
-        <td><span class="test-pass">✅ 通过</span></td>
-        <td><a href="#" class="clickable" data-type="spec">{ID}-{NAME}.spec.md</a></td>
-        <td><a href="#" class="clickable" data-type="test">test-case-{N}.ts</a></td>
-      </tr>
-      <!-- 更多测试用例... -->
-    </tbody>
-  </table>
-
-  <h2>3️⃣ 人工测试用例单</h2>
-  <!-- 如果有需要人工测试的内容 -->
-  <div class="manual-list">
-    <h4>⚠️ 需要人工验证</h4>
-    <p>请使用 <code>/az-sdd-test</code> 进行测试</p>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>序号</th>
-        <th>测试项</th>
-        <th>测试说明</th>
-        <th>操作步骤</th>
-        <th>通过标准</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>MT001</td>
-        <td>界面布局</td>
-        <td>验证界面元素位置</td>
-        <td>1. 打开界面<br>2. 观察布局</td>
-        <td>☑️ 位置正确<br>☑️ 尺寸正确</td>
-      </tr>
-      <!-- 更多人工测试项... -->
-    </tbody>
-  </table>
-
-  <div style="margin-top: 30px; padding: 20px; background: #E8F5E9; border-radius: 8px;">
-    <h3>💡 下一步操作</h3>
-    <p>请执行 <code>/az-sdd-test</code> 进行完整验收（包括人工测试）</p>
-  </div>
-
-  <script>
-    // 点击链接时打开对应的规范或测试文件
-    document.querySelectorAll('.clickable').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const type = link.dataset.type;
-        const filename = link.textContent;
-        // 实际实现时可以打开文件或显示详情
-        console.log(`Open: ${type} - ${filename}`);
-        alert(`${type}: ${filename}`);
-      });
-    });
-  </script>
-</body>
-</html>
-```
-
-### Step 5.2: 保存报告并更新状态
+### Step 5.2: 更新状态
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  📋 状态更新                                                │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  1. 将 HTML 报告保存到：                                     │
-│     az-sdd/reports/{TIMESTAMP}-{ID}-{NAME}-report.html      │
+│  1. 更新编码任务文档：                                       │
+│     az-sdd/coding/{TIMESTAMP}-plan.coding.md                │
+│     - 记录实现摘要、测试结果、人工验收项、遗留问题             │
 │                                                              │
 │  2. 更新 {ID}-{NAME}.spec.md（必须执行）：                    │
 │     - 状态字段：测试中 → 待验收                               │
@@ -620,7 +468,7 @@ CLI 测试覆盖：
 │  3. 更新 SPEC.md 功能列表：                                   │
 │     | {ID} | {NAME} | ... | 待验收 | ... |                 │
 │                                                              │
-│  4. 更新 track.md：                                          │
+│  4. 更新 STATUS.md，必要时追加 TRACK.md：                                          │
 │     - {DATE} 待验收 自动化测试完成，等待人工验收               │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
@@ -659,14 +507,17 @@ CLI 测试覆盖：
   ✅ CLI 命令：{N} 个命令可用
   ✅ 测试覆盖率：{X}%
 
-📄 HTML 报告：az-sdd/reports/{TIMESTAMP}-{ID}-{NAME}-report.html
+📄 编码任务文档：az-sdd/coding/{TIMESTAMP}-plan.coding.md
 
 ─────────────────────────────────────────
 
 📋 人工测试用例单：
   共 {N} 项需要人工验证
 
-  如果有，请执行：/az-sdd-test 进行完整验收
+  如果有，请执行：/az-sdd-tester 进行完整验收
+
+📊 如需对外汇报或分享项目进度，请使用：
+  /az-sdd-track 生成项目汇报 HTML
 ═══════════════════════════════════════════════════════════════
 
 ## 批量模式
@@ -705,7 +556,7 @@ CLI 测试覆盖：
 | ③ 功能实现前趋图 | 展示涉及功能的依赖关系（含已完成） |
 | ④ 编码进度 | 实时更新每个步骤的执行状态、耗时 |
 
-**⚠️ 强制要求：每次 az-sdd-coding 触发时必须创建任务计划文件**
+**⚠️ 强制要求：每次 az-sdd-coder 触发时必须创建任务计划文件**
 
 ---
 
@@ -715,7 +566,7 @@ CLI 测试覆盖：
 
 **文件路径**：`az-sdd/coding/{TIMESTAMP}-plan.coding.md`
 
-**触发条件**：**每次**触发 az-sdd-coding 时（不仅是批量模式）
+**触发条件**：**每次**触发 az-sdd-coder 时（不仅是批量模式）
 
 **必须包含的内容（四要素）**：
 
@@ -730,7 +581,7 @@ CLI 测试覆盖：
 
 **⚠️ 强制要求：必须将计划保存到文件**
 
-每次 az-sdd-coding 触发都必须生成任务计划文件，不可跳过！
+每次 az-sdd-coder 触发都必须生成任务计划文件，不可跳过！
 
 ---
 
@@ -1132,13 +983,14 @@ CLI 测试覆盖：
 ─────────────────────────────────────────
 
 📄 编码任务文档：az-sdd/coding/{TIMESTAMP}-plan.coding.md
-📄 HTML 汇报：az-sdd/reports/{TIMESTAMP}-batch-report.html
+📄 编码任务文档：az-sdd/coding/{TIMESTAMP}-plan.coding.md
 
 📋 人工测试用例单：
   共 {N} 个功能，{X} 项人工测试
 
 💡 下一步：
-  /az-sdd-test 进行批量验收
+  /az-sdd-tester 进行批量验收
+  如需对外汇报：/az-sdd-track 生成项目汇报 HTML
 ═══════════════════════════════════════════════════════════════
 ```
 
@@ -1226,7 +1078,7 @@ CLI 测试覆盖：
 2. 更新文件：
    - az-sdd/spec/{ID}-{NAME}.spec.md 中的状态字段
    - az-sdd/SPEC.md 中的功能列表状态列
-3. 在 track.md 中记录状态变更
+3. 在 STATUS.md 更新当前态，必要时在 TRACK.md 记录关键事件
 ```
 
 **Step 5.2: 提示用户开始测试流程**
@@ -1245,7 +1097,7 @@ CLI 测试覆盖：
 ─────────────────────────
 
 🎯 下一步：
-  /az-sdd-test 开始测试流程
+  /az-sdd-tester 开始测试流程
 ```
 
 ---
@@ -1378,7 +1230,8 @@ describe('CLI: {COMMAND_NAME}', () => {
 │   │   └── manuals/                     # 操作手册
 │   ├── coding/                          # 编码任务文档目录
 │   │   └── {TIMESTAMP}-plan.coding.md  # 任务计划文件
-│   └── track.md                         # 状态追踪
+│   ├── STATUS.md                        # 当前状态看板
+│   └── TRACK.md                         # 历史事件日志
 │
 ├── code/                                # 代码实现文件（统一存放位置）
 │   ├── main.py                          # 主入口

@@ -1,29 +1,28 @@
 ---
-name: az-sdd-test
+name: az-sdd-tester
 version: 3.0.0
 description: |-
   基于 SDD（规范驱动开发）流程，执行交互式人工测试验收。
-  **触发场景**：仅当用户明确要求按 AZ-SDD/SDD 做验收测试，
-  或使用 "az-sdd test"、"sdd test"、"/az-sdd-test"、
-  "按 AZ-SDD 验收"、"验收已进入待验收状态的功能" 时激活。
+  **触发场景**：仅当用户显式调用 "/az-sdd-tester"、"az-sdd tester"、"sdd tester"，
+  或明确要求按 AZ-SDD/SDD 做验收测试时激活。
   **不触发**：普通地说"跑测试"、"测试一下"时，应使用项目原有测试方式，
-  不应自动进入人工验收工单流程。
+  不应创建 AZ-SDD 人工验收工单。
   **参数**：可选，功能编号如 "0001"。
   **前置条件**：
   1. 代码已编写完成（coding 阶段完成），有人工测试用例待验证
   2. 应用启动/关闭脚本已创建并测试通过（Step 0 前置检查）
 ---
 
-# AZ-SDD-TEST
+# AZ-SDD-TESTER
 
 人工测试验收 - 通过工单目录管理测试过程，为每个测试项单独生成测试单，支持异常记录与处理。
 
 ## 日常使用边界
 
-- 仅在用户明确要求 AZ-SDD 验收，或目标 spec 已进入 `待验收` 状态时使用。
+- 仅在用户显式调用 `/az-sdd-tester`、`az-sdd tester`、`sdd tester`，或明确要求 AZ-SDD/SDD 验收时使用。
 - 普通“跑测试”应优先使用项目已有测试命令，不生成验收工单。
 - `lite` 模式只记录关键验收项；`standard` 生成测试单和汇总；`strict` 需要签名、异常处理和状态同步。
-- Step 0 只确认应用可启动、可关闭和可进入人工验收，不重复执行 `az-sdd-coding` 已完成的完整自动化测试；若已有近期自测证据且代码未变，只引用该结果并执行最小前置检查。
+- Step 0 只确认应用可启动、可关闭和可进入人工验收，不重复执行 `az-sdd-coder` 已完成的完整自动化测试；若已有近期自测证据且代码未变，只引用该结果并执行最小前置检查。
 
 ## 目录结构
 
@@ -32,8 +31,6 @@ description: |-
 └── az-sdd/
     └── test/
         └── {工单目录}/              # 例如：20260514_203126/
-            ├── test-review.html     # 测试总览页面
-            ├── test-data.json       # 测试数据
             ├── test-summary.md       # 测试汇总报告
             └── cases/                # 测试单目录
                 ├── MT001.md          # 测试项测试单
@@ -79,7 +76,7 @@ description: |-
 **读取项目配置**：
 
 1. 读取 `{项目目录}/az-sdd/ARCH.md` 获取技术架构
-2. 读取 `{项目目录}/az-sdd/init.md` 获取项目信息
+2. 读取 `{项目目录}/az-sdd/INIT.md` 获取项目信息
 3. 查找启动/关闭脚本位置
 
 **根据技术架构，检查脚本位置**：
@@ -175,17 +172,17 @@ C. 关闭失败 → 请修复后再继续
 
 ### Step 2: 检索待测试功能
 
-运行脚本生成测试清单：
+默认不生成 HTML 验收页。AI 直接扫描待验收功能规范，提取 MTxxx 人工测试用例，并为每个测试项生成 Markdown 测试单。
+
+默认产物：
+- `az-sdd/test/{工单目录}/cases/MTxxx.md`
+- `az-sdd/test/{工单目录}/test-summary.md`（测试完成后生成）
+
+如用户明确要求“交互式验收页 / HTML 测试页面”，才手动运行辅助脚本：
 
 ```bash
-python az-sdd-test/references/generate-test-review-html.py {项目根目录路径} {工单目录路径}
+python az-sdd-tester/references/generate-test-review-html.py {项目根目录路径} {功能编号}
 ```
-
-脚本会自动：
-- 扫描所有待测试功能的规范文件
-- 提取人工测试用例（MTxxx 格式）
-- 在工单目录下生成 `test-review.html` 和 `test-data.json`
-- 为每个测试项生成单独的测试单 `cases/MTxxx.md`
 
 ---
 
@@ -242,19 +239,14 @@ python az-sdd-test/references/generate-test-review-html.py {项目根目录路�
 
 🎯 请进行测试：
 
-1. 查看测试总览页面：
-   az-sdd/test/{工单目录}/test-review.html
-
-2. 点击功能卡片展开测试项
-
-3. 点击测试项，查看测试单：
+1. 打开测试单目录：
    az-sdd/test/{工单目录}/cases/MTxxx.md
 
-4. 按测试单要求完成测试后：
+2. 按测试单要求完成测试后：
    - 测试通过 → 在测试单中勾选"通过"，完善测试记录
    - 测试失败 → 在测试单中填写"失败"和"异常描述"
 
-5. 完成所有测试后，回复"测试已完成"
+3. 完成所有测试后，回复"测试已完成"
 
 ─────────────────────────────────────────────────────────────
 
@@ -484,7 +476,7 @@ AI 判断：{正确 / 不正确}
 2. 更新 SPEC.md：
    - 将状态从"待验收"/"测试中"改为"已完成"
 
-3. 更新 track.md：
+3. 更新 STATUS.md，必要时追加 TRACK.md：
    - 记录测试完成信息
 ```
 
@@ -612,7 +604,5 @@ AI 判断：{正确 / 不正确}
 
 | 文件 | 路径 |
 |------|------|
-| 测试总览页面 | `{项目目录}/az-sdd/test/{工单目录}/test-review.html` |
-| 测试数据 | `{项目目录}/az-sdd/test/{工单目录}/test-data.json` |
 | 测试汇总报告 | `{项目目录}/az-sdd/test/{工单目录}/test-summary.md` |
 | 测试单 | `{项目目录}/az-sdd/test/{工单目录}/cases/MTxxx.md` |
