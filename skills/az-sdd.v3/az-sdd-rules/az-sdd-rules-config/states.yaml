@@ -109,106 +109,179 @@ query_rules:
   abnormal:
     - blocked
 
-# 状态同步更新规则
-# 当任何功能的状态发生变化时，必须同步更新以下文件
+# 反馈闭环状态定义
+feedback_states:
+  - id: clarifying
+    name: 待澄清
+    description: 已记录反馈，但关键信息不足
+    open: true
+
+  - id: planned
+    name: 已计划
+    description: 已完成分类并生成处理计划
+    open: true
+
+  - id: processing
+    name: 处理中
+    description: 正在修复、改规范、重构或验证
+    open: true
+
+  - id: verifying
+    name: 待验证
+    description: 已处理，等待自动化测试或人工确认
+    open: true
+
+  - id: resolved
+    name: 已解决
+    description: 验证通过或用户确认问题解决
+    open: false
+
+  - id: closed
+    name: 已关闭
+    description: 不处理、重复或无效，且已记录原因
+    open: false
+
+  - id: repro_pending
+    name: 待复现
+    description: 暂无法复现，等待补充复现条件
+    open: true
+
+  - id: transferred
+    name: 转需求
+    description: 已转成新/改 spec，后续跟踪关联规范
+    open: true
+
+feedback_next_actions:
+  - id: spec
+    description: 创建或更新功能规范
+  - id: arch
+    description: 创建或更新技术规范
+  - id: coder
+    description: 修复实现缺陷或执行重构
+  - id: tester
+    description: 执行测试验收或异常处理
+  - id: none
+    description: 无需执行阶段动作，记录关闭或待复现原因
+
+# 状态写入规则
+# STATUS.md 是当前态入口，TRACK.md 是历史事件日志
 sync_rules:
   description: |
-    每次执行完流程、功能状态发生变化时，必须同步更新所有相关文档，
-    防止出现文档内容不一致。
+    状态管理采用“一个状态看板 + 多文档证据”。
+    每次阶段推进时，优先更新 STATUS.md 作为当前态入口；
+    SPEC.md、ARCH.md、FEEDBACK.md 只保留索引和链接；
+    TRACK.md 只追加关键事件，不承担状态总览职责。
 
   files_to_update:
+    - name: STATUS.md
+      path: az-sdd/STATUS.md
+      description: 当前状态看板，展示阶段、进度、焦点、阻塞、未闭环反馈和下一步
+      mandatory: true
+
     - name: SPEC.md
       path: az-sdd/SPEC.md
-      description: 功能规范索引目录，更新功能列表中的状态列
+      description: 功能规范索引，只保留功能列表、状态、链接和简短备注
       mandatory: true
 
     - name: coding.md
       path: az-sdd/coding.md
-      description: 批量开发计划文档，更新当前编码进度情况
+      description: 批量开发计划证据，不作为全局状态入口
       mandatory: false
       condition: "仅在批量开发模式时存在"
 
     - name: ARCH.md
       path: az-sdd/ARCH.md
-      description: 技术规范索引目录，更新技术规范状态列
-      mandatory: true
+      description: 技术规范索引，只保留架构文档列表和关联功能
+      mandatory: false
 
     - name: FEEDBACK.md
       path: az-sdd/FEEDBACK.md
-      description: 用户反馈索引目录，更新反馈处理状态列
+      description: 反馈索引，只保留反馈列表、状态、下一步动作和链接
       mandatory: true
       condition: "仅当存在反馈记录时"
 
-    - name: track.md
-      path: az-sdd/track.md
-      description: 工作状态追踪记录，记录状态变更历史
-      mandatory: true
+    - name: TRACK.md
+      path: az-sdd/TRACK.md
+      description: 历史事件日志，只追加关键状态变化、阻塞、关闭和发布记录
+      mandatory: false
 
-  # 同步更新的触发时机
+  # 写入触发时机
   trigger_points:
     - skill: az-sdd-spec
       triggers:
         - "规范创建时（draft）"
         - "状态变更时（draft → reviewing → approved）"
       files:
+        - STATUS.md
         - SPEC.md
-        - track.md
+        - TRACK.md（仅关键事件）
 
-    - skill: az-sdd-coding
+    - skill: az-sdd-coder
       triggers:
         - "开始开发时（approved → developing）"
         - "开发完成时（developing → testing）"
         - "测试通过时（testing → acceptance）"
       files:
+        - STATUS.md
         - SPEC.md
         - coding.md
-        - track.md
+        - TRACK.md（仅关键事件）
 
-    - skill: az-sdd-test
+    - skill: az-sdd-tester
       triggers:
         - "验收通过时（acceptance → completed）"
       files:
+        - STATUS.md
         - SPEC.md
         - coding.md
-        - track.md
+        - TRACK.md（仅关键事件）
+
+    - skill: az-sdd-feedback
+      triggers:
+        - "反馈创建时（待澄清/已计划）"
+        - "反馈分流时（已计划 → 处理中/转需求/待复现）"
+        - "反馈验证时（处理中 → 待验证 → 已解决）"
+        - "反馈关闭时（任意状态 → 已关闭/已解决/待复现/转需求）"
+      files:
+        - STATUS.md
+        - FEEDBACK.md
+        - TRACK.md（仅关闭、挂起、阻塞或高优先级事件）
 
     - skill: az-sdd-track
       triggers:
-        - "任何状态变更时"
+        - "查看或更新当前状态时"
         - "发布时（completed → released）"
       files:
+        - STATUS.md
         - SPEC.md
         - ARCH.md
         - FEEDBACK.md
-        - track.md
+        - TRACK.md（仅事件日志）
 
-  # 同步更新检查清单
+  # 写入检查清单
   checklist:
-    - name: 状态列一致性
-      check: "SPEC.md 中该功能的状态列是否与规范文件中的当前状态一致"
+    - name: 状态入口完整性
+      check: "STATUS.md 是否能在第一屏看到当前阶段、当前工作、阻塞项和下一步"
 
-    - name: 进度情况实时性
-      check: "coding.md 中的当前编码进度是否反映最新执行状态"
+    - name: 索引轻量性
+      check: "SPEC.md、ARCH.md、FEEDBACK.md 是否只保留索引、状态、链接和简短备注"
 
-    - name: 技术规范关联
-      check: "ARCH.md 中的技术规范状态是否与对应功能规范状态一致"
+    - name: 证据可追踪
+      check: "STATUS.md 中的当前焦点是否链接到 spec、coder、tester 或 feedback 证据"
 
-    - name: 反馈处理追踪
-      check: "FEEDBACK.md 中相关反馈的处理状态是否已更新"
-
-    - name: 历史记录完整性
-      check: "track.md 中是否已记录本次状态变更（时间、原因、变更前后状态）"
+    - name: 历史日志克制
+      check: "TRACK.md 是否只追加关键事件，而不是重复维护状态总览"
 
   # 常见不一致问题及处理
   common_issues:
-    - symptom: "SPEC.md 显示已发布，但规范文件仍是草稿"
-      cause: "未同步更新"
-      fix: "立即同步所有相关文件"
+    - symptom: "用户无法一眼判断下一步"
+      cause: "STATUS.md 未更新或当前焦点不清晰"
+      fix: "先更新 STATUS.md，再补充相关证据链接"
 
-    - symptom: "coding.md 显示已完成，但 SPEC.md 还是开发中"
-      cause: "批量开发计划与索引目录不同步"
-      fix: "更新 SPEC.md 和 coding.md 使其一致"
+    - symptom: "多个文件都在维护完整状态"
+      cause: "索引或日志承担了状态看板职责"
+      fix: "将当前态收敛到 STATUS.md，其他文件降级为索引或证据"
 
-    - symptom: "ARCH.md 状态超前于 SPEC.md"
-      cause: "技术规范先于功能规范完成"
-      fix: "确保技术规范状态不超过对应功能规范状态"
+    - symptom: "TRACK.md 内容越来越像日报或看板"
+      cause: "把历史日志当成状态总览使用"
+      fix: "保留关键事件，当前态迁移到 STATUS.md"

@@ -3,10 +3,9 @@ name: az-sdd-init
 version: 3.0.0
 description: |-
   基于 SDD（规范驱动开发）流程，初始化项目档案目录结构。
-  **触发场景**：当用户明确要求初始化 AZ-SDD/SDD 项目档案，
-  或使用 "az-sdd init"、"sdd init"、"/az-sdd-init"、
-  "初始化 AZ-SDD"、"建立 AZ-SDD 规范目录"、"给项目创建 SDD 档案"时激活。
-  **不触发**：普通"初始化项目"、"开始新项目"若未提到 AZ-SDD/SDD，
+  **触发场景**：仅当用户显式调用 "/az-sdd-init"、"az-sdd init"、"sdd init"，
+  或明确要求初始化 AZ-SDD/SDD 项目档案时激活。
+  **不触发**：普通"初始化项目"、"开始新项目"、"创建项目"若未显式调用 AZ-SDD/SDD，
   不应自动创建 `az-sdd/` 档案；如果用户已经在 az-sdd/ 目录下工作，
   或明确说"不需要初始化"，也不触发。
 ---
@@ -73,8 +72,9 @@ description: |-
 
 ```
 az-sdd/
-├── init.md          # SDD 档案入口，引用 AGENTS.md 的项目说明
-├── track.md         # 工作状态记录
+├── INIT.md          # SDD 档案入口，引用 AGENTS.md 的项目说明
+├── STATUS.md        # 当前状态看板，一眼查看项目状态和下一步
+├── TRACK.md         # 事件日志，只记录关键历史变化
 ├── SPEC.md          # 功能规范索引
 ├── ARCH.md          # 技术规范索引
 ├── FEEDBACK.md      # 用户反馈索引
@@ -84,15 +84,17 @@ az-sdd/
 │   ├── cases/       # 测试用例
 │   ├── reports/     # 测试报告
 │   └── manuals/     # 操作手册
+├── reports/         # 对外汇报与分享报告
 └── feedback/        # 用户反馈目录
 ```
 
 ### Step 6: 初始化文件
 
 1. 如果项目根目录没有 AGENTS.md，先创建 AGENTS.md，并写入项目说明与 AZ-SDD 使用约定。
-2. 如果 AGENTS.md 已存在，不复制其已有内容到 az-sdd/init.md；只在缺少 AZ-SDD 约定时追加一个中文优先的简短章节。
-3. 使用 templates/init.md 和 templates/track.md 初始化文件。
-4. az-sdd/init.md 只保留项目档案入口、关键元数据和 AGENTS.md 引用，避免与 AGENTS.md 重复维护项目背景、定位、目标用户等长文本。
+2. 如果 AGENTS.md 已存在，不复制其已有内容到 az-sdd/INIT.md；只在缺少 AZ-SDD 约定时追加一个中文优先的简短章节。
+3. 使用 templates/INIT.md、templates/STATUS.md 和 templates/TRACK.md 初始化文件。
+4. az-sdd/INIT.md 只保留项目档案入口、关键元数据和 AGENTS.md 引用，避免与 AGENTS.md 重复维护项目背景、定位、目标用户等长文本。
+5. az-sdd/STATUS.md 是当前状态入口；az-sdd/TRACK.md 只追加关键事件，不承担状态总览职责。
 
 ### Step 7: 输出结果
 
@@ -101,14 +103,16 @@ az-sdd/
 
 📁 目录结构：
 az-sdd/
-├── init.md           SDD 档案入口（项目说明见 AGENTS.md）
-├── track.md          工作状态记录
+├── INIT.md           SDD 档案入口（项目说明见 AGENTS.md）
+├── STATUS.md         当前状态看板
+├── TRACK.md          事件日志
 ├── SPEC.md           功能规范索引
 ├── ARCH.md           技术规范索引
 ├── FEEDBACK.md       用户反馈索引
 ├── spec/             功能规范目录
 ├── arch/             技术规范目录
 ├── test/             测试目录
+├── reports/          项目汇报目录
 └── feedback/         用户反馈目录
 
 📊 项目信息：

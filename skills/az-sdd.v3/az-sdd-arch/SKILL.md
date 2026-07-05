@@ -3,11 +3,10 @@ name: az-sdd-arch
 version: 3.0.0
 description: |
   为复杂技术决策创建独立的技术规范文档。
-  **触发场景**：当用户明确要求按 AZ-SDD/SDD 创建技术规范，
-  或使用 "az-sdd arch"、"sdd arch"、"/az-sdd-arch"、
-  "为这个 AZ-SDD spec 创建架构文档"、"按规范补充技术方案"时激活。
-  **不触发**：普通架构设计、接口设计、数据模型讨论，
-  若未要求写入 AZ-SDD 档案，不应自动创建 arch 文档。
+  **触发场景**：仅当用户显式调用 "/az-sdd-arch"、"az-sdd arch"、"sdd arch"，
+  或明确要求按 AZ-SDD/SDD 流程创建技术规范时激活。
+  **不触发**：普通架构设计、接口设计、数据模型讨论、继续开发或代码评审，
+  若未显式调用 AZ-SDD/SDD，不应读取或创建 `az-sdd/` 档案。
   **适用场景**：
   - 功能涉及多个模块或子系统
   - 需要架构变更或重构
@@ -139,7 +138,7 @@ description: |
 - {COMPONENT_2}
 
 💡 下一步：
-1. /az-sdd-coding 开始代码实现
+1. /az-sdd-coder 开始代码实现
 2. /az-sdd-spec 查看功能规范
 ```
 

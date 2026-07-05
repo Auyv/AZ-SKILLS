@@ -21,7 +21,8 @@
 
 ## 档案入口
 
-- 工作状态记录：`az-sdd/track.md`
+- 当前状态看板：`az-sdd/STATUS.md`
+- 历史事件日志：`az-sdd/TRACK.md`
 - 功能规范索引：`az-sdd/SPEC.md`
 - 技术规范索引：`az-sdd/ARCH.md`
 - 用户反馈索引：`az-sdd/FEEDBACK.md`
@@ -30,8 +31,9 @@
 
 ```
 az-sdd/
-├── init.md          本文件，SDD 档案入口
-├── track.md         工作状态记录
+├── INIT.md          本文件，SDD 档案入口
+├── STATUS.md        当前状态看板
+├── TRACK.md         历史事件日志
 ├── SPEC.md          功能规范索引
 ├── ARCH.md          技术规范索引
 ├── FEEDBACK.md      用户反馈索引
@@ -41,6 +43,7 @@ az-sdd/
 │   ├── cases/       测试用例
 │   ├── reports/     测试报告
 │   └── manuals/     操作手册
+├── reports/         对外汇报与分享报告
 └── feedback/        用户反馈文档 (FB-*.feedback.md)
 ```
 

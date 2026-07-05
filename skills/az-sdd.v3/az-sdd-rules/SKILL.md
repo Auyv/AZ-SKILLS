@@ -2,27 +2,27 @@
 name: az-sdd-rules
 version: 3.0.0
 description: |
-  SDD 规范守卫 - 确保用户在开发过程中遵循 az-sdd 规则体系。
+  SDD 规则检查清单 - 为显式调用的 az-sdd 流程提供规则、状态机和前置检查。
   **触发场景**：
-  - 当用户明确使用 az-sdd 系列 SKILL 时由入口或当前 SKILL 显式加载
-  - 当用户偏离 SDD 流程时自动介入
-  - 当需要查询规则、状态、流程时
-  - 当 SKILL 执行结果与预期不符时
+  - 仅当用户显式调用 "/az-sdd-rules"、"az-sdd rules"、"sdd rules" 时激活
+  - 或由已经显式触发的 az-sdd-* SKILL 内部加载为规则清单
+  - 或当用户明确要求按 AZ-SDD/SDD 查询规则、状态机、流程或纠偏原因时激活
+  **不触发**：普通开发、测试、进度、需求讨论或流程偏离，均保持普通对话处理。
 
   **职责**：
   - 加载并记忆 az-sdd 规则配置
-  - 监控 SKILL 执行是否符合规范
-  - 必要时介入并纠正偏离行为
+  - 为已显式触发的 SKILL 提供前置检查清单
+  - 检查状态变更是否符合转换规则
   - 提供规则查询和解释
 ---
 
 # AZ-SDD-RULES
 
-SDD 规范守卫 - 保护开发流程不走偏。
+SDD 规则检查清单 - 为显式调用的 AZ-SDD 流程提供校验依据。
 
-> 现实约束：不同 AI 平台未必支持一个 SKILL 自动拦截另一个 SKILL。
-> 日常使用时优先通过 `/az-sdd-next` 进入流程；直接调用某个 az-sdd-* SKILL 时，
-> 该 SKILL 必须先执行本规则的前置检查清单，再继续具体任务。
+> 触发边界：本 skill 不作为常驻守卫，也不接管普通开发对话。
+> 只有用户显式调用 `/az-sdd-rules`，或某个已显式触发的 az-sdd-* skill
+> 在执行前加载规则清单时，才读取和应用这些规则。
 
 ## 核心职责
 
@@ -31,10 +31,10 @@ SDD 规范守卫 - 保护开发流程不走偏。
 │                    az-sdd-rules 职责                        │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  1. 加载规则 - 启动时加载规则配置到记忆                       │
-│  2. 监控流程 - 确保 SKILL 按正确顺序执行                      │
+│  1. 加载规则 - 显式调用时加载规则配置到上下文                 │
+│  2. 检查流程 - 为已触发的 SKILL 校验执行顺序                  │
 │  3. 状态校验 - 确保状态变更符合转换规则                       │
-│  4. 干预纠正 - 发现偏离时及时介入                             │
+│  4. 提示纠偏 - 发现偏离时给出可选修正路径                     │
 │  5. 解释规则 - 应要求解释规则含义                             │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
@@ -98,7 +98,7 @@ az-sdd-rules/
 ### 1.5 SKILL 流程顺序
 
 ```
-init → spec → arch(可选) → coding → test → track → feedback
+init → spec → arch(可选) → coder → tester → track → feedback
 ```
 
 | 顺序 | SKILL | 可跳过 |
@@ -106,39 +106,39 @@ init → spec → arch(可选) → coding → test → track → feedback
 | 1 | az-sdd-init | ❌ |
 | 2 | az-sdd-spec | ❌ |
 | 3 | az-sdd-arch | ✅（简单功能） |
-| 4 | az-sdd-coding | ❌ |
-| 5 | az-sdd-test | ❌ |
+| 4 | az-sdd-coder | ❌ |
+| 5 | az-sdd-tester | ❌ |
 | 6 | az-sdd-track | ❌ |
-| 7 | az-sdd-feedback | ❌（可选） |
+| 7 | az-sdd-feedback | ❌（仅用户显式调用时启用自动闭环） |
 
 ### 1.6 跳过规则
 
 | 跳过条件 | 可跳过项 |
 |---------|---------|
-| 功能非常简单明确，无需详细规范 | spec → coding |
-| 用户明确说'不需要写规范，直接做' | spec → coding |
+| 功能非常简单明确，无需详细规范 | spec → coder |
+| 用户明确说'不需要写规范，直接做' | spec → coder |
 | 不涉及技术方案变更、不涉及新的技术依赖 | arch |
 | 功能简单，无复杂技术决策 | arch |
 | 用户选择简单模式 | arch |
 
 ---
 
-## 二、自动介入时机
+## 二、显式规则检查时机
 
-### 2.1 必须介入的情况
+### 2.1 必须检查的情况
 
-| 场景 | 偏离行为 | 介入方式 |
+| 场景 | 偏离行为 | 检查结果 |
 |------|---------|---------|
-| 跳过 spec 直接 coding | spec → coding 未满足条件 | 询问是否需要创建规范 |
+| 跳过 spec 直接 coder | spec → coder 未满足条件 | 询问是否需要创建规范 |
 | 跳过 arch 但应该创建 | 功能涉及多模块/架构变更 | 建议使用 az-sdd-arch |
 | 状态跳跃 | 未按顺序经历状态 | 提示正确的状态顺序 |
-| 回退未记录 | acceptance → developing | 要求在 track.md 记录原因 |
+| 回退未记录 | acceptance → developing | 要求在 TRACK.md 记录原因 |
 | 审核未通过继续开发 | reviewing → developing | 提示必须审核通过 |
 | 测试未完成提前验收 | testing → acceptance | 提示等待测试完成 |
 
-### 2.2 可选介入的情况
+### 2.2 可选检查的情况
 
-| 场景 | 介入方式 |
+| 场景 | 处理方式 |
 |------|---------|
 | 用户询问规则含义 | 提供规则解释 |
 | 用户请求查看状态 | 显示当前状态 |
@@ -146,7 +146,7 @@ init → spec → arch(可选) → coding → test → track → feedback
 
 ---
 
-## 三、干预纠正流程
+## 三、显式纠偏流程
 
 ### 3.1 前置条件检查（核心新增）
 
@@ -157,7 +157,7 @@ init → spec → arch(可选) → coding → test → track → feedback
 │              前置条件检查流程                                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  用户要求执行：az-sdd-coding 0001                            │
+│  用户要求执行：az-sdd-coder 0001                            │
 │                          │                                   │
 │                          ▼                                   │
 │              读取对应规范文件状态                             │
@@ -192,8 +192,8 @@ init → spec → arch(可选) → coding → test → track → feedback
 
 | SKILL | 所需规范状态 | 前置动作 |
 |-------|-------------|---------|
-| az-sdd-coding | 必须为 `已批准` ✅ | 需先完成审核流程 |
-| az-sdd-test | 必须为 `待验收` 🎯 | 需先完成开发+自动化测试 |
+| az-sdd-coder | 必须为 `已批准` ✅ | 需先完成审核流程 |
+| az-sdd-tester | 必须为 `待验收` 🎯 | 需先完成开发+自动化测试 |
 | 需求变更 | 无限制 | 直接执行 |
 
 **重要**：状态必须是 `已批准` 才能开始 coding，`待验收` 才能开始验收测试。
@@ -248,7 +248,7 @@ az-sdd-rules 重新检查：
 
   ✓ 前置条件满足，开始执行 coding...
 
-  [正常执行 az-sdd-coding]
+  [正常执行 az-sdd-coder]
 ```
 
 ---
@@ -298,7 +298,7 @@ az-sdd-rules 检查：
 
 ---
 
-### 3.2 发现偏离时的处理
+### 3.2 显式检查发现偏离时的处理
 
 ```
 检测到偏离
@@ -338,7 +338,7 @@ az-sdd-rules 检查：
 ### 4.1 az-sdd-init 后
 
 - [ ] az-sdd/ 目录结构完整
-- [ ] init.md、track.md、SPEC.md 存在
+- [ ] INIT.md、STATUS.md、TRACK.md、SPEC.md 存在
 
 ### 4.2 az-sdd-spec 后
 
@@ -351,18 +351,19 @@ az-sdd-rules 检查：
 - [ ] 技术规范已创建（.arch.md）
 - [ ] ARCH.md 已更新
 
-### 4.4 az-sdd-coding 后
+### 4.4 az-sdd-coder 后
 
 - [ ] 代码已实现
 - [ ] spec 状态已更新为"开发中"
 - [ ] 测试通过后状态更新为"待验收"
 - [ ] SPEC.md 已更新
 
-### 4.5 az-sdd-test 后
+### 4.5 az-sdd-tester 后
 
 - [ ] 人工测试已完成
 - [ ] spec 状态已更新为"已完成"
-- [ ] track.md 已记录
+- [ ] STATUS.md 已更新
+- [ ] TRACK.md 已按需记录关键事件
 
 ### 4.6 az-sdd-track 后
 
@@ -371,18 +372,18 @@ az-sdd-rules 检查：
 
 ---
 
-## 五、介入示例
+## 五、显式检查示例
 
 ### 5.1 场景：用户明确要求在 AZ-SDD 中跳过 spec 直接 coding
 
 ```
 用户：按 AZ-SDD 直接开始写代码吧，不需要规范了
 
-AI（az-sdd-rules）：
+AI（已显式调用 az-sdd-rules 或已触发的 AZ-SDD skill）：
   ⚠️ 检测到偏离 SDD 流程
 
   当前情况：尚未创建功能规范
-  规则要求：az-sdd-spec → az-sdd-coding
+  规则要求：az-sdd-spec → az-sdd-coder
 
   强制规则：coding 前必须先有已批准的规范
   原因：规范是代码的唯一真实来源，状态驱动的基础
@@ -400,7 +401,7 @@ AI（az-sdd-rules）：
 ```
 用户：我想把 spec 状态从"草稿"直接改成"已完成"
 
-AI（az-sdd-rules）：
+AI（已显式调用 az-sdd-rules 或已触发的 AZ-SDD skill）：
   ⚠️ 检测到非法状态跳跃
 
   当前状态：草稿
@@ -419,7 +420,7 @@ AI（az-sdd-rules）：
 ```
 用户：开始开发这个功能吧
 
-AI（az-sdd-rules）：
+AI（已显式调用 az-sdd-rules 或已触发的 AZ-SDD skill）：
   ℹ️ 建议检查是否需要技术规范
 
   检测到功能涉及：
@@ -440,11 +441,11 @@ AI（az-sdd-rules）：
 ```
 用户：测试失败了，返回开发状态
 
-AI（az-sdd-rules）：
+AI（已显式调用 az-sdd-rules 或已触发的 AZ-SDD skill）：
   ⚠️ 状态回退需要记录原因
 
   变更：测试中 → 开发中
-  规则：回退时必须在 track.md 中记录原因
+  规则：回退时必须在 TRACK.md 中记录原因
 
   请描述回退原因：
   （用户输入原因）
@@ -454,14 +455,14 @@ AI（az-sdd-rules）：
   - 变更：测试中 → 开发中
   - 原因：{用户输入}
 
-  正在更新 track.md...
+  正在更新 TRACK.md...
 ```
 
 ---
 
 ## 六、启动时的规则加载
 
-**首次使用或直接调用某个 az-sdd-* skill 时，显式执行规则检查**：
+**显式调用 `/az-sdd-rules` 或直接调用某个 az-sdd-* skill 时，执行规则检查**：
 
 ```
 [AZ-SDD-RULES] 正在加载规则配置...
@@ -479,7 +480,7 @@ AI（az-sdd-rules）：
 ## 七、与其他 SKILL 的协作
 
 ```
-az-sdd-rules 作为规则清单 SKILL，在其他 SKILL 执行前提供显式校验
+az-sdd-rules 作为规则清单 SKILL，只在显式调用或已触发流程内部提供校验
 
 ┌──────────────┐     读取规则      ┌──────────────┐
 │ az-sdd-rules │ ←────────────── │ 其他 SKILL   │
@@ -495,10 +496,10 @@ az-sdd-rules 作为规则清单 SKILL，在其他 SKILL 执行前提供显式校
 ```
 
 **工作模式**：
-1. 推荐从 `/az-sdd-next` 进入，由它读取状态并提示下一步。
-2. 直接触发任何 az-sdd-* SKILL 时，当前 SKILL 必须先执行前置检查。
+1. 推荐显式调用 `/az-sdd-next` 进入，由它读取状态并提示下一步。
+2. 直接显式触发任何 az-sdd-* SKILL 时，当前 SKILL 必须先执行前置检查。
 3. 需要解释状态、流程或纠偏原因时，调用 `/az-sdd-rules`。
-4. 完成后验证状态更新和索引同步。
+4. 完成后验证 STATUS.md 当前态、索引链接和必要的 TRACK.md 事件记录。
 
 ---
 
@@ -522,7 +523,7 @@ az-sdd-rules 作为规则清单 SKILL，在其他 SKILL 执行前提供显式校
 紧急绕过选项：
 1. 强制继续 - 输入"FORCE"确认风险后继续
 2. 跳过本次检查 - 仅本次有效
-3. 禁用守卫 - 整个会话禁用 az-sdd-rules（慎用）
+3. 跳过规则清单 - 整个会话不再加载 az-sdd-rules（慎用）
 
 ⚠️ 警告：绕过规则可能导致状态不一致、流程混乱
 ```
