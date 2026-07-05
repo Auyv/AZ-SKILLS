@@ -1,0 +1,106 @@
+{
+  "skill_name": "az-spc-mpu-adapter",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "Adapt generated SPC C output into an MPU app using a reference view style.",
+      "prompt": "Adapt doc/mcud-spc_out/mcud/c into app/mcud, following common/view/spc_hq_fota_app style.",
+      "expected_output": "Creates common/view/spc_mcud, copies generated app/conn/srv runtime files, adds wrapper lifecycle files, updates CMake, and wires init/done in main.c.",
+      "criteria": [
+        "Does not copy generated main_client.c or main_server.c",
+        "Creates wrapper init/done/run-once APIs",
+        "Updates CMake include and source directories",
+        "Places lifecycle calls in main.c at sensible dependency points"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "Bridge generated SPC service handlers to xrpc process wrapper APIs.",
+      "prompt": "Generated mcud_srv.c contains TODO handlers. Forward SPC requests to XrpcProcess* APIs in business/xrpc/inc/xrpc_process_define.h.",
+      "expected_output": "Each SPC handler reads request parameters, fills the matching TXrpcProcess* input struct, calls XrpcProcess*, writes output fields on success, and returns the Int32 result.",
+      "criteria": [
+        "Uses existing XrpcProcess* wrappers instead of ad hoc encoding",
+        "Initializes input and output structs",
+        "Avoids uninitialized response fields",
+        "Handles string length copying safely"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "Move service RunOnce maintenance into an SFC task thread.",
+      "prompt": "SpcMcudSrvRunOnce() must run in a separate thread using mpu/sdk/include/sfc/sfc_task.h.",
+      "expected_output": "Adds sfc/sfc_task.h, creates a TSfTask, runs SpcMcudSrvRunOnce in OnExecute with sleep, starts it in init, and stops/waits in done. Removes main-loop RunOnce call.",
+      "criteria": [
+        "Uses TSfTaskCreate, TSfTaskResume, TSfTaskStart",
+        "Uses TSfTaskTerminated in the task loop",
+        "Stops and waits for the task before closing SPC",
+        "Removes direct main-loop SpcMcudSrvRunOnce call"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 4,
+      "category": "normal",
+      "description": "Create a sibling SPC client test project from generated client code.",
+      "prompt": "Create spc_mcud_clt_test beside app/mcud, following app/spc_hq_fota_app_clt_test style.",
+      "expected_output": "Creates app/spc_mcud_clt_test with build scripts, CMake target, test framework, generated mcud_client/conn files, a SpanCall lifecycle test entry, and interactive command handlers for all generated client APIs.",
+      "criteria": [
+        "Places generated client and conn files under common/spc_mcud/c",
+        "Does not compile generated main_client.c",
+        "Creates one project-specific test main entry",
+        "Adds command handlers for connection smoke tests and generated client methods",
+        "Links the same SDK libraries used by the reference client test project"
+      ],
+      "pass_score": 5
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "Generated SPC directory is missing.",
+      "prompt": "Adapt missing generated directory doc/not-exist-spc_out/foo/c into an MPU project.",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_GENERATED_DIR_MISSING",
+      "criteria": [
+        "Checks the generated directory before editing",
+        "Does not create partial adapter files",
+        "Asks for the correct generated path"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "Build script cannot access Docker daemon.",
+      "prompt": "Use az_build_linux.bat to verify build, but Docker pipe access is denied.",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_BUILD_ENTRY_BLOCKED",
+      "criteria": [
+        "Preserves the raw Docker permission error",
+        "Does not replace the user-provided script with unrelated commands",
+        "Asks for authorization or user-side rerun of the same script"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "error",
+      "description": "Generated SPC methods do not map cleanly to existing business APIs.",
+      "prompt": "Bridge generated SPC server handlers, but some generated method names have no clear XrpcProcess* equivalent.",
+      "expected_behavior": "partial_success",
+      "expected_error_code": "ERR_XRPC_API_MISMATCH",
+      "criteria": [
+        "Implements only mappings confirmed by local headers or existing code",
+        "Does not invent wire semantics for ambiguous methods",
+        "Leaves explicit TODOs or reports the unmatched methods",
+        "Still initializes all response variables and returns a defined error for unmapped handlers"
+      ],
+      "pass_score": 4
+    }
+  ]
+}

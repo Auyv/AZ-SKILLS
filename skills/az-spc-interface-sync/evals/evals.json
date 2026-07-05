@@ -1,0 +1,78 @@
+{
+  "skill_name": "az-spc-interface-sync",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "Sync the project mcud xrpc YAML into SPC-Interface.",
+      "prompt": "把 C:\\HQ_Workspace\\YLB04_A6\\code\\task-jpz_dev\\mpu\\app\\mcud\\business\\xrpc\\process_define.yaml 定义的函数同步到 C:\\HQ_Workspace\\YLB04_A6\\code\\task-jpz_dev\\mpu\\app\\mcud\\doc\\mcud.xlsx 的 SPC-Interface 工作表。",
+      "expected_output": "Workbook is updated in place, Function count matches YAML processes, and each Function has a RETURN Int32 row.",
+      "criteria": [
+        "Creates a backup before modifying the workbook",
+        "Preserves SPC-Interface header and template style",
+        "Writes one RETURN row for every Function",
+        "Sets every RETURN type to Int32",
+        "Sets RETURN description to >=0 表示执行成功； <0 错误码"
+      ],
+      "pass_score": 5
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "Handle a process with no input_params and no output_params.",
+      "prompt": "同步一个 process_define.yaml，其中某个 process 的 input_params: [] 且 output_params: []。",
+      "expected_output": "The Function still has one RETURN row with Int32 and the standard return description.",
+      "criteria": [
+        "Does not skip empty-parameter process entries",
+        "Adds a Function row with Normal type",
+        "Adds RETURN / Int32 / >=0 表示执行成功； <0 错误码",
+        "Does not add blank bogus parameter rows"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "Preserve String and ByteArray fixed lengths.",
+      "prompt": "同步一个 process_define.yaml，其中参数包含 param_type: String, param_len: 64 和 param_type: ByteArray, param_len: 16。",
+      "expected_output": "The SPC parameter types are written as String[64] and ByteArray[16].",
+      "criteria": [
+        "Converts String with param_len to String[n]",
+        "Converts ByteArray with param_len to ByteArray[n]",
+        "Copies other scalar types as-is",
+        "Keeps IN and OUT modifiers from the YAML section"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "Workbook path does not exist.",
+      "prompt": "把 process_define.yaml 同步到 C:\\missing\\mcud.xlsx。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_WORKBOOK_NOT_FOUND",
+      "criteria": [
+        "Reports that the workbook path does not exist",
+        "Does not create a new workbook silently",
+        "Asks for a valid workbook path"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "Target worksheet header is not the SPC-Interface template.",
+      "prompt": "同步到一个存在 SPC-Interface 工作表但表头不是七列 SPC 接口模板的 workbook。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_INVALID_TEMPLATE",
+      "criteria": [
+        "Reads row 1 before editing",
+        "Detects unexpected headers",
+        "Stops before overwriting data",
+        "Reports expected header names"
+      ],
+      "pass_score": 4
+    }
+  ]
+}
