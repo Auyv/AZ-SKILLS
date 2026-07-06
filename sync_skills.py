@@ -8,16 +8,28 @@ AZ-SKILLS 同步脚本
 - agent_targets.enabled 开关决定目标是否启用
 
 用法:
-    python sync_skills.py                    # 同步所有 skill
+    python sync_skills.py                    # 无参数: 进入交互式 Shell
     python sync_skills.py --list            # 仅列出状态
     python sync_skills.py --to cline         # 只同步到 cline
     python sync_skills.py --to codex         # 只同步到 codex
     python sync_skills.py --dry-run          # 模拟运行，不实际复制
     python sync_skills.py --skill az-sdd.v3  # 只同步指定 skill
+
+无参数时进入交互式 Shell（命令风格，支持 Tab 补全），可用命令：
+    help [cmd]             显示帮助（可指定命令名查看详情）
+    status, ls             查看 manifest 状态
+    sync, s [opts] [targets...]
+                           同步 skills（--all / --dry-run / --skills s1,s2）
+    enable <target>...     启用一个或多个平台
+    disable <target>...    禁用一个或多个平台
+    target <name> ...      管理平台 skills (list/add/remove/clear)
+    skills <name>          查看平台已配置的 skills
+    quit, q, exit          退出
 """
 
 import os
 import sys
+import shlex
 import shutil
 import argparse
 import subprocess
@@ -28,6 +40,21 @@ try:
     import yaml
 except ModuleNotFoundError:
     yaml = None
+
+try:
+    import readline  # Unix 标准库
+    READLINE_AVAILABLE = True
+except ImportError:
+    try:
+        import pyreadline3 as readline  # Windows 推荐
+        READLINE_AVAILABLE = True
+    except ImportError:
+        try:
+            import pyreadline as readline  # 旧版 Windows
+            READLINE_AVAILABLE = True
+        except ImportError:
+            READLINE_AVAILABLE = False
+            readline = None  # type: ignore
 
 # ========== 配置 ==========
 
@@ -385,14 +412,19 @@ class SkillSyncer:
             error(f"  ✗ {label}: {e}")
             return False
 
-    def _collect_target_labels(self, target_name: str) -> List[str]:
+    def _collect_target_labels(self, target_name: str, skill_names: Optional[List[str]] = None) -> List[str]:
         """收集 manifest 中 target_name 应同步的所有 skill 标签（含聚合容器展开）。
 
         返回的 label 集合是 manifest **管理**的 skill 名，用于后续定向清理。
         用户在目标目录里自建的 skill 不会被纳入此集合。
+
+        skill_names: 可选，自定义 skills 列表；为 None 时使用 manifest 配置。
         """
+        if skill_names is None:
+            skill_names = self._get_target_skill_names(target_name)
+
         labels: List[str] = []
-        for sn in self._get_target_skill_names(target_name):
+        for sn in skill_names:
             src = self.source_dir / sn
             if not src.exists():
                 continue
@@ -512,8 +544,11 @@ class SkillSyncer:
 
         return total
 
-    def sync_to_target(self, target_name: str) -> Dict[str, int]:
-        """同步到指定目标"""
+    def sync_to_target(self, target_name: str, skill_names: Optional[List[str]] = None) -> Dict[str, int]:
+        """同步到指定目标
+
+        skill_names: 可选，自定义本次要同步的 skills 子集；为 None 时使用 manifest 配置。
+        """
         config = self._get_target_config(target_name)
         if not config:
             error(f"未找到目标配置: {target_name}")
@@ -540,12 +575,15 @@ class SkillSyncer:
         # 在目标目录下创建 az-skills 子文件夹（不强制清空整个目录以避免与运行中的进程冲突）
         az_skills_path = self._get_az_skills_path(target_name, target_path)
 
+        # 确定本次要同步的 skills（skill_names 为 None 时使用 manifest 配置）
+        target_skills = skill_names if skill_names is not None else self._get_target_skill_names(target_name)
+
         # 仅清掉 manifest 管理的旧 link，保留用户在目标目录里自建的 skill
         if not self.dry_run:
             try:
                 az_skills_path.mkdir(parents=True, exist_ok=True)
                 self._purge_managed_links(
-                    az_skills_path, self._collect_target_labels(target_name)
+                    az_skills_path, self._collect_target_labels(target_name, skill_names=target_skills)
                 )
             except Exception as e:
                 warning(f"  目标目录准备失败 {az_skills_path}: {e}")
@@ -554,13 +592,12 @@ class SkillSyncer:
         info(f"同步目标: {target_name}")
         info(f"源目录: {self.source_dir}")
         info(f"目标目录: {az_skills_path}")
+        if skill_names is not None:
+            info(f"本次 skills (自定义): {len(target_skills)} 个")
         info(f"{'='*50}")
 
         success_count = 0
         failed_count = 0
-
-        # 获取该目标需要同步的 skills
-        target_skills = self._get_target_skill_names(target_name)
 
         for skill in target_skills:
             if self._sync_skill_to_target(skill, az_skills_path, target_name):
@@ -667,7 +704,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  python sync_skills.py              # 同步所有 skill
+  python sync_skills.py              # 进入交互式 Shell
   python sync_skills.py --to cline   # 只同步到 cline
   python sync_skills.py --to codex   # 只同步到 codex
   python sync_skills.py --skill az-sdd.v3  # 只同步指定 skill
@@ -724,73 +761,520 @@ def main():
             syncer._save_manifest()
         return
 
-    # 无参数时，进入交互式菜单
+    # 无参数时，进入交互式 Shell
     _interactive_menu(syncer)
 
-def _interactive_menu(syncer: SkillSyncer):
-    """交互式菜单选择同步目标"""
-    targets = syncer._get_agent_targets()
-    enabled_targets = [t for t in targets if t.get('enabled', True)]
 
-    if not enabled_targets:
-        error("没有已启用的同步目标")
-        return
+# ========== 交互式 Shell ==========
 
-    header("\n🎯 选择同步目标")
-    info("输入序号选择（多个用空格分隔），或输入 'a' 全选，'q' 退出\n")
+class CommandCompleter:
+    """Tab 补全器 - 根据当前输入位置返回候选列表"""
 
-    for i, t in enumerate(enabled_targets, 1):
-        name = t['name']
-        path = syncer._get_target_path(name)
-        path_str = str(path) if path else "(未配置)"
-        exists = "✓" if path and path.exists() else "✗"
+    COMMANDS = ['help', 'status', 'sync', 'enable', 'disable',
+                'target', 'skills', 'quit']
+    SYNC_FLAGS = ['--all', '--dry-run', '-n', '--skills']
+    TARGET_SUBCMDS = ['list', 'add', 'remove', 'clear']
+    ALIASES = {
+        'h': 'help', '?': 'help',
+        'ls': 'status', 'list': 'status',
+        's': 'sync',
+        'q': 'quit', 'exit': 'quit',
+    }
 
-        # 统计该目标应同步的 skill 数量
-        target_skills = syncer._get_target_skill_names(name)
-        info(f"  [{i}] {name}: {path_str} [{exists}] ({len(target_skills)} skills)")
+    def __init__(self, syncer: 'SkillSyncer'):
+        self.syncer = syncer
+        self._targets_cache: Optional[List[str]] = None
+        self._skills_cache: Optional[List[str]] = None
 
-    print()
-    try:
-        choice = input("请选择 > ").strip().lower()
-    except (EOFError, KeyboardInterrupt):
-        print()
-        return
+    @property
+    def targets(self) -> List[str]:
+        if self._targets_cache is None:
+            self._targets_cache = [t['name'] for t in self.syncer._get_agent_targets()]
+        return self._targets_cache
 
-    if choice == 'q':
-        return
+    @property
+    def skills(self) -> List[str]:
+        if self._skills_cache is None:
+            self._skills_cache = self.syncer._get_source_skills()
+        return self._skills_cache
 
-    if choice == 'a':
-        selected = enabled_targets
-    else:
+    def target_skills(self, target_name: str) -> List[str]:
+        config = self.syncer._get_target_config(target_name)
+        return list(config.get('skills') or []) if config else []
+
+    def complete(self, text: str, state: int):
+        if not READLINE_AVAILABLE:
+            return None
         try:
-            indices = [int(x) for x in choice.split()]
-            selected = [enabled_targets[i-1] for i in indices if 1 <= i <= len(enabled_targets)]
-        except (ValueError, IndexError):
-            error("无效输入")
+            line = readline.get_line_buffer()
+            begin = readline.get_begidx()
+
+            before = line[:begin]
+            words = before.split()
+            after_space = before.endswith(' ')
+
+            candidates = self._candidates(words, after_space)
+            matches = [c for c in candidates if c.startswith(text)]
+
+            if state < len(matches):
+                return matches[state]
+            return None
+        except Exception:
+            return None
+
+    def _candidates(self, words: List[str], after_space: bool) -> List[str]:
+        if not words:
+            return list(self.COMMANDS) + ['h', 's', 'q', '?', 'ls', 'exit']
+
+        cmd_raw = words[0].lower()
+        cmd = self.ALIASES.get(cmd_raw, cmd_raw)
+
+        if cmd == 'help':
+            return list(self.COMMANDS) + ['h', 's', 'q', '?', 'ls', 'exit']
+
+        if cmd == 'status':
+            return []
+
+        if cmd == 'sync':
+            return self._sync_candidates(words, after_space)
+
+        if cmd in ('enable', 'disable'):
+            return self.targets
+
+        if cmd == 'target':
+            return self._target_candidates(words, after_space)
+
+        if cmd == 'skills':
+            return self.targets
+
+        if cmd == 'quit':
+            return []
+
+        return []
+
+    def _sync_candidates(self, words: List[str], after_space: bool) -> List[str]:
+        # sync [--all] [--dry-run] [--skills s1,s2,...] [targets...]
+        n = len(words)
+
+        if n == 1:
+            return self.SYNC_FLAGS + self.targets
+
+        # 2+ words: 取“上一个已完成的 token”做上下文判断
+        # after_space=True 表示开始输入新 token，前一个就是 words[-1]
+        # after_space=False 表示正在补全当前 token，前一个是 words[-2]
+        prev = words[-1] if after_space else (words[-2] if n >= 2 else '')
+        if prev in ('--skills', '-s'):
+            return self.skills
+
+        return self.SYNC_FLAGS + self.targets
+
+    def _target_candidates(self, words: List[str], after_space: bool) -> List[str]:
+        # target <name> <subcmd> [skill...]
+        n = len(words)
+
+        if n == 1:
+            return self.targets
+
+        if n == 2 and not after_space:
+            return self.targets
+
+        target_name = words[1]
+        if target_name not in self.targets:
+            return []
+
+        # 有 target 名，开始补 subcmd
+        if n == 2 or (n == 3 and not after_space):
+            return self.TARGET_SUBCMDS
+
+        subcmd = words[2]
+        if subcmd == 'add':
+            return self.skills
+        if subcmd == 'remove':
+            return self.target_skills(target_name)
+        return []
+
+
+class InteractiveShell:
+    """交互式 Shell - 命令风格界面（支持 Tab 补全 + 历史）"""
+
+    PROMPT = "az-skills> "
+    HISTORY_FILE = Path.home() / ".az_skills_history"
+
+    def __init__(self, syncer: 'SkillSyncer'):
+        self.syncer = syncer
+        self.running = True
+        self._setup_readline()
+
+    # ---- readline 集成 ----
+
+    def _setup_readline(self):
+        if not READLINE_AVAILABLE:
+            return
+        try:
+            completer = CommandCompleter(self.syncer)
+            readline.set_completer(completer.complete)
+            readline.parse_and_bind('tab: complete')
+            try:
+                readline.set_completer_delims(' \t\n')
+            except Exception:
+                pass
+
+            # 加载历史
+            try:
+                if self.HISTORY_FILE.exists():
+                    readline.read_history_file(str(self.HISTORY_FILE))
+            except Exception:
+                pass
+
+            # 退出时保存历史
+            import atexit
+            def _save():
+                try:
+                    readline.write_history_file(str(self.HISTORY_FILE))
+                except Exception:
+                    pass
+            atexit.register(_save)
+        except Exception as e:
+            warning(f"readline 初始化失败: {e}")
+
+    # ---- 命令实现 ----
+
+    def cmd_help(self, args):
+        """显示帮助（可指定命令名查看详情）"""
+        if not args:
+            self._print_main_help()
+            return
+        cmd_raw = args[0].lower()
+        cmd = CommandCompleter.ALIASES.get(cmd_raw, cmd_raw)
+        method = getattr(self, f'cmd_{cmd}', None)
+        if method and method.__doc__:
+            info(f"  {cmd}: {method.__doc__.strip()}")
+        else:
+            warning(f"未知命令: {cmd_raw}")
+
+    def _print_main_help(self):
+        header("\n可用命令:")
+        info("  help [cmd]             显示帮助（可指定命令名查看详情）")
+        info("  status, ls, list       查看 manifest 状态")
+        info("  sync, s [opts] [targets...]   同步 skills（help sync 查看详情）")
+        info("  enable <target>...     启用一个或多个平台")
+        info("  disable <target>...    禁用一个或多个平台")
+        info("  target <name> ...      管理平台 skills（help target 查看详情）")
+        info("  skills <name>          查看平台已配置的 skills")
+        info("  quit, q, exit          退出")
+        info("")
+        info("提示: Tab 补全 / ↑↓ 历史 / Ctrl+C 取消当前输入 / quit 退出")
+        header("")
+
+    def cmd_status(self, args):
+        """查看 manifest 状态概览"""
+        self.syncer.list_status()
+
+    def cmd_sync(self, args):
+        """sync [--all] [--dry-run|-n] [--skills s1,s2,...] [target1 target2 ...]
+
+        示例:
+          sync --all                          同步所有启用平台
+          sync hermes cline                   同步指定平台
+          sync hermes --dry-run               模拟同步
+          sync hermes --skills foo,bar        用自定义 skills 子集同步
+          sync --all --dry-run                全平台模拟
+        """
+        if not args:
+            warning("用法: sync --all | sync <target>... [--dry-run] [--skills s1,s2,...]")
             return
 
-    if not selected:
-        error("未选择任何目标")
-        return
+        sync_all = False
+        dry_run = False
+        target_names: List[str] = []
+        skills_override: Optional[List[str]] = None
 
-    header(f"\n开始同步到 {len(selected)} 个目标")
-    total = {"success": 0, "skipped": 0, "failed": 0}
+        i = 0
+        while i < len(args):
+            arg = args[i]
+            if arg in ('--all', '-a'):
+                sync_all = True
+            elif arg in ('--dry-run', '-n'):
+                dry_run = True
+            elif arg in ('--skills', '-s'):
+                i += 1
+                if i < len(args):
+                    skills_override = [s.strip() for s in args[i].split(',') if s.strip()]
+            elif arg.startswith('-'):
+                warning(f"未知参数: {arg}")
+                return
+            else:
+                target_names.append(arg)
+            i += 1
 
-    for target in selected:
-        result = syncer.sync_to_target(target['name'])
-        total["success"] += result["success"]
-        total["skipped"] += result["skipped"]
-        total["failed"] += result["failed"]
+        if sync_all:
+            selected = [t for t in self.syncer._get_agent_targets() if t.get('enabled', True)]
+        elif target_names:
+            selected = []
+            for name in target_names:
+                config = self.syncer._get_target_config(name)
+                if not config:
+                    warning(f"未找到目标: {name}")
+                    continue
+                if not config.get('enabled', True):
+                    warning(f"目标未启用（已跳过）: {name}")
+                    continue
+                selected.append(config)
+        else:
+            warning("请指定同步目标（--all 或平台名）")
+            return
 
-    if not syncer.dry_run:
-        syncer.manifest['last_sync'] = datetime.now().isoformat()
-        syncer._save_manifest()
+        if not selected:
+            warning("无有效目标")
+            return
 
-    header("\n" + "="*50)
-    success(f"同步完成! 成功: {total['success']}, 跳过: {total['skipped']}, 失败: {total['failed']}")
-    if syncer.dry_run:
-        warning(" (模拟模式，未实际复制)")
-    header("="*50)
+        # 确认
+        info(f"\n即将同步到 {len(selected)} 个平台: {', '.join(t['name'] for t in selected)}")
+        if skills_override is not None:
+            info(f"自定义 skills: {', '.join(skills_override) if skills_override else '(空)'}")
+        else:
+            info("使用 manifest 默认 skills 配置")
+        if dry_run:
+            info("模式: 模拟运行")
+
+        try:
+            confirm = input("确认执行? [Y/n] > ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            return
+        if confirm in ('n', 'no'):
+            info("已取消")
+            return
+
+        # 执行
+        original_dry = self.syncer.dry_run
+        self.syncer.dry_run = dry_run
+        total = {"success": 0, "skipped": 0, "failed": 0}
+        try:
+            for target in selected:
+                name = target['name']
+                if skills_override is None:
+                    result = self.syncer.sync_to_target(name)
+                else:
+                    result = self.syncer.sync_to_target(name, skill_names=skills_override)
+                total["success"] += result["success"]
+                total["skipped"] += result["skipped"]
+                total["failed"] += result["failed"]
+        finally:
+            self.syncer.dry_run = original_dry
+
+        if not dry_run:
+            self.syncer.manifest['last_sync'] = datetime.now().isoformat()
+            self.syncer._save_manifest()
+
+        header("\n" + "=" * 60)
+        success(f"同步完成! 成功: {total['success']}, 跳过: {total['skipped']}, 失败: {total['failed']}")
+        if dry_run:
+            warning(" (模拟模式，未实际复制)")
+        header("=" * 60)
+
+    def cmd_enable(self, args):
+        """启用平台: enable <target>..."""
+        if not args:
+            warning("用法: enable <target>...")
+            return
+        changed = False
+        for name in args:
+            config = self.syncer._get_target_config(name)
+            if not config:
+                warning(f"未找到目标: {name}")
+                continue
+            if config.get('enabled', True):
+                info(f"  {name} 已是启用状态")
+                continue
+            config['enabled'] = True
+            changed = True
+            success(f"已启用: {name}")
+        if changed:
+            self.syncer._save_manifest()
+
+    def cmd_disable(self, args):
+        """禁用平台: disable <target>..."""
+        if not args:
+            warning("用法: disable <target>...")
+            return
+        changed = False
+        for name in args:
+            config = self.syncer._get_target_config(name)
+            if not config:
+                warning(f"未找到目标: {name}")
+                continue
+            if not config.get('enabled', True):
+                info(f"  {name} 已是禁用状态")
+                continue
+            config['enabled'] = False
+            changed = True
+            warning(f"已禁用: {name}")
+        if changed:
+            self.syncer._save_manifest()
+
+    def cmd_target(self, args):
+        """管理平台 skills: target <name> [list|add|remove|clear] [skill...]
+
+        示例:
+          target hermes                列出 hermes 的 skills
+          target hermes list           同上
+          target hermes add foo bar    添加 skills
+          target hermes remove foo     移除 skill
+          target hermes clear          清空全部
+        """
+        if not args:
+            warning("用法: target <name> [list|add|remove|clear] [skill...]")
+            return
+        target_name = args[0]
+        config = self.syncer._get_target_config(target_name)
+        if not config:
+            warning(f"未找到目标: {target_name}")
+            return
+        if len(args) == 1:
+            self._show_target_skills(config)
+            return
+        subcmd = args[1].lower()
+        rest = args[2:]
+        if subcmd in ('list', 'ls', 'show'):
+            self._show_target_skills(config)
+        elif subcmd == 'add':
+            self._target_add(config, rest)
+        elif subcmd == 'remove':
+            self._target_remove(config, rest)
+        elif subcmd == 'clear':
+            self._target_clear(config)
+        else:
+            warning(f"未知子命令: {subcmd}")
+            info("可用: list, add, remove, clear")
+
+    def _show_target_skills(self, config: Dict):
+        skills = list(config.get('skills') or [])
+        info(f"  {config['name']} (已配置 {len(skills)} 个):")
+        if skills:
+            for sk in skills:
+                info(f"    - {sk}")
+        else:
+            info("    (空)")
+
+    def _target_add(self, config: Dict, skills: List[str]):
+        if not skills:
+            warning("请指定要添加的 skill")
+            return
+        current = list(config.get('skills') or [])
+        current_set = set(current)
+        changed = False
+        for sk in skills:
+            if sk in current_set:
+                info(f"  已存在: {sk}")
+                continue
+            current.append(sk)
+            current_set.add(sk)
+            success(f"  已添加: {sk}")
+            changed = True
+        if changed:
+            config['skills'] = current
+            self.syncer._save_manifest()
+
+    def _target_remove(self, config: Dict, skills: List[str]):
+        if not skills:
+            warning("请指定要移除的 skill")
+            return
+        current = list(config.get('skills') or [])
+        current_set = set(current)
+        changed = False
+        for sk in skills:
+            if sk not in current_set:
+                warning(f"  未配置: {sk}")
+                continue
+            current.remove(sk)
+            current_set.discard(sk)
+            info(f"  已移除: {sk}")
+            changed = True
+        if changed:
+            config['skills'] = current
+            self.syncer._save_manifest()
+
+    def _target_clear(self, config: Dict):
+        if not config.get('skills'):
+            info(f"  {config['name']} 已为空")
+            return
+        config['skills'] = []
+        self.syncer._save_manifest()
+        warning(f"  已清空 {config['name']} 的 skills")
+
+    def cmd_skills(self, args):
+        """查看平台 skills: skills <name>"""
+        if not args:
+            warning("用法: skills <target>")
+            return
+        config = self.syncer._get_target_config(args[0])
+        if not config:
+            warning(f"未找到目标: {args[0]}")
+            return
+        self._show_target_skills(config)
+
+    def cmd_quit(self, args):
+        """退出交互式 Shell"""
+        self.running = False
+        info("Bye!")
+
+    # ---- 主循环 ----
+
+    def dispatch(self, line: str) -> bool:
+        line = line.strip()
+        if not line or line.startswith('#'):
+            return True
+
+        try:
+            parts = shlex.split(line)
+        except ValueError as e:
+            warning(f"解析错误: {e}")
+            return True
+
+        cmd_raw = parts[0].lower()
+        args = parts[1:]
+        cmd = CommandCompleter.ALIASES.get(cmd_raw, cmd_raw)
+
+        method = getattr(self, f'cmd_{cmd}', None)
+        if not method:
+            warning(f"未知命令: {cmd_raw}（输入 help 查看帮助）")
+            return True
+
+        try:
+            method(args)
+        except (KeyboardInterrupt, EOFError):
+            print()
+        except Exception as e:
+            error(f"命令执行出错: {e}")
+        return self.running
+
+    def run(self):
+        header("\n" + "=" * 60)
+        header("       AZ-SKILLS Shell")
+        header("=" * 60)
+        if READLINE_AVAILABLE:
+            info("输入 help 查看可用命令，Tab 补全，↑↓ 历史，Ctrl+C 取消，quit 退出")
+        else:
+            warning("当前环境无 readline，Tab 补全不可用")
+            info("可安装 pyreadline3 启用: pip install pyreadline3")
+            info("输入 help 查看命令，quit 退出")
+        header("=" * 60)
+
+        while True:
+            try:
+                line = input(f"\n{self.PROMPT}")
+            except (EOFError, KeyboardInterrupt):
+                print()
+                break
+            if not self.dispatch(line):
+                break
+
+
+def _interactive_menu(syncer: SkillSyncer):
+    """交互式 Shell - 命令风格界面（支持 Tab 补全）"""
+    shell = InteractiveShell(syncer)
+    shell.run()
+
 
 if __name__ == "__main__":
     main()

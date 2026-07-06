@@ -1,0 +1,105 @@
+{
+  "skill_name": "ctp-mpu-debug-build",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "Generate and run mcud local build scripts",
+      "prompt": "给 mcud 生成 mpu app 本地编译脚本并执行验证",
+      "expected_output": "Asks the user to confirm docker id, build model, product name, and project name; after confirmation creates az_build_linux_mcud.bat and az_build_linux_app_mcud.sh, runs the bat, reports exit code and log path.",
+      "criteria": [
+        "asks for confirmation of docker id, build model, product name, and project name before execution",
+        "validates app/mcud/build/build.sh before writing",
+        "generates both Windows and Linux scripts",
+        "runs the generated bat only with confirmed parameters",
+        "reports log path and exit code"
+      ],
+      "pass_score": 5
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "Generate only without executing",
+      "prompt": "只生成 can_server_app 的 MPU 本地编译脚本，不要执行",
+      "expected_output": "Creates app-specific scripts and does not run Docker.",
+      "criteria": [
+        "sets execute=false",
+        "does not call generated bat",
+        "reports generated paths"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "Use custom container id fallback",
+      "prompt": "用容器 id 6e10b5571b75d05d434742663a15b0188157d431b8e13c6d93a09585e4ac9986 给 mcud 生成并编译",
+      "expected_output": "Generated bat contains the provided container id as fallback while still preferring container name.",
+      "criteria": [
+        "passes ContainerId to helper",
+        "uses AppName as ProjectName by default when both are the same",
+        "passes -Confirmed after user confirmation",
+        "keeps YLB04_A6 as default container name unless overridden",
+        "executes generated bat"
+      ],
+      "pass_score": 5
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "Empty app name",
+      "prompt": "生成 MPU app 本地编译脚本",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_APP_NAME_EMPTY",
+      "criteria": [
+        "does not generate scripts with an empty app name",
+        "asks for or infers a concrete app directory",
+        "mentions expected location code/task-jpz_dev/mpu/app/<app>/build/build.sh"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "Missing app build script",
+      "prompt": "给 not_exist_app 生成并执行 mpu 本地编译脚本",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_APP_BUILD_SCRIPT_MISSING",
+      "criteria": [
+        "checks app/not_exist_app/build/build.sh",
+        "does not run Docker",
+        "returns a clear missing file error"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "Execution requested without confirmed parameters",
+      "prompt": "直接执行 mcud 的 mpu 本地编译，不用再确认参数",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_CONFIRMATION_REQUIRED",
+      "criteria": [
+        "does not execute the generated bat",
+        "requires explicit confirmation before running",
+        "names the four required fields"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "error",
+      "description": "Docker unavailable during execution",
+      "prompt": "给 mcud 生成并执行 mpu 本地编译脚本，但 Docker 未启动",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_DOCKER_NOT_FOUND",
+      "criteria": [
+        "preserves original docker error",
+        "does not claim build failure is a compiler failure",
+        "suggests starting Docker and rerunning generated bat"
+      ],
+      "pass_score": 3
+    }
+  ]
+}

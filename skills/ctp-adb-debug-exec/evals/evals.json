@@ -1,0 +1,99 @@
+{
+  "skill_name": "ctp-adb-debug-exec",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "Generate adb_exec_spc_mcud_clt_test.bat with default paths",
+      "prompt": "做一个 adb_exec_spc_mcud_clt_test.bat",
+      "expected_output": "Creates code/task-jpz_dev/mpu/adb_exec_spc_mcud_clt_test.bat with APP_NAME=spc_mcud_clt_test, TEST_PATH=/media/card, LD_PATH=/vendor/app/hq/lib.",
+      "criteria": [
+        "validates workspace exists before writing",
+        "warns (does not fail) when build_output/app/debug/spc_mcud_clt_test is missing",
+        "writes CRLF-terminated .bat",
+        "does not require any explicit confirmation since Execute defaults to false",
+        "reports generated path"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "Generate with custom device path",
+      "prompt": "生成 mcud 的 adb push 脚本，部署到 /oemdata 而不是 /media/card",
+      "expected_output": "Generates adb_exec_mcud.bat with TEST_PATH=/oemdata while keeping LD_PATH default.",
+      "criteria": [
+        "passes -DevicePath /oemdata",
+        "TEST_PATH in generated bat reflects /oemdata",
+        "LD_PATH stays at /vendor/app/hq/lib"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "CRLF line endings enforced",
+      "prompt": "把生成的 adb_exec_mcud.bat 拿去 Windows 上跑",
+      "expected_output": "Generated bat parses cleanly under cmd.exe without variable assignment or label resolution errors.",
+      "criteria": [
+        "every LF is preceded by CR",
+        "no bare LF-only lines remain",
+        "first 4 bytes are 0D 0A 3A 3A"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "Empty app name",
+      "prompt": "生成 adb push 脚本",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_APP_NAME_EMPTY",
+      "criteria": [
+        "does not generate any file",
+        "prints ERR_APP_NAME_EMPTY with guidance to provide an app name"
+      ],
+      "pass_score": 2
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "Workspace not found",
+      "prompt": "用 Workspace C:\\no\\such\\path 给 mcud 生成 adb push 脚本",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_WORKSPACE_NOT_FOUND",
+      "criteria": [
+        "does not generate any file",
+        "prints ERR_WORKSPACE_NOT_FOUND with the bad path"
+      ],
+      "pass_score": 2
+    },
+    {
+      "id": 6,
+      "category": "normal",
+      "description": "Generate and execute in one shot",
+      "prompt": "直接跑 adb_exec_spc_mcud_clt_test.bat 把 spc_mcud_clt_test 推到设备",
+      "expected_output": "After generating the bat, the script invokes cmd.exe to run it; user observes real adb push on stdout.",
+      "criteria": [
+        "passes -Execute",
+        "uses cmd.exe wrapper so device-side echo flows through",
+        "surfaces the exit code from the generated bat"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "normal",
+      "description": "Multiple apps generate independent scripts",
+      "prompt": "分别给 mcud 和 spc_mcud_clt_test 各做一个 adb push 脚本",
+      "expected_output": "Two independent .bat files coexist: adb_exec_mcud.bat and adb_exec_spc_mcud_clt_test.bat, neither modifies adb_push_app.bat.",
+      "criteria": [
+        "each invocation produces only its own app-specific file",
+        "the shared adb_push_app.bat is unchanged",
+        "running both invocations does not overwrite the wrong file"
+      ],
+      "pass_score": 3
+    }
+  ]
+}
