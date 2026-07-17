@@ -68,3 +68,10 @@ python manifest_update.py --auto
 - `manifest_update.py` 跳过 `template/`、`templates/` 目录及名称为 `skill-name` 的技能（模板占位符）。
 - 写入中间文件时使用 `./.claude_tmp` 而非 `.claude/plans/`（az-sdd 约定）。
 - 生成或修改 Windows `.bat` 脚本时，必须强制使用 `CRLF` 换行符，避免 `cmd.exe` 解析异常。
+
+## AZ-SDD 使用约定
+
+- `az-sdd/` 是本仓库的规范驱动开发档案目录；项目背景、定位和仓库约定仍以本文件为单一来源。
+- 当前状态以 `az-sdd/STATUS.md` 为准，关键历史事件记录在 `az-sdd/TRACK.md`。
+- 功能规范、技术规范和反馈分别维护在 `az-sdd/spec/`、`az-sdd/arch/` 和 `az-sdd/feedback/`，并同步更新对应索引。
+- 仅在用户显式调用 AZ-SDD 流程时创建或更新相关档案。

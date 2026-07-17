@@ -103,6 +103,17 @@ powershell -ExecutionPolicy Bypass -File <skill_dir>\scripts\generate_adb_exec.p
   -LdLibraryPath "/vendor/app/hq/lib"
 ```
 
+Generate with custom mpu subdirectory (avoid hardcoded 'code\task-jpz_dev\mpu'):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File <skill_dir>\scripts\generate_adb_exec.ps1 `
+  -Workspace "C:\HQ_Workspace\hqt401_k00" `
+  -AppName "atserver_app-master" `
+  -MpuDir "code\task-dev\mpu"
+```
+
+Use -MpuDir to override the default subdirectory 'code\task-jpz_dev\mpu'. Useful when the project uses a different layout (e.g. 'code\task-dev\mpu').
+
 Generate and immediately run (device must already be connected via adb):
 
 ```powershell

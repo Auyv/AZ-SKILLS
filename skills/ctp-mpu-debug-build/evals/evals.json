@@ -1,6 +1,6 @@
 {
   "skill_name": "ctp-mpu-debug-build",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "evals": [
     {
       "id": 1,
@@ -55,7 +55,7 @@
       "criteria": [
         "does not generate scripts with an empty app name",
         "asks for or infers a concrete app directory",
-        "mentions expected location code/task-jpz_dev/mpu/app/<app>/build/build.sh"
+        "mentions the supported code/task-mpu and legacy code/task-jpz_dev/mpu locations"
       ],
       "pass_score": 3
     },
@@ -98,6 +98,34 @@
         "preserves original docker error",
         "does not claim build failure is a compiler failure",
         "suggests starting Docker and rerunning generated bat"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 8,
+      "category": "normal",
+      "description": "Auto-detect current code/task-mpu layout",
+      "prompt": "给 code/task-mpu/app/atserver_app 生成本地编译脚本",
+      "expected_output": "Detects code/task-mpu, writes both scripts there, and derives /home/sei/code/task-mpu as the container work directory.",
+      "criteria": [
+        "detects code/task-mpu from the app build script",
+        "does not require the legacy code/task-jpz_dev/mpu directory",
+        "derives the matching container work directory",
+        "generates both app-specific scripts"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 9,
+      "category": "error",
+      "description": "Reject absolute MPU path override",
+      "prompt": "用 -MpuRelativePath C:\\external\\mpu 生成脚本",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_MPU_PATH_INVALID",
+      "criteria": [
+        "rejects an absolute MpuRelativePath",
+        "does not write generated scripts",
+        "asks for a workspace-relative path"
       ],
       "pass_score": 3
     }

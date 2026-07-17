@@ -34,7 +34,7 @@ AZ-SKILLS/
     ├── az-todo-tracker/         # 任务待办追踪（事前立项，2026-06-27 新增）
     ├── az-keil-build/           # Keil 嵌入式构建工具链（2026-06-23 新增）
     ├── az-c-macro2ini-config/   # C 宏定义转 ini 配置
-    ├── az-mpu-local-build/      # MPU 本地构建
+    ├── hq-autobuild-mpu/        # MPU 本地自动构建
     ├── az-nmrj/                 # 牛马日志（nmrj 项目）
     ├── hq_tester_skills/        # 鸿泉测试技能族
     │   └── hq_adb_srtget/       # 通过 ADB 设置 SRT 属性

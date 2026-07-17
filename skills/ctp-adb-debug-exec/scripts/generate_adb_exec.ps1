@@ -3,6 +3,7 @@ param(
     [string]$AppName = "",
     [string]$DevicePath = "/media/card",
     [string]$LdLibraryPath = "/vendor/app/hq/lib",
+    [string]$MpuDir = "code\task-jpz_dev\mpu",
     [switch]$Execute
 )
 
@@ -21,7 +22,7 @@ if (-not (Test-Path -LiteralPath $Workspace -PathType Container)) {
     Fail "ERR_WORKSPACE_NOT_FOUND" "Workspace not found: $Workspace"
 }
 
-$mpuDir = Join-Path $Workspace "code\task-jpz_dev\mpu"
+$mpuDir = Join-Path $Workspace $MpuDir
 $buildArtifact = Join-Path $mpuDir "build_output\app\debug\$AppName"
 if (-not (Test-Path -LiteralPath $buildArtifact -PathType Leaf)) {
     Write-Warning "Build artifact not found (you may need to build first via ctp-mpu-debug-build): $buildArtifact"
@@ -126,6 +127,7 @@ Write-Host "Generated adb script: $batScriptPath"
 Write-Host "  AppName:        $AppName"
 Write-Host "  DevicePath:     $DevicePath"
 Write-Host "  LdLibraryPath:  $LdLibraryPath"
+Write-Host "  MpuDir:         $MpuDir"
 
 if ($Execute) {
     Write-Host "Executing adb script (device must be connected via adb)..."

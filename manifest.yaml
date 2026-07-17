@@ -1,15 +1,17 @@
-last_sync: '2026-06-27T09:46:30.733435'
+last_sync: '2026-07-14T19:43:59.027609'
 agent_targets:
-- enabled: true
+- aggregate_subdir: ''
+  enabled: true
   name: hermes
-  path: ~/.hermes/skills
+  path: ~/AppData/Local/hermes/skills
   skills:
   - az-skill-creator
   - auto-skill-creator
   - az-pdf2md
   - az-todo-tracker
-  - issue-tracker
-- enabled: true
+  - az-issue-tracker
+  - hq-autobuild-mpu
+- enabled: false
   name: cline
   path: ~/.agents/skills
   skills:
@@ -20,7 +22,7 @@ agent_targets:
   - az-sdd.v3
   - core-dump-analyzer
   - hq_tester_skills
-  - issue-tracker
+  - az-issue-tracker
 - aggregate_subdir: ''
   enabled: true
   name: claude_code
@@ -33,9 +35,10 @@ agent_targets:
   - az-sdd.v3
   - core-dump-analyzer
   - hq_tester_skills
-  - issue-tracker
+  - az-issue-tracker
   - docker-image-build
   - az-keil-build
+  - hq-autobuild-mpu
 - enabled: true
   name: opencode
   path: ~/.config/opencode/skills
@@ -47,17 +50,19 @@ agent_targets:
   - az-sdd.v3
   - core-dump-analyzer
   - hq_tester_skills
-  - issue-tracker
   - docker-image-build
   - az-keil-build
-- enabled: true
+  - ctp-adb-debug-exec
+  - ctp-mpu-debug-build
+  - hq-autobuild-mpu
+- enabled: false
   name: openclaw
   path: ~/.openclaw/skills
   skills:
   - az-skill-creator
   - auto-skill-creator
   - az-pdf2md
-  - issue-tracker
+  - az-issue-tracker
 - enabled: true
   name: codex
   path: ~/.codex/skills
@@ -69,6 +74,7 @@ agent_targets:
   - az-sdd.v3
   - core-dump-analyzer
   - hq_tester_skills
-  - issue-tracker
-  - docker-image-build
   - az-keil-build
+  - hq-autobuild-mpu
+  - ctp-mpu-debug-build
+  - ctp-adb-debug-exec

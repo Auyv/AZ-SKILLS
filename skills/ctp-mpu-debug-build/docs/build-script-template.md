@@ -1,10 +1,14 @@
 # Build Script Template Notes
 
-The generated `.bat` is based on the existing project entry:
+The generated `.bat` follows the existing project entry pattern. The helper supports:
 
 ```text
-code\task-jpz_dev\mpu\az_build_linux.bat
+code\task-mpu
+code\task-jpz_dev\mpu (legacy)
 ```
+
+It chooses the first supported root containing `app/<AppName>/build/build.sh`. A non-standard
+workspace-relative root can be selected with `-MpuRelativePath`.
 
 Key improvements for generated per-app scripts:
 

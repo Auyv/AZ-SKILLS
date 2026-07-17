@@ -4,14 +4,14 @@ description: >
   Generate a focused Windows .bat plus Linux container .sh pair for one CTP MPU app,
   then optionally run the generated .bat to verify local Docker-based compilation.
   Use when the user asks to create or run a local MPU app debug build script for
-  YLB04-A6, especially based on code/task-jpz_dev/mpu/az_build_linux.bat.
-version: 1.0.0
+  CTP projects using either code/task-mpu or the legacy code/task-jpz_dev/mpu layout.
+version: 1.1.0
 
 inputs:
   required:
     - name: app_name
       type: string
-      description: MPU app directory name under code/task-jpz_dev/mpu/app/.
+      description: MPU app directory name under the detected MPU root's app/ directory.
       validation: Must be a non-empty app directory containing build/build.sh.
   optional:
     - name: workspace
@@ -42,20 +42,24 @@ inputs:
       type: string
       description: Docker container id confirmed by the user; required when execute=true.
       default: ""
+    - name: mpu_relative_path
+      type: string
+      description: MPU root relative to workspace. Empty means auto-detect code/task-mpu or code/task-jpz_dev/mpu by locating the app build script.
+      default: ""
     - name: container_work_dir
       type: string
-      description: MPU working directory inside the Docker container.
-      default: "/home/sei/code/task-jpz_dev/mpu"
+      description: MPU working directory inside the Docker container. Empty means derive it from mpu_relative_path under /home/sei.
+      default: ""
 
 outputs:
   - name: windows_script
     type: file
     description: Generated Windows build entry script.
-    path: "<workspace>\\code\\task-jpz_dev\\mpu\\az_build_linux_<app_name>.bat"
+    path: "<workspace>\\<detected_mpu_relative_path>\\az_build_linux_<app_name>.bat"
   - name: linux_script
     type: file
     description: Generated Linux container build script.
-    path: "<workspace>\\code\\task-jpz_dev\\mpu\\az_build_linux_app_<app_name>.sh"
+    path: "<workspace>\\<detected_mpu_relative_path>\\az_build_linux_app_<app_name>.sh"
   - name: build_log
     type: file
     description: Captured build log when execute=true.
@@ -74,6 +78,12 @@ errors:
   - code: ERR_APP_BUILD_SCRIPT_MISSING
     message: app/<app_name>/build/build.sh does not exist.
     handling: List nearby app directories and ask the user to choose the correct one.
+  - code: ERR_MPU_DIR_NOT_FOUND
+    message: Neither the explicit MPU root nor a supported auto-detected MPU directory exists.
+    handling: Confirm workspace or pass the correct relative path with -MpuRelativePath.
+  - code: ERR_MPU_PATH_INVALID
+    message: MpuRelativePath is absolute instead of workspace-relative.
+    handling: Pass a relative path such as code/task-mpu.
   - code: ERR_DOCKER_NOT_FOUND
     message: docker command is unavailable or Docker Desktop is not running.
     handling: Start Docker Desktop, then rerun the generated .bat.
@@ -95,9 +105,10 @@ errors:
 
 ## What It Does
 
-Create a one-app build entry derived from `code\task-jpz_dev\mpu\az_build_linux.bat`.
+Create a one-app build entry under the repository's MPU root. Auto-detect
+`code\task-mpu` first and retain `code\task-jpz_dev\mpu` as a legacy fallback.
 The generated Windows script starts or reuses the Docker container, enters
-`/home/sei/code/task-jpz_dev/mpu`, and runs a generated Linux shell script that builds only
+the matching MPU root under `/home/sei`, and runs a generated Linux shell script that builds only
 `app/<app_name>/build/build.sh`.
 
 Use this for fast local verification of an MPU app without editing the shared
@@ -116,14 +127,16 @@ Do not use it for full firmware image packaging, FOTA packaging, MCU Keil builds
 
 ## How To Do It
 
-1. Read the current project context and locate `code\task-jpz_dev\mpu`.
-2. Validate `app/<app_name>/build/build.sh` exists before generating anything.
-3. Before every `execute=true` run, ask the user to confirm these four fields in one short message:
+1. Read the current project context and locate `code\task-mpu` or legacy `code\task-jpz_dev\mpu`.
+2. Let the helper auto-detect the root from `app/<app_name>/build/build.sh`; pass
+   `-MpuRelativePath` only for a non-standard relative layout.
+3. Validate `app/<app_name>/build/build.sh` exists before generating anything.
+4. Before every `execute=true` run, ask the user to confirm these four fields in one short message:
    `docker id`, `模组型号(build_model)`, `产品型号(product_name)`, `工程名称(project_name)`.
    If the engineering name equals the app directory, use `app_name` as the project name and do not pass a duplicate `-ProjectName`.
-4. Generate scripts with `scripts/generate_and_build.ps1`.
-5. If `execute=true`, pass `-Confirmed`, run the generated `.bat`, and capture the log under `ai_tmp\mpu_debug_build`.
-6. Report the generated script paths, exit code, and the last relevant log lines on failure.
+5. Generate scripts with `scripts/generate_and_build.ps1`.
+6. If `execute=true`, pass `-Confirmed`, run the generated `.bat`, and capture the log under `ai_tmp\mpu_debug_build`.
+7. Report the detected MPU root, generated script paths, exit code, and the last relevant log lines on failure.
 
 Preferred command:
 
@@ -152,10 +165,11 @@ powershell -ExecutionPolicy Bypass -File <skill_dir>\scripts\generate_and_build.
 
 The helper creates two project-local files:
 
-- `code\task-jpz_dev\mpu\az_build_linux_<app_name>.bat`
-- `code\task-jpz_dev\mpu\az_build_linux_app_<app_name>.sh`
+- `<detected_mpu_relative_path>\az_build_linux_<app_name>.bat`
+- `<detected_mpu_relative_path>\az_build_linux_app_<app_name>.sh`
 
-These files are intentionally app-specific so the existing shared scripts remain unchanged.
+The files are created in the auto-detected MPU root (`code\task-mpu` or the legacy
+`code\task-jpz_dev\mpu`). They are intentionally app-specific so existing shared scripts remain unchanged.
 
 ## Verification
 

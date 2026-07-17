@@ -1,0 +1,104 @@
+{
+  "skill_name": "hq-autobuild-mpu",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "执行普通 Release 构建",
+      "prompt": "本地构建MPU，测试能否正常编译通过",
+      "expected_output": "构建成功，errorlevel=0，package.zip 时间戳更新",
+      "criteria": [
+        "执行 check_env.ps1 环境检查",
+        "执行 local_build_mpu.bat",
+        "验证 build.sh 返回 success",
+        "确认 package.zip 时间戳更新",
+        "输出构建成功摘要"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "执行清理构建",
+      "prompt": "清理后重新构建 MPU",
+      "expected_output": "先清理 build_output，再完整编译，最终成功",
+      "criteria": [
+        "调用 local_build_mpu.bat clean",
+        "确认 build.sh 返回 success",
+        "验证 package.zip 重新生成"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "仅触发构建，用户指定路径",
+      "prompt": "在 C:\\HQ_Workspace\\wit803_001-open 执行本地 MPU 构建验证",
+      "expected_output": "使用指定工作区路径完成构建",
+      "criteria": [
+        "正确使用用户指定的 workspace 路径",
+        "构建流程正常执行"
+      ],
+      "pass_score": 2
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "Docker 容器未运行",
+      "prompt": "执行本地 MPU 构建（假设容器 sim7805-wit803_001 已退出）",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_CONTAINER_NOT_RUNNING",
+      "criteria": [
+        "检测到容器未运行",
+        "尝试 docker start 启动",
+        "若启动成功则继续构建",
+        "若启动失败则输出 ERR_CONTAINER_NOT_RUNNING 错误"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "端口冲突导致容器无法启动",
+      "prompt": "执行本地 MPU 构建（假设 2023 端口被其他容器占用）",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_PORT_CONFLICT",
+      "criteria": [
+        "检测到端口冲突",
+        "列出占用端口的容器",
+        "输出 ERR_PORT_CONFLICT 错误",
+        "提供解决建议（停止冲突容器）"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "构建脚本不存在",
+      "prompt": "执行本地 MPU 构建（local_build_mpu.bat 被删除）",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_BUILD_SCRIPT_MISSING",
+      "criteria": [
+        "检查构建脚本存在性",
+        "输出 ERR_BUILD_SCRIPT_MISSING 错误",
+        "提示正确的脚本路径"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "error",
+      "description": "容器不存在",
+      "prompt": "执行本地 MPU 构建（Docker 容器 sim7805-wit803_001 已被删除）",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_CONTAINER_NOT_FOUND",
+      "criteria": [
+        "检测到容器不存在",
+        "输出 ERR_CONTAINER_NOT_FOUND 错误",
+        "引导用户执行 ctp_docker_run.bat 创建容器"
+      ],
+      "pass_score": 3
+    }
+  ]
+}
