@@ -72,6 +72,7 @@ formatted_dialog = format_dialog_for_skill(dialog_data)
 2. 提供提取的对话示例
 3. 提供触发场景说明
 4. 按照 `az-skill-creator` 的指引完成技能文档编写
+5. 由 `az-skill-creator` 将技能登记到当前 Agent 的 AZ-SKILLS 同步清单，并运行同步工具完成发布
 
 ### 第六步：生成 FAQ
 
@@ -101,7 +102,7 @@ faq_path = save_faq(faq_content, skill_name, base_path)
 
 ```json
 {
-  "skills_base_path": "C:\\JPZ_Workspace\\笔记仓库-jpz\\hq-jpz\\AZ-SKILLS",
+  "skills_base_path": "C:\\JPZ_Workspace\\笔记仓库-jpz\\hq-jpz\\AZ-SKILLS\\skills",
   "positive_keywords": ["good", "搞定", "可以了", ...],
   "negative_keywords": ["不行", "失败了", "报错", ...],
   "auto_ask_enabled": true,

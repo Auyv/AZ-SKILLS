@@ -1,4 +1,4 @@
-last_sync: '2026-07-14T19:43:59.027609'
+last_sync: '2026-07-18T15:21:31.534513'
 agent_targets:
 - aggregate_subdir: ''
   enabled: true
@@ -10,7 +10,6 @@ agent_targets:
   - az-pdf2md
   - az-todo-tracker
   - az-issue-tracker
-  - hq-autobuild-mpu
 - enabled: false
   name: cline
   path: ~/.agents/skills
@@ -78,3 +77,4 @@ agent_targets:
   - hq-autobuild-mpu
   - ctp-mpu-debug-build
   - ctp-adb-debug-exec
+  - az-api-summary

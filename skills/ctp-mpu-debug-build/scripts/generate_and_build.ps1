@@ -224,22 +224,15 @@ echo ----- end docker diag -----
 exit /b 0
 "@
 
-$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($linuxScriptPath, $linuxScript, [System.Text.UTF8Encoding]::new($false))
+[System.IO.File]::WriteAllText($batScriptPath, ($batScript -replace "`r?`n", "`r`n"), [System.Text.UTF8Encoding]::new($false))
 
 # .sh 保持 LF（Linux 容器需要 LF 换行）
-[System.IO.File]::WriteAllText($linuxScriptPath, $linuxScript, $utf8NoBom)
+[System.IO.File]::WriteAllText($linuxScriptPath, $linuxScript, [System.Text.UTF8Encoding]::new($false))
 
 # .bat 必须 CRLF（Windows cmd 解析 .bat 需要 CRLF；WriteAllText 默认写 LF 会导致中文 Windows / cmd 解析异常）
-$batBytes = [System.Text.Encoding]::UTF8.GetBytes($batScript)
-$batOut = New-Object System.Collections.Generic.List[byte]
-foreach ($b in $batBytes) {
-    if ($b -eq 0x0A) {
-        $batOut.Add(0x0D); $batOut.Add(0x0A)
-    } elseif ($b -ne 0x0D) {
-        $batOut.Add($b)
-    }
-}
-[System.IO.File]::WriteAllBytes($batScriptPath, $batOut.ToArray())
+Write-Host "BAT template length: $($batScript.Length)"
+[System.IO.File]::WriteAllText($batScriptPath, ($batScript -replace "`r?`n", "`r`n"), [System.Text.UTF8Encoding]::new($false))
 
 Write-Host "Generated Windows script: $batScriptPath"
 Write-Host "Generated Linux script:   $linuxScriptPath"

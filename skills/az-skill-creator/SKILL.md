@@ -7,7 +7,7 @@ description: |
   - 用户提到"测试技能"、"评估技能效果"
 
   职责：帮助用户将 SKILL 写清楚、做优秀
-  边界：不涉及技能安装、部署、CI/CD 等其他工作
+  边界：不涉及 CI/CD；技能创建完成后按 AZ-SKILLS 标准流程同步到当前 Agent
 version: 2.0.0
 inputs:
   required:
@@ -26,8 +26,8 @@ inputs:
       default: null
     - name: skills_base_path
       type: string
-      description: 技能创建根目录；默认使用当前项目的 skills/ 目录
-      default: "./skills"
+      description: 技能创建根目录；默认使用 AZ-SKILLS 的 skills/ 目录
+      default: 'C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\skills'
     - name: dialog_context
       type: string
       description: 对话上下文摘要（创建场景）
@@ -65,6 +65,12 @@ errors:
   - code: ERR_EMPTY_EVALS
     message: 测试用例为空
     handling: 自动生成默认测试用例或提示用户补充
+  - code: ERR_MANIFEST_UPDATE
+    message: 无法将技能登记到当前 Agent 的同步清单
+    handling: 保留 AZ-SKILLS 中的技能源文件，报告原始错误并提示人工更新 manifest.yaml
+  - code: ERR_SYNC_FAILED
+    message: 技能同步到当前 Agent 失败
+    handling: 保留 AZ-SKILLS 中的技能源文件和清单修改，报告同步命令及原始错误
 ---
 
 # 技能创建器
@@ -79,7 +85,8 @@ errors:
 4. **创建测试**：准备包含异常场景的测试用例（至少 5 个）
 5. **运行测试**：在有技能的情况下执行测试(需要用户许可状态下)
 6. **评估改进**：直接在对话中评估结果并迭代
-7. **完成**：直到满意为止
+7. **登记同步**：登记到当前 Agent 的 `manifest.yaml` 清单并运行同步工具
+8. **完成**：验证源目录和当前 Agent 中的技能均可用，直到满意为止
 
 ---
 
@@ -117,9 +124,17 @@ errors:
 
 ### 创建位置
 
-默认把新技能创建在当前项目的 `skills/<skill-name>/` 下；不要默认写入全局技能目录（如 `$CODEX_HOME/skills`）。
+默认把新技能创建在 `C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\skills\<skill-name>\` 下。该目录是自建技能的单一事实来源；不要把当前项目的 `skills/` 或 Agent 自身的技能目录作为源目录。
 
-如果用户明确要求创建到全局目录或其他仓库，先复述目标路径并确认，确认后再写入。
+如果用户明确指定其他仓库或目录，以用户指定路径为准；先复述目标路径并确认，确认后再写入。
+
+创建或更新技能后，执行以下发布流程：
+
+1. 识别当前 Agent 对应的 `manifest.yaml` target；Codex 对应 `codex`。
+2. 如果仓库根目录存在 `manifest_update.py`，运行 `python manifest_update.py --auto`；如果不存在，则直接在 `manifest.yaml` 当前 Agent 的 `skills` 列表中添加技能名，禁止重复添加或修改其他 Agent 的列表。
+3. 在 AZ-SKILLS 根目录运行 `python sync_skills.py --to <当前 Agent>`，只同步当前 Agent。
+4. 验证当前 Agent 技能目录中存在该技能的 `SKILL.md`，并确认其内容来自 AZ-SKILLS 源目录。
+5. 同步失败时保留 AZ-SKILLS 中的完整技能包，向用户报告原始错误和未完成的同步步骤。
 
 ### 访谈和研究
 
@@ -143,7 +158,7 @@ errors:
 
 ### 编写 SKILL.md
 
-1. 严格遵循模板编写技能文档 `template/SKILL.md`
+1. 严格遵循模板编写技能文档 `template/SKILL.template.md`
 2. **先填写 front matter 的 inputs/outputs/errors 定义**
 3. **默认将制作结果组织成独立技能包**：每个技能拥有独立目录，至少包含 `SKILL.md`，按需包含 `scripts/`、`docs/`、`assets/`、`evals/`、`MANUAL.md` 等配套文件，避免只生成零散片段
 4. skill的执行过程要尽量使用python脚本分步实现，放在 `scripts/` 目录下
