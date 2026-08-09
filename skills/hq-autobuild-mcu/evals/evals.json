@@ -1,0 +1,93 @@
+{
+  "skill_name": "hq-autobuild-mcu",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "为唯一 MCU 项目生成仅打包入口",
+      "prompt": "给 C:\\ci\\demo 生成 autobuild-mcu.bat，产品 YLB04-A6，使用 pack 模式。",
+      "expected_output": "自动识别唯一 build/mcu 项目，生成包含 pack.bat 调用和错误码透传的脚本。",
+      "criteria": ["返回 success 和 timestamp", "脚本路径正确", "pack.bat 参数正确", "不自动执行编译"],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "生成先编译再打包入口",
+      "prompt": "为项目 ac78428_asr1806 创建 build-pack 模式脚本，产品名 YLB04-A6，MCU 型号 ac78428。",
+      "expected_output": "按 build.bat、pack.bat 顺序生成调用，并在任一步失败时返回原始错误码。",
+      "criteria": ["项目名和型号正确", "调用顺序正确", "路径带双引号", "失败时 popd"],
+      "pass_score": 4
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "覆盖前备份已有入口",
+      "prompt": "确认覆盖已有 autobuild-mcu.bat，并保留备份。",
+      "expected_output": "使用 force 后创建 .bak，再生成新脚本。",
+      "criteria": ["读取并保护原文件", "创建备份", "返回 backup_path"],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "空输入或非法产品名",
+      "prompt": "repository_root 为空，product_name 为 A&B。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_INVALID_INPUT",
+      "criteria": ["返回 error 和 timestamp", "不写文件", "指出非法字段和合法格式"],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "仓库不存在",
+      "prompt": "为 C:\\not-exist\\repo 生成脚本。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_REPOSITORY_NOT_FOUND",
+      "criteria": ["返回 error", "包含绝对路径", "不创建仓库目录"],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "多个项目候选无法自动选择",
+      "prompt": "仓库有两个包含 build/mcu 的项目，未提供 project_name。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_PROJECT_NOT_FOUND",
+      "criteria": ["不猜测项目", "列出候选数量和名称", "不写文件"],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "error",
+      "description": "缺少构建入口",
+      "prompt": "选择 build-pack，但项目缺少 build.bat。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_BUILD_ENTRY_NOT_FOUND",
+      "criteria": ["指出缺失 build.bat", "不生成半成品", "提供修复方向"],
+      "pass_score": 3
+    },
+    {
+      "id": 8,
+      "category": "error",
+      "description": "已有输出且未授权覆盖",
+      "prompt": "目标 autobuild-mcu.bat 已存在，未指定 force。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_OUTPUT_EXISTS",
+      "criteria": ["保留原文件", "返回已有路径", "提示确认后使用 force"],
+      "pass_score": 3
+    },
+    {
+      "id": 9,
+      "category": "error",
+      "description": "输出路径位于仓库外",
+      "prompt": "把脚本输出到 CI 仓库外的临时目录。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_INVALID_INPUT",
+      "criteria": ["拒绝仓库外路径", "说明相对定位约束", "不写文件"],
+      "pass_score": 3
+    }
+  ]
+}

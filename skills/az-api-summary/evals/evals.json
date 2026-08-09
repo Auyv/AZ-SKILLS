@@ -1,0 +1,90 @@
+{
+  "skill_name": "az-api-summary",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "CHM API 文档按五层架构总结",
+      "prompt": "请解析 vendor_sdk_api.chm，按公共 API、命令层、协议抽象层、链路层和硬件适配层输出 Markdown，读者没有密码学基础。",
+      "expected_output": "生成包含术语表、分层架构、公共 API 完整清单、内部接口索引、调用流程和限制的 Markdown。",
+      "criteria": [
+        "区分公共、内部和移植接口",
+        "术语表解释上下文而非只列英文全称",
+        "公共 API 清单通过结构化清单校验",
+        "输出可点击的绝对路径"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "联合用户手册、示例 PDF 和 CHM",
+      "prompt": "结合用户手册.pdf、API示例.pdf 和 API接口.chm 生成分层 API 指南，并标出推荐调用顺序。",
+      "expected_output": "交叉引用三份资料，使用 CHM 作为接口权威来源、示例文档作为流程来源、用户手册作为架构来源。",
+      "criteria": [
+        "说明各资料的权威范围",
+        "渲染抽查 PDF 表格或流程图",
+        "输出初始化和业务调用流程",
+        "列出资料冲突或待确认项"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "参考另一份 PDF 的篇章格式",
+      "prompt": "总结 SDK API，章节格式参考 style-reference.pdf，但不要复制其技术内容。",
+      "expected_output": "提炼参考文档的章节节奏，生成原创的接口总结。",
+      "criteria": [
+        "识别函数概览和 API 详解等篇章结构",
+        "不复制参考文档技术内容",
+        "保留当前 SDK 的真实层次和接口",
+        "包含术语表和适用范围"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "空输入",
+      "prompt": "{}",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_MISSING_INPUT",
+      "criteria": [
+        "返回 error 状态",
+        "包含 ERR_MISSING_INPUT",
+        "提示 source_documents 为必需字段"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "源文件不存在",
+      "prompt": "请总结 C:\\missing\\not-exist.chm 并输出 Markdown。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_FILE_NOT_FOUND",
+      "criteria": [
+        "返回 error 状态",
+        "保留并显示原始路径",
+        "不猜测或改用同名文件"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "输出已存在且未授权覆盖",
+      "prompt": "总结 api.chm 到已存在的 api-summary.md，overwrite=false。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_OUTPUT_EXISTS",
+      "criteria": [
+        "停止写入",
+        "包含 ERR_OUTPUT_EXISTS",
+        "提示改名或显式允许覆盖"
+      ],
+      "pass_score": 3
+    }
+  ]
+}

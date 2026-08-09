@@ -7,7 +7,8 @@ param(
     [string]$ProjectName = "",
     [string]$ContainerName = "YLB04_A6",
     [string]$ContainerId = "",
-    [string]$ContainerWorkDir = "/home/sei/code/task-jpz_dev/mpu",
+    [string]$MpuRelativePath = "",
+    [string]$ContainerWorkDir = "",
     [switch]$Confirmed
 )
 
@@ -45,10 +46,46 @@ if (-not (Test-Path -LiteralPath $Workspace -PathType Container)) {
     Fail "ERR_WORKSPACE_NOT_FOUND" "Workspace not found: $Workspace"
 }
 
-$mpuDir = Join-Path $Workspace "code\task-jpz_dev\mpu"
-$buildScript = Join-Path $mpuDir "app\$AppName\build\build.sh"
-if (-not (Test-Path -LiteralPath $buildScript -PathType Leaf)) {
-    Fail "ERR_APP_BUILD_SCRIPT_MISSING" "Missing app build script: $buildScript"
+$mpuRelativeCandidates = @()
+if (-not [string]::IsNullOrWhiteSpace($MpuRelativePath)) {
+    if ([System.IO.Path]::IsPathRooted($MpuRelativePath)) {
+        Fail "ERR_MPU_PATH_INVALID" "MpuRelativePath must be relative to Workspace: $MpuRelativePath"
+    }
+    $mpuRelativeCandidates += $MpuRelativePath.Trim().TrimStart([char[]]".\/")
+} else {
+    # New repositories use code\task-mpu; retain the legacy layout as a fallback.
+    $mpuRelativeCandidates += "code\task-mpu"
+    $mpuRelativeCandidates += "code\task-jpz_dev\mpu"
+}
+
+$mpuDir = $null
+$selectedMpuRelativePath = $null
+$existingMpuDirs = New-Object System.Collections.Generic.List[string]
+$checkedBuildScripts = New-Object System.Collections.Generic.List[string]
+foreach ($candidate in $mpuRelativeCandidates) {
+    $candidateMpuDir = Join-Path $Workspace $candidate
+    $candidateBuildScript = Join-Path $candidateMpuDir "app\$AppName\build\build.sh"
+    $checkedBuildScripts.Add($candidateBuildScript)
+    if (Test-Path -LiteralPath $candidateMpuDir -PathType Container) {
+        $existingMpuDirs.Add($candidateMpuDir)
+        if (Test-Path -LiteralPath $candidateBuildScript -PathType Leaf) {
+            $mpuDir = $candidateMpuDir
+            $selectedMpuRelativePath = $candidate
+            break
+        }
+    }
+}
+
+if ($null -eq $mpuDir) {
+    if ($existingMpuDirs.Count -eq 0) {
+        Fail "ERR_MPU_DIR_NOT_FOUND" "MPU directory not found. Checked: $($mpuRelativeCandidates -join '; ')"
+    }
+    Fail "ERR_APP_BUILD_SCRIPT_MISSING" "Missing app build script. Checked: $($checkedBuildScripts -join '; ')"
+}
+
+if ([string]::IsNullOrWhiteSpace($ContainerWorkDir)) {
+    $containerRelativePath = $selectedMpuRelativePath -replace '\\', '/'
+    $ContainerWorkDir = "/home/sei/$containerRelativePath"
 }
 
 $safeAppName = $AppName -replace '[^A-Za-z0-9_.-]', '_'
@@ -187,25 +224,20 @@ echo ----- end docker diag -----
 exit /b 0
 "@
 
-$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($linuxScriptPath, $linuxScript, [System.Text.UTF8Encoding]::new($false))
+[System.IO.File]::WriteAllText($batScriptPath, ($batScript -replace "`r?`n", "`r`n"), [System.Text.UTF8Encoding]::new($false))
 
 # .sh 保持 LF（Linux 容器需要 LF 换行）
-[System.IO.File]::WriteAllText($linuxScriptPath, $linuxScript, $utf8NoBom)
+[System.IO.File]::WriteAllText($linuxScriptPath, $linuxScript, [System.Text.UTF8Encoding]::new($false))
 
 # .bat 必须 CRLF（Windows cmd 解析 .bat 需要 CRLF；WriteAllText 默认写 LF 会导致中文 Windows / cmd 解析异常）
-$batBytes = [System.Text.Encoding]::UTF8.GetBytes($batScript)
-$batOut = New-Object System.Collections.Generic.List[byte]
-foreach ($b in $batBytes) {
-    if ($b -eq 0x0A) {
-        $batOut.Add(0x0D); $batOut.Add(0x0A)
-    } elseif ($b -ne 0x0D) {
-        $batOut.Add($b)
-    }
-}
-[System.IO.File]::WriteAllBytes($batScriptPath, $batOut.ToArray())
+Write-Host "BAT template length: $($batScript.Length)"
+[System.IO.File]::WriteAllText($batScriptPath, ($batScript -replace "`r?`n", "`r`n"), [System.Text.UTF8Encoding]::new($false))
 
 Write-Host "Generated Windows script: $batScriptPath"
 Write-Host "Generated Linux script:   $linuxScriptPath"
+Write-Host "Detected MPU root:        $mpuDir"
+Write-Host "Container work directory: $ContainerWorkDir"
 
 if ($Execute) {
     Write-Host "Confirmed build parameters:"

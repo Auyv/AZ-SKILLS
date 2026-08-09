@@ -7,7 +7,7 @@
 ## 使用前提
 
 - 已安装 Cline 或支持技能的 AI Agent
-- 技能路径：`C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\auto-skill-creator`
+- 技能路径：`C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\skills\auto-skill-creator`
 
 ## 基本使用流程
 
@@ -41,7 +41,7 @@ Agent 会引导您提供：
 
 ### 4. 查看创建的技能
 
-技能会保存在：`C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\{技能名称}\`
+技能会保存在：`C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\skills\{技能名称}\`，随后通过 AZ-SKILLS 同步工具发布到当前 Agent。
 
 ## 配置文件管理
 
@@ -85,7 +85,7 @@ A: 可以。在任何阶段说"算了"或"不要创建了"即可取消。
 
 ### Q: 创建的技能在哪里？
 
-A: 默认在 `C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\{技能名称}\`
+A: 默认在 `C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\skills\{技能名称}\`，并同步到当前 Agent 的技能目录。
 
 ### Q: 可以修改默认保存路径吗？
 

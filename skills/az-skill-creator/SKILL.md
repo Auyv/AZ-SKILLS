@@ -7,7 +7,7 @@ description: |
   - 用户提到"测试技能"、"评估技能效果"
 
   职责：帮助用户将 SKILL 写清楚、做优秀
-  边界：不涉及技能安装、部署、CI/CD 等其他工作
+  边界：不涉及 CI/CD；技能创建完成后按 AZ-SKILLS 标准流程同步到当前 Agent
 version: 2.0.0
 inputs:
   required:
@@ -65,9 +65,12 @@ errors:
   - code: ERR_EMPTY_EVALS
     message: 测试用例为空
     handling: 自动生成默认测试用例或提示用户补充
-  - code: ERR_PROJECT_SKILL_RULE_UNKNOWN
-    message: 无法确认当前 Agent/Codex 的项目技能加载规则
-    handling: 不默认写入 ./skills；向用户说明探测结果，并询问创建项目内技能草稿/源码包还是全局技能
+  - code: ERR_MANIFEST_UPDATE
+    message: 无法将技能登记到当前 Agent 的同步清单
+    handling: 保留 AZ-SKILLS 中的技能源文件，报告原始错误并提示人工更新 manifest.yaml
+  - code: ERR_SYNC_FAILED
+    message: 技能同步到当前 Agent 失败
+    handling: 保留 AZ-SKILLS 中的技能源文件和清单修改，报告同步命令及原始错误
 ---
 
 # 技能创建器
@@ -82,7 +85,8 @@ errors:
 4. **创建测试**：准备包含异常场景的测试用例（至少 5 个）
 5. **运行测试**：在有技能的情况下执行测试(需要用户许可状态下)
 6. **评估改进**：直接在对话中评估结果并迭代
-7. **完成**：直到满意为止
+7. **登记同步**：登记到当前 Agent 的 `manifest.yaml` 清单并运行同步工具
+8. **完成**：验证源目录和当前 Agent 中的技能均可用，直到满意为止
 
 ---
 
@@ -100,11 +104,23 @@ errors:
 
 ### 命名规范
 
-**重要**：创建的技能名称**必须**以 `az-` 作为前缀，例如：
-- `az-pdf2md`（正确）
-- `pdf2md`（错误，缺少前缀）
+**规则：用户指定的名称优先，无指定时自动加 `az-` 前缀。**
 
-除非用户明确指定了其他前缀，否则默认使用 `az-` 前缀。
+| 场景 | 用户输入 | 最终名称 |
+|------|---------|---------|
+| 用户明确指定名称 | "创建技能 hq-check-add-patch" | `hq-check-add-patch` |
+| 用户明确指定名称 | "创建技能 az-pdf2md" | `az-pdf2md` |
+| 用户未指定名称 | "创建一个PDF转MD的技能" | `az-pdf2md`（自动生成） |
+
+- 用户明确说出的名称**原样使用**，不添加/不删除前缀、不修改大小写、不调整分隔符
+- 仅在用户**未给出名称**时，自动以 `az-` 为前缀生成名称
+- 名称仅允许字母、数字、连字符（`-`）
+
+### 已创建技能的名称不可修改
+
+- 优化/调整已有技能时，**禁止**修改目录名或 `name` 字段
+- 即使用户要求改名也**拒绝**，并向用户说明会导致引用断裂
+- 这不需要靠 `immutable_fields` 之类的字段来判断——这是创建器自身的铁律
 
 ### 创建位置
 
@@ -147,7 +163,7 @@ errors:
 
 ### 编写 SKILL.md
 
-1. 严格遵循模板编写技能文档 `template/SKILL.md`
+1. 严格遵循模板编写技能文档 `template/SKILL.template.md`
 2. **先填写 front matter 的 inputs/outputs/errors 定义**
 3. **默认将制作结果组织成独立技能包**：每个技能拥有独立目录，至少包含 `SKILL.md`，按需包含 `scripts/`、`docs/`、`assets/`、`evals/`、`MANUAL.md` 等配套文件，避免只生成零散片段
 4. skill的执行过程要尽量使用python脚本分步实现，放在 `scripts/` 目录下

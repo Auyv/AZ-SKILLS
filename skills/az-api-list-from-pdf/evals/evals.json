@@ -1,0 +1,118 @@
+{
+  "skill_name": "az-api-list-from-pdf",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "正常场景：从已转好的 .md 提取 QTEE API 接口清单",
+      "prompt": "帮我把 D:\\模组资料\\Quectel_AG35系列_QuecOpen_QTEE_API_参考手册_V1.0.md 整理为接口清单",
+      "expected_output": "生成接口清单 .md，包含 43 个函数（RSA 15 / AES 12 / ECC 13 / 安全存储 3），并追加索引到原 .md",
+      "criteria": [
+        "生成 _接口清单.md 文件",
+        "正确识别模块数和接口总数",
+        "按模块分类函数",
+        "在原 .md 末尾追加索引链接"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "正常场景：直接从 PDF 提取（先调用 az-pdf2md）",
+      "prompt": "提取 Quectel AG35 SMS API 参考手册的接口清单",
+      "expected_output": "完成 PDF→MD→接口清单的完整流程",
+      "criteria": [
+        "调用 az-pdf2md 完成 PDF 转换",
+        "解析 .md 提取 API",
+        "生成结构化清单",
+        "追加索引到原 .md"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "正常场景：批量处理多个 Quectel PDF",
+      "prompt": "把这个目录下所有 Quectel API 参考手册 PDF 都整理成接口清单",
+      "expected_output": "批量处理 5+ PDF，每个生成接口清单 .md",
+      "criteria": [
+        "遍历目录识别所有 API PDF",
+        "并行或串行处理",
+        "输出汇总报告"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "异常场景：文件不存在",
+      "prompt": "帮我整理 D:\\nofile\\X.pdf 的接口清单",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_FILE_NOT_FOUND",
+      "criteria": [
+        "返回错误状态",
+        "包含错误码 ERR_FILE_NOT_FOUND",
+        "错误信息清晰，包含文件路径",
+        "提示用户检查路径"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "异常场景：非 API 文档（产品规格书）",
+      "prompt": "帮我整理 Quectel_AG35_产品规格书.pdf 的接口清单",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_NOT_API_DOC",
+      "criteria": [
+        "检测到非 API 文档特征",
+        "返回 ERR_NOT_API_DOC 错误码",
+        "提示用户提供 API 参考手册类 PDF",
+        "不生成无效清单文件"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "异常场景：空输入",
+      "prompt": "整理接口清单（未提供文件路径）",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_INVALID_INPUT",
+      "criteria": [
+        "检测到空路径",
+        "返回 ERR_INVALID_INPUT 错误码",
+        "提示用户输入有效路径"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "error",
+      "description": "异常场景：输出目录无写权限",
+      "prompt": "把接口清单输出到 C:\\Windows\\System32\\xxx.md",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_OUTPUT_WRITE",
+      "criteria": [
+        "检测到写权限问题",
+        "返回 ERR_OUTPUT_WRITE 错误码",
+        "提供备用输出路径建议"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 8,
+      "category": "normal",
+      "description": "正常场景：已包含索引的文档重复处理",
+      "prompt": "再次整理 XXX_接口清单（已处理过）",
+      "expected_output": "检测到已存在索引，跳过追加或询问用户",
+      "criteria": [
+        "识别已存在的索引章节",
+        "跳过或询问用户",
+        "不破坏原内容"
+      ],
+      "pass_score": 2
+    }
+  ]
+}

@@ -437,21 +437,35 @@ class SkillSyncer:
                         labels.append(c.name)
         return labels
 
-    def _purge_managed_links(self, az_skills_path: Path, labels: List[str]) -> None:
-        """仅删除 az_skills_path 下属于 manifest 管理的旧 link，保留用户自建内容。
+    def _purge_managed_links(
+        self, az_skills_path: Path, current_labels: Optional[List[str]] = None
+    ) -> None:
+        """删除目标目录中由本仓库管理的旧 link，保留用户自建内容。
 
-        规则：仅当目录条目是 symlink/junction 且名称在 labels 集合内才删除；
-        普通目录、非管理内的条目、任何其它内容均不动。
+        受管项按链接的真实目标判断：只有指向本仓库 ``skills/`` 源目录的
+        symlink/junction 才会删除。不能只按当前 manifest 标签过滤，否则已经
+        从目标 skills 清单移除的历史链接永远不会进入清理范围。
+
+        ``current_labels`` 为兼容既有内部调用保留；受管判断不依赖当前清单。
+        普通目录、外部链接和任何其它内容均不动。
         """
         if not az_skills_path.exists():
             return
-        label_set = set(labels)
+
+        source_root = self.source_dir.resolve()
         for entry in az_skills_path.iterdir():
-            if entry.name in label_set and (entry.is_symlink() or entry.is_junction()):
-                try:
-                    entry.unlink()
-                except Exception as e:
-                    warning(f"  清理旧 link 失败 {entry.name}: {e}")
+            if not (entry.is_symlink() or entry.is_junction()):
+                continue
+
+            try:
+                entry.resolve(strict=False).relative_to(source_root)
+            except (OSError, ValueError):
+                continue
+
+            try:
+                entry.unlink()
+            except Exception as e:
+                warning(f"  清理旧 link 失败 {entry.name}: {e}")
 
     def _get_az_skills_path(self, target_name: str, target_path: Path) -> Path:
         """获取 skill 同步根目录。
