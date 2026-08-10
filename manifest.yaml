@@ -1,4 +1,4 @@
-last_sync: '2026-07-18T15:21:31.534513'
+last_sync: '2026-08-10T19:29:52.445765'
 agent_targets:
 - aggregate_subdir: ''
   enabled: true
@@ -78,3 +78,6 @@ agent_targets:
   - ctp-mpu-debug-build
   - ctp-adb-debug-exec
   - az-api-summary
+  - az-experience-capture
+  - az-experience-search
+  - az-experience-publish

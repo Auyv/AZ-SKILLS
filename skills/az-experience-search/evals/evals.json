@@ -1,0 +1,63 @@
+{
+  "skill_name": "az-experience-search",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "按错误码检索",
+      "prompt": "先查经验库：Docker 程序退出码 139。",
+      "expected_output": "返回包含 SIGSEGV/vsyscall 经验并解释命中特征。",
+      "criteria": ["在排查前搜索", "返回文件路径", "说明命中 139", "提示适用边界"],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "按 RIP 地址精确检索",
+      "prompt": "有没有 rip=0xffffffffff600000 的类似问题？",
+      "expected_output": "精确命中 legacy vsyscall 经验。",
+      "criteria": ["识别地址", "返回根因", "给出优先验证步骤"],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "指定参考经验查询",
+      "prompt": "参考 experiences/troubleshooting/WSL2-Docker旧版静态工具-vsyscall段错误.md 排查当前问题。",
+      "expected_output": "读取参考经验并比较当前环境差异。",
+      "criteria": ["读取指定文件", "提取标签和症状", "说明差异", "返回补充经验"],
+      "pass_score": 4
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "空查询",
+      "prompt": "query 为空，查经验库。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_EMPTY_QUERY",
+      "criteria": ["返回错误状态", "提示提供日志或现象", "不伪造结果"],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "参考文件不存在",
+      "prompt": "参考 experiences/missing.md 查询。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_REFERENCE_NOT_FOUND",
+      "criteria": ["报告缺失路径", "不猜测文件内容", "允许退化普通查询"],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "无匹配经验",
+      "prompt": "查询一个仓库中完全不存在的量子硬件错误。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_NO_MATCH",
+      "criteria": ["明确未命中", "不阻断正常排查", "问题解决后建议积累"],
+      "pass_score": 3
+    }
+  ]
+}

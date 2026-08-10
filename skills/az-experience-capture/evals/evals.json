@@ -1,0 +1,63 @@
+{
+  "skill_name": "az-experience-capture",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "从已解决会话创建新经验",
+      "prompt": "这个 Docker 段错误已经解决，退出码为 0，请沉淀到经验库。",
+      "expected_output": "查重后创建 verified/private 经验并返回路径。",
+      "criteria": ["先查重", "包含六个正文段落", "默认 private", "记录验证证据"],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "合并到相同根因经验",
+      "prompt": "把这次 WSL2 vsyscall 修复补充到已有同名经验。",
+      "expected_output": "更新已有经验而不是创建重复文件。",
+      "criteria": ["读取已有经验", "追加验证环境", "保留原有结论", "返回 merged 决策"],
+      "pass_score": 4
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "未完全解决时进入 inbox",
+      "prompt": "先记录这个问题，目前只是临时规避，还没找到根因。",
+      "expected_output": "创建 draft 到 inbox，明确未验证。",
+      "criteria": ["不标记 verified", "写入 inbox", "区分规避与根因"],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "经验仓库不存在",
+      "prompt": "repo_path=C:\\missing\\experience-kb，记录经验。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_REPO_NOT_FOUND",
+      "criteria": ["返回错误状态", "不创建猜测目录", "请求正确路径"],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "问题上下文为空",
+      "prompt": "沉淀经验，但没有提供当前问题或对话上下文。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_EMPTY_CONTEXT",
+      "criteria": ["指出缺失上下文", "请求现象和验证", "不写正式经验"],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "未授权 Git 写入",
+      "prompt": "生成经验后直接 commit 并 push，但 allow_git_write=false。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_GIT_NOT_AUTHORIZED",
+      "criteria": ["保留工作区文件", "不 commit", "不 push", "请求明确授权"],
+      "pass_score": 4
+    }
+  ]
+}
