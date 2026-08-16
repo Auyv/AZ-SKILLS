@@ -1,0 +1,73 @@
+{
+  "skill_name": "az-sdd-spec",
+  "version": "4.1.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "创建 v4 标准变更规范",
+      "prompt": "/az-sdd-spec 为登录功能创建 CHG-0001",
+      "expected_output": "创建 proposal 和相对 baseline 的 spec.delta",
+      "criteria": [
+        "包含 proposal 范围和非目标",
+        "包含验收标准",
+        "保留 base_sha256 与 delta 标记"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "简单任务自动快速路径",
+      "prompt": "/az-sdd-spec 修改一处低风险文案",
+      "expected_output": "自动识别无风险，生成精简 change 并标记 fast",
+      "criteria": [
+        "不要求用户选择模式",
+        "只保留必要字段",
+        "仍保留 delta 和验收条件"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "澄清模式",
+      "prompt": "/az-sdd-spec clarify 0001",
+      "expected_output": "输出影响验收的关键问题",
+      "criteria": [
+        "最多询问 1-3 个问题",
+        "先利用现有上下文",
+        "不写实现方案"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "空需求",
+      "prompt": "/az-sdd-spec {}",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_INVALID_INPUT",
+      "criteria": [
+        "返回指定错误码",
+        "指出需求为空",
+        "不创建空规范"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "项目未初始化",
+      "prompt": "/az-sdd-spec 为登录创建规范，但没有 az-sdd/",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_PROJECT_NOT_INITIALIZED",
+      "criteria": [
+        "返回指定错误码",
+        "建议 az-sdd-init",
+        "不创建孤立 spec"
+      ],
+      "pass_score": 3
+    }
+  ]
+}
