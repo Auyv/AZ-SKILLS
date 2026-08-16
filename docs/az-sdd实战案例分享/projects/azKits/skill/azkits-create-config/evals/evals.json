@@ -1,0 +1,101 @@
+{
+  "skill_name": "azkits-create-config",
+  "version": "1.1.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "在已有目录创建空配置",
+      "prompt": "帮我创建 C:\\work\\device.yaml，名称是设备工具箱，说明是设备回归入口",
+      "expected_output": "生成 version 1、toolbox 元数据和 scripts: [] 的 UTF-8 YAML",
+      "criteria": ["未添加占位工具", "返回绝对路径", "包含 status 和 timestamp"],
+      "pass_score": 3
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "创建不存在的父目录",
+      "prompt": "创建 new/config/toolbox.yml，父目录也帮我创建，名称测试工具箱，说明本地测试",
+      "expected_output": "明确启用 create_parent 后创建父目录与配置",
+      "criteria": ["扩展名受支持", "父目录已创建", "YAML 使用 UTF-8"],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "正确转义特殊字符",
+      "prompt": "创建 config.yaml，名称含冒号：设备:测试，说明含 # 号",
+      "expected_output": "使用安全 YAML 字符串表示并保留原文本",
+      "criteria": ["配置可解析", "文本无丢失", "scripts 为空列表"],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "缺少必需输入",
+      "prompt": "创建一个 azKits 配置，但不提供名称和说明",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_REQUIRED_INPUT",
+      "criteria": ["返回错误状态", "包含错误码", "提示缺少名称或说明"],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "目标文件已经存在",
+      "prompt": "在已有的 toolbox.yaml 上再创建空配置",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_FILE_EXISTS",
+      "criteria": ["不覆盖原文件", "返回错误状态", "提示更换路径或处理旧文件"],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "错误文件扩展名",
+      "prompt": "创建 toolbox.json 作为 azKits 配置",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_INVALID_PATH",
+      "criteria": ["拒绝 JSON 扩展名", "提示 .yaml 或 .yml", "不创建文件"],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "normal",
+      "description": "创建配置及同级一键启动脚本",
+      "prompt": "创建 ecall-azKits.yaml，并生成同级 ecall调试-azKitsRun.bat，azkits.exe 在 C:\\tools\\azkits.exe",
+      "expected_output": "同时创建 YAML 和 BAT，BAT 使用绝对 EXE 路径及 %~dp0 相对配置路径",
+      "criteria": ["YAML 与 BAT 同级", "启动器检查 EXE 和配置", "异常退出时 pause"],
+      "pass_score": 3
+    },
+    {
+      "id": 8,
+      "category": "normal",
+      "description": "为已有配置单独创建启动器",
+      "prompt": "为已有 device.yaml 创建默认名称的一键启动脚本",
+      "expected_output": "创建 deviceRun.bat，不修改 YAML",
+      "criteria": ["默认名称正确", "使用 %~dp0device.yaml", "返回启动器绝对路径"],
+      "pass_score": 3
+    },
+    {
+      "id": 9,
+      "category": "error",
+      "description": "找不到 azkits.exe",
+      "prompt": "创建启动器，但指定的 azkits.exe 不存在且无法自动探测",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_AZKITS_NOT_FOUND",
+      "criteria": ["不创建无效 BAT", "不退化调用旧版 Python", "提示指定 EXE 路径"],
+      "pass_score": 3
+    },
+    {
+      "id": 10,
+      "category": "error",
+      "description": "启动器已存在",
+      "prompt": "目标目录已经存在 deviceRun.bat，再次创建同名启动器",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_LAUNCHER_EXISTS",
+      "criteria": ["不覆盖原 BAT", "返回明确错误码", "建议更换名称或先确认处理"],
+      "pass_score": 3
+    }
+  ]
+}

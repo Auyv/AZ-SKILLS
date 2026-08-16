@@ -2,7 +2,7 @@
 name: az-experience-publish
 description: |
   当用户要求“发布成博客”“生成并发布飞书文章”“分享这条经验”时使用。读取标准经验，生成公开稿，扫描敏感信息，用户确认后通过 lark-cli 在配置的飞书文件夹创建在线文档，并回写 URL；禁止未经批准自动发布。
-version: 1.0.0
+version: 1.1.0
 inputs:
   required:
     - name: repo_path
@@ -26,6 +26,10 @@ inputs:
       type: boolean
       description: 用户是否已逐篇批准公开稿。
       default: false
+    - name: base_ref
+      type: string
+      description: 发布资格校验使用的远端集成分支。
+      default: 从 .experience/config.yaml 读取，缺省为 origin/master
 outputs:
   - name: result
     type: object
@@ -57,6 +61,15 @@ errors:
   - code: ERR_WRITEBACK
     message: 飞书创建成功但本地 URL 回写失败。
     handling: 返回远端 URL 和 partial 状态，提示手工回写。
+  - code: ERR_BASE_REF_NOT_FOUND
+    message: 本地尚无 origin/master 或远端状态未同步。
+    handling: 执行 git fetch origin master 后重新校验；不得调用飞书创建接口。
+  - code: ERR_NOT_MERGED_TO_MASTER
+    message: 来源经验尚未通过合并请求进入 master。
+    handling: 保留公开稿和预览，等待经验合并后再发布。
+  - code: ERR_SOURCE_DIVERGED
+    message: 本地来源经验与 origin/master 中的内容不一致。
+    handling: 切换或恢复为已合并版本，禁止发布未审核差异。
 ---
 
 # 经验分享与飞书发布
@@ -83,16 +96,23 @@ python scripts/scan_sensitive.py <draft.md>
 ```
 
 5. 命中高风险信息时返回 `ERR_SENSITIVE_CONTENT`，逐项展示并等待处理。
-6. 展示最终公开稿差异。`approved=false` 时只执行 dry-run：
+6. 展示最终公开稿差异。`approved=false` 时可以执行 dry-run，但必须说明尚未通过发布资格校验时不能实际创建：
 
 ```powershell
 lark-cli docs +create --as user --doc-format markdown --parent-token "<folder-url>" --title "<title>" --content @publish/drafts/<file>.md --dry-run
 ```
 
-7. 用户批准后，在经验仓库根目录执行同一命令并移除 `--dry-run`。路径必须相对 cwd。
-8. 以退出码 0 且 JSON `ok == true` 判断成功。
-9. 把文档 URL 回写到来源经验 `published` 字段和 `publish/published.md`。
-10. 未经 Git 授权不 commit/push。
+7. 用户批准后，先同步并校验来源经验：
+
+```powershell
+git fetch origin master
+python scripts/check_publish_eligibility.py --repo <repo_path> --experience <experience_path> --base-ref origin/master
+```
+
+8. 只有校验返回 `status=success`，才在经验仓库根目录执行飞书创建命令并移除 `--dry-run`。路径必须相对 cwd。
+9. 以退出码 0 且 JSON `ok == true` 判断成功。
+10. 从最新 `master` 创建 `publish/<slug>` 分支，把文档 URL 回写到来源经验 `published` 字段和 `publish/published.md`，通过合并请求进入 `master`。
+11. 未经 Git 授权不 commit、push 或创建合并请求。
 
 ## 安全边界
 
@@ -101,6 +121,8 @@ lark-cli docs +create --as user --doc-format markdown --parent-token "<folder-ur
 - 无法判断是否敏感时停止发布。
 - 不把原始私有经验直接上传；只上传已审核公开稿。
 - 飞书创建成功前不写入虚假 URL。
+- 来源经验未进入 `origin/master` 或本地内容与其不一致时，禁止实际创建飞书文档。
+- 发布 URL 回写不得直接提交到 `master`。
 
 ## 输出结构
 
@@ -111,7 +133,10 @@ lark-cli docs +create --as user --doc-format markdown --parent-token "<folder-ur
   "data": {
     "draft": "...md",
     "lark_url": "https://...",
-    "writeback": true
+    "writeback": true,
+    "source_base_ref": "origin/master",
+    "merge_verified": true,
+    "writeback_branch": "publish/<slug>"
   }
 }
 ```
@@ -122,6 +147,7 @@ lark-cli docs +create --as user --doc-format markdown --parent-token "<folder-ur
 az-experience-publish/
 ├── SKILL.md
 ├── MANUAL.md
+├── scripts/check_publish_eligibility.py
 ├── scripts/scan_sensitive.py
 ├── assets/publication-template.md
 └── evals/evals.json

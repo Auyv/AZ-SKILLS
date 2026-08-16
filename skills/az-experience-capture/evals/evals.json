@@ -1,6 +1,6 @@
 {
   "skill_name": "az-experience-capture",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "evals": [
     {
       "id": 1,
@@ -57,6 +57,25 @@
       "expected_behavior": "error",
       "expected_error_code": "ERR_GIT_NOT_AUTHORIZED",
       "criteria": ["保留工作区文件", "不 commit", "不 push", "请求明确授权"],
+      "pass_score": 4
+    },
+    {
+      "id": 7,
+      "category": "error",
+      "description": "禁止直接在 master 新增经验",
+      "prompt": "当前分支是 master，直接把新经验写入 experiences。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_PROTECTED_BRANCH",
+      "criteria": ["停止写入", "要求创建 experience/<slug>", "不直接修改 master"],
+      "pass_score": 3
+    },
+    {
+      "id": 8,
+      "category": "normal",
+      "description": "经验分支等待合并请求",
+      "prompt": "当前位于 experience/docker-vsyscall，经验校验已通过但尚未合并。",
+      "expected_output": "返回工作分支、master 目标和 pending 合并请求状态，并明确不可发布。",
+      "criteria": ["分支命名通过", "目标为 master", "merge_request_status=pending", "禁止提前发布"],
       "pass_score": 4
     }
   ]

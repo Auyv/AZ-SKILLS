@@ -1,0 +1,29 @@
+version: 1
+toolbox:
+  name: 设备测试工具箱
+  description: 初始化与回归测试入口
+scripts:
+  - id: device-init
+    alias: device-init
+    name: 设备初始化
+    description: 初始化设备并检查连接
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: regression
+    alias: regression
+    name: 回归测试
+    description: 运行回归测试套件
+    path: scripts/regression.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: hidden
+    alias: hidden
+    name: 隐藏脚本
+    description: 不应显示
+    path: scripts/missing.bat
+    enabled: false

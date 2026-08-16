@@ -1,0 +1,105 @@
+/**
+ * @file        hsed_spc_contract.c
+ * @brief       Compile-time checks between the SPC model and BSC contract
+ * @author      HSED
+ * @date        2026/07/24
+ * @version     1.0
+ */
+
+#include "generated/hsed_datatype.h"
+#include "bsc_hse/bsc_hse_types.h"
+
+#define HSED_SPC_ASSERT_EQ(name, spc_value, bsc_value) \
+    typedef char THsedSpcContract_##name[((spc_value) == (bsc_value)) ? 1 : -1]
+
+HSED_SPC_ASSERT_EQ(ResultOk, kHsedHsedResult_OK, kBscHseResultOk);
+HSED_SPC_ASSERT_EQ(ResultInvalidParam, kHsedHsedResult_INVALID_PARAM, kBscHseResultInvalidParam);
+HSED_SPC_ASSERT_EQ(ResultUnsupported, kHsedHsedResult_UNSUPPORTED, kBscHseResultUnsupported);
+HSED_SPC_ASSERT_EQ(ResultPermissionDenied, kHsedHsedResult_PERMISSION_DENIED, kBscHseResultPermissionDenied);
+HSED_SPC_ASSERT_EQ(ResultKeyNotFound, kHsedHsedResult_KEY_NOT_FOUND, kBscHseResultKeyNotFound);
+HSED_SPC_ASSERT_EQ(ResultKeyOccupied, kHsedHsedResult_KEY_OCCUPIED, kBscHseResultKeyOccupied);
+HSED_SPC_ASSERT_EQ(ResultBusy, kHsedHsedResult_BUSY, kBscHseResultBusy);
+HSED_SPC_ASSERT_EQ(ResultObjectNotFound, kHsedHsedResult_OBJECT_NOT_FOUND, kBscHseResultObjectNotFound);
+HSED_SPC_ASSERT_EQ(ResultObjectStateError, kHsedHsedResult_OBJECT_STATE_ERROR, kBscHseResultObjectStateError);
+HSED_SPC_ASSERT_EQ(ResultDataTooLarge, kHsedHsedResult_DATA_TOO_LARGE, kBscHseResultDataTooLarge);
+HSED_SPC_ASSERT_EQ(ResultNoResource, kHsedHsedResult_NO_RESOURCE, kBscHseResultNoResource);
+HSED_SPC_ASSERT_EQ(ResultTimeout, kHsedHsedResult_TIMEOUT, kBscHseResultTimeout);
+HSED_SPC_ASSERT_EQ(ResultDeviceUnavailable, kHsedHsedResult_DEVICE_UNAVAILABLE, kBscHseResultDeviceUnavailable);
+HSED_SPC_ASSERT_EQ(ResultAuthLocked, kHsedHsedResult_AUTH_LOCKED, kBscHseResultAuthLocked);
+HSED_SPC_ASSERT_EQ(ResultDeviceError, kHsedHsedResult_DEVICE_ERROR, kBscHseResultDeviceError);
+
+HSED_SPC_ASSERT_EQ(AlgorithmNone, kHsedHsedAlgorithm_NONE, kBscHseAlgorithmNone);
+HSED_SPC_ASSERT_EQ(AlgorithmAes128, kHsedHsedAlgorithm_AES128, kBscHseAlgorithmAes128);
+HSED_SPC_ASSERT_EQ(AlgorithmTdes128, kHsedHsedAlgorithm_TDES128, kBscHseAlgorithmTdes128);
+HSED_SPC_ASSERT_EQ(AlgorithmSm1, kHsedHsedAlgorithm_SM1, kBscHseAlgorithmSm1);
+HSED_SPC_ASSERT_EQ(AlgorithmSm4, kHsedHsedAlgorithm_SM4, kBscHseAlgorithmSm4);
+HSED_SPC_ASSERT_EQ(AlgorithmRsa1024, kHsedHsedAlgorithm_RSA1024, kBscHseAlgorithmRsa1024);
+HSED_SPC_ASSERT_EQ(AlgorithmRsa2048, kHsedHsedAlgorithm_RSA2048, kBscHseAlgorithmRsa2048);
+HSED_SPC_ASSERT_EQ(AlgorithmEcc256, kHsedHsedAlgorithm_ECC256, kBscHseAlgorithmEcc256);
+HSED_SPC_ASSERT_EQ(AlgorithmSm2, kHsedHsedAlgorithm_SM2, kBscHseAlgorithmSm2);
+HSED_SPC_ASSERT_EQ(AlgorithmSm9, kHsedHsedAlgorithm_SM9, kBscHseAlgorithmSm9);
+HSED_SPC_ASSERT_EQ(AlgorithmSha1, kHsedHsedAlgorithm_SHA1, kBscHseAlgorithmSha1);
+HSED_SPC_ASSERT_EQ(AlgorithmSha256, kHsedHsedAlgorithm_SHA256, kBscHseAlgorithmSha256);
+HSED_SPC_ASSERT_EQ(AlgorithmSha384, kHsedHsedAlgorithm_SHA384, kBscHseAlgorithmSha384);
+HSED_SPC_ASSERT_EQ(AlgorithmSha512, kHsedHsedAlgorithm_SHA512, kBscHseAlgorithmSha512);
+HSED_SPC_ASSERT_EQ(AlgorithmSm3, kHsedHsedAlgorithm_SM3, kBscHseAlgorithmSm3);
+
+HSED_SPC_ASSERT_EQ(CipherModeNone, kHsedHsedCipherMode_NONE, kBscHseCipherModeNone);
+HSED_SPC_ASSERT_EQ(CipherModeEcb, kHsedHsedCipherMode_ECB, kBscHseCipherModeEcb);
+HSED_SPC_ASSERT_EQ(CipherModeCbc, kHsedHsedCipherMode_CBC, kBscHseCipherModeCbc);
+HSED_SPC_ASSERT_EQ(PaddingNone, kHsedHsedPadding_NONE, kBscHsePaddingNone);
+HSED_SPC_ASSERT_EQ(PaddingPkcs7, kHsedHsedPadding_PKCS7, kBscHsePaddingPkcs7);
+HSED_SPC_ASSERT_EQ(PaddingPkcs1, kHsedHsedPadding_PKCS1, kBscHsePaddingPkcs1);
+HSED_SPC_ASSERT_EQ(SignInputMessage, kHsedHsedSignInputMode_MESSAGE, kBscHseSignInputModeMessage);
+HSED_SPC_ASSERT_EQ(SignInputDigest, kHsedHsedSignInputMode_DIGEST, kBscHseSignInputModeDigest);
+HSED_SPC_ASSERT_EQ(Sm9ModeNone, kHsedHsedSm9Mode_NONE, kBscHseSm9ModeNone);
+HSED_SPC_ASSERT_EQ(Sm9ModeStream, kHsedHsedSm9Mode_STREAM, kBscHseSm9ModeStream);
+HSED_SPC_ASSERT_EQ(Sm9ModeSymmetric, kHsedHsedSm9Mode_SYMMETRIC, kBscHseSm9ModeSymmetric);
+
+HSED_SPC_ASSERT_EQ(PropertyUserId, kHsedHsedPropertyId_USER_ID, kBscHsePropertyIdUserId);
+HSED_SPC_ASSERT_EQ(PropertyChipId, kHsedHsedPropertyId_CHIP_ID, kBscHsePropertyIdChipId);
+HSED_SPC_ASSERT_EQ(PropertyAes128KeyId, kHsedHsedPropertyId_AES128_KEY_ID, kBscHsePropertyIdAes128KeyId);
+HSED_SPC_ASSERT_EQ(PropertyAes128CipherMode, kHsedHsedPropertyId_AES128_CIPHER_MODE, kBscHsePropertyIdAes128CipherMode);
+HSED_SPC_ASSERT_EQ(PropertyAes128Padding, kHsedHsedPropertyId_AES128_PADDING, kBscHsePropertyIdAes128Padding);
+HSED_SPC_ASSERT_EQ(PropertyAes128Iv, kHsedHsedPropertyId_AES128_IV, kBscHsePropertyIdAes128Iv);
+HSED_SPC_ASSERT_EQ(PropertyTdes128KeyId, kHsedHsedPropertyId_TDES128_KEY_ID, kBscHsePropertyIdTdes128KeyId);
+HSED_SPC_ASSERT_EQ(PropertyTdes128CipherMode, kHsedHsedPropertyId_TDES128_CIPHER_MODE, kBscHsePropertyIdTdes128CipherMode);
+HSED_SPC_ASSERT_EQ(PropertyTdes128Padding, kHsedHsedPropertyId_TDES128_PADDING, kBscHsePropertyIdTdes128Padding);
+HSED_SPC_ASSERT_EQ(PropertyTdes128Iv, kHsedHsedPropertyId_TDES128_IV, kBscHsePropertyIdTdes128Iv);
+HSED_SPC_ASSERT_EQ(PropertySm1KeyId, kHsedHsedPropertyId_SM1_KEY_ID, kBscHsePropertyIdSm1KeyId);
+HSED_SPC_ASSERT_EQ(PropertySm1CipherMode, kHsedHsedPropertyId_SM1_CIPHER_MODE, kBscHsePropertyIdSm1CipherMode);
+HSED_SPC_ASSERT_EQ(PropertySm1Padding, kHsedHsedPropertyId_SM1_PADDING, kBscHsePropertyIdSm1Padding);
+HSED_SPC_ASSERT_EQ(PropertySm1Iv, kHsedHsedPropertyId_SM1_IV, kBscHsePropertyIdSm1Iv);
+HSED_SPC_ASSERT_EQ(PropertySm4KeyId, kHsedHsedPropertyId_SM4_KEY_ID, kBscHsePropertyIdSm4KeyId);
+HSED_SPC_ASSERT_EQ(PropertySm4CipherMode, kHsedHsedPropertyId_SM4_CIPHER_MODE, kBscHsePropertyIdSm4CipherMode);
+HSED_SPC_ASSERT_EQ(PropertySm4Padding, kHsedHsedPropertyId_SM4_PADDING, kBscHsePropertyIdSm4Padding);
+HSED_SPC_ASSERT_EQ(PropertySm4Iv, kHsedHsedPropertyId_SM4_IV, kBscHsePropertyIdSm4Iv);
+HSED_SPC_ASSERT_EQ(PropertyRsa1024PublicKeyId, kHsedHsedPropertyId_RSA1024_PUBLIC_KEY_ID, kBscHsePropertyIdRsa1024PublicKeyId);
+HSED_SPC_ASSERT_EQ(PropertyRsa1024PrivateKeyId, kHsedHsedPropertyId_RSA1024_PRIVATE_KEY_ID, kBscHsePropertyIdRsa1024PrivateKeyId);
+HSED_SPC_ASSERT_EQ(PropertyRsa1024Padding, kHsedHsedPropertyId_RSA1024_PADDING, kBscHsePropertyIdRsa1024Padding);
+HSED_SPC_ASSERT_EQ(PropertyRsa1024Hash, kHsedHsedPropertyId_RSA1024_HASH_ALGORITHM, kBscHsePropertyIdRsa1024HashAlgorithm);
+HSED_SPC_ASSERT_EQ(PropertyRsa1024SignInput, kHsedHsedPropertyId_RSA1024_SIGN_INPUT_MODE, kBscHsePropertyIdRsa1024SignInputMode);
+HSED_SPC_ASSERT_EQ(PropertyRsa1024Format, kHsedHsedPropertyId_RSA1024_PUBLIC_KEY_FORMAT, kBscHsePropertyIdRsa1024PublicKeyFormat);
+HSED_SPC_ASSERT_EQ(PropertyRsa2048PublicKeyId, kHsedHsedPropertyId_RSA2048_PUBLIC_KEY_ID, kBscHsePropertyIdRsa2048PublicKeyId);
+HSED_SPC_ASSERT_EQ(PropertyRsa2048PrivateKeyId, kHsedHsedPropertyId_RSA2048_PRIVATE_KEY_ID, kBscHsePropertyIdRsa2048PrivateKeyId);
+HSED_SPC_ASSERT_EQ(PropertyRsa2048Padding, kHsedHsedPropertyId_RSA2048_PADDING, kBscHsePropertyIdRsa2048Padding);
+HSED_SPC_ASSERT_EQ(PropertyRsa2048Hash, kHsedHsedPropertyId_RSA2048_HASH_ALGORITHM, kBscHsePropertyIdRsa2048HashAlgorithm);
+HSED_SPC_ASSERT_EQ(PropertyRsa2048SignInput, kHsedHsedPropertyId_RSA2048_SIGN_INPUT_MODE, kBscHsePropertyIdRsa2048SignInputMode);
+HSED_SPC_ASSERT_EQ(PropertyRsa2048Format, kHsedHsedPropertyId_RSA2048_PUBLIC_KEY_FORMAT, kBscHsePropertyIdRsa2048PublicKeyFormat);
+HSED_SPC_ASSERT_EQ(PropertyEcc256PublicKeyId, kHsedHsedPropertyId_ECC256_PUBLIC_KEY_ID, kBscHsePropertyIdEcc256PublicKeyId);
+HSED_SPC_ASSERT_EQ(PropertyEcc256PrivateKeyId, kHsedHsedPropertyId_ECC256_PRIVATE_KEY_ID, kBscHsePropertyIdEcc256PrivateKeyId);
+HSED_SPC_ASSERT_EQ(PropertyEcc256Hash, kHsedHsedPropertyId_ECC256_HASH_ALGORITHM, kBscHsePropertyIdEcc256HashAlgorithm);
+HSED_SPC_ASSERT_EQ(PropertyEcc256SignInput, kHsedHsedPropertyId_ECC256_SIGN_INPUT_MODE, kBscHsePropertyIdEcc256SignInputMode);
+HSED_SPC_ASSERT_EQ(PropertyEcc256Format, kHsedHsedPropertyId_ECC256_PUBLIC_KEY_FORMAT, kBscHsePropertyIdEcc256PublicKeyFormat);
+HSED_SPC_ASSERT_EQ(PropertySm2PublicKeyId, kHsedHsedPropertyId_SM2_PUBLIC_KEY_ID, kBscHsePropertyIdSm2PublicKeyId);
+HSED_SPC_ASSERT_EQ(PropertySm2PrivateKeyId, kHsedHsedPropertyId_SM2_PRIVATE_KEY_ID, kBscHsePropertyIdSm2PrivateKeyId);
+HSED_SPC_ASSERT_EQ(PropertySm2Hash, kHsedHsedPropertyId_SM2_HASH_ALGORITHM, kBscHsePropertyIdSm2HashAlgorithm);
+HSED_SPC_ASSERT_EQ(PropertySm2SignInput, kHsedHsedPropertyId_SM2_SIGN_INPUT_MODE, kBscHsePropertyIdSm2SignInputMode);
+HSED_SPC_ASSERT_EQ(PropertySm2Format, kHsedHsedPropertyId_SM2_PUBLIC_KEY_FORMAT, kBscHsePropertyIdSm2PublicKeyFormat);
+HSED_SPC_ASSERT_EQ(PropertySm9PublicKeyId, kHsedHsedPropertyId_SM9_PUBLIC_KEY_ID, kBscHsePropertyIdSm9PublicKeyId);
+HSED_SPC_ASSERT_EQ(PropertySm9PrivateKeyId, kHsedHsedPropertyId_SM9_PRIVATE_KEY_ID, kBscHsePropertyIdSm9PrivateKeyId);
+HSED_SPC_ASSERT_EQ(PropertySm9Hash, kHsedHsedPropertyId_SM9_HASH_ALGORITHM, kBscHsePropertyIdSm9HashAlgorithm);
+HSED_SPC_ASSERT_EQ(PropertySm9SignInput, kHsedHsedPropertyId_SM9_SIGN_INPUT_MODE, kBscHsePropertyIdSm9SignInputMode);
+HSED_SPC_ASSERT_EQ(PropertySm9Mode, kHsedHsedPropertyId_SM9_SM9_MODE, kBscHsePropertyIdSm9Sm9Mode);
+HSED_SPC_ASSERT_EQ(PropertySm9Format, kHsedHsedPropertyId_SM9_PUBLIC_KEY_FORMAT, kBscHsePropertyIdSm9PublicKeyFormat);
+

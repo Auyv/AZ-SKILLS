@@ -376,7 +376,8 @@ class SkillSyncer:
 
             # 删除已存在的目标
             if dest.exists() or dest.is_symlink():
-                if dest.is_symlink():
+                is_junction = getattr(dest, "is_junction", lambda: False)()
+                if dest.is_symlink() or is_junction:
                     dest.unlink()
                 else:
                     shutil.rmtree(dest)
