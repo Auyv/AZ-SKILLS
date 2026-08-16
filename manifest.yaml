@@ -1,4 +1,4 @@
-last_sync: '2026-08-13T10:23:01.740070'
+last_sync: '2026-08-16T13:34:06.141367'
 agent_targets:
 - aggregate_subdir: ''
   enabled: true
@@ -18,7 +18,7 @@ agent_targets:
   - auto-skill-creator
   - az-c-macro2ini-config
   - az-pdf2md
-  - az-sdd.v3
+  - az-sdd
   - core-dump-analyzer
   - hq_tester_skills
   - az-issue-tracker
@@ -31,7 +31,7 @@ agent_targets:
   - auto-skill-creator
   - az-c-macro2ini-config
   - az-pdf2md
-  - az-sdd.v3
+  - az-sdd
   - core-dump-analyzer
   - hq_tester_skills
   - az-keil-build
@@ -50,7 +50,7 @@ agent_targets:
   - auto-skill-creator
   - az-c-macro2ini-config
   - az-pdf2md
-  - az-sdd.v3
+  - az-sdd
   - core-dump-analyzer
   - hq_tester_skills
   - docker-image-build
@@ -74,7 +74,7 @@ agent_targets:
   - auto-skill-creator
   - az-c-macro2ini-config
   - az-pdf2md
-  - az-sdd.v3
+  - az-sdd
   - core-dump-analyzer
   - hq_tester_skills
   - az-keil-build

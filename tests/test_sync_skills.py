@@ -23,6 +23,28 @@ def create_directory_link(link: Path, target: Path) -> None:
 
 
 class PurgeManagedLinksTests(unittest.TestCase):
+    def test_replaces_dangling_link_after_source_container_rename(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source_dir = root / "skills"
+            target_dir = root / "target"
+            old_child = source_dir / "az-sdd.v3" / "az-sdd-next"
+            new_child = source_dir / "az-sdd" / "az-sdd-next"
+            target_dir.mkdir()
+            old_child.mkdir(parents=True)
+            (old_child / "SKILL.md").write_text("# old", encoding="utf-8")
+
+            installed = target_dir / "az-sdd-next"
+            create_directory_link(installed, old_child)
+            old_child.parent.rename(new_child.parent)
+            (new_child / "SKILL.md").write_text("# new", encoding="utf-8")
+
+            syncer = SkillSyncer.__new__(SkillSyncer)
+            syncer.dry_run = False
+
+            self.assertTrue(syncer._link_one("az-sdd-next", new_child, target_dir))
+            self.assertEqual("# new", (installed / "SKILL.md").read_text(encoding="utf-8"))
+
     def test_removes_stale_repository_link_but_preserves_user_content(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -98,6 +120,45 @@ class PurgeManagedLinksTests(unittest.TestCase):
             self.assertTrue((target_dir / "current-skill").exists())
             self.assertFalse((target_dir / "stale-skill").exists())
             self.assertTrue((target_dir / "user-skill").exists())
+
+    def test_aggregate_skill_publishes_shared_runtime(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source_dir = root / "skills"
+            target_dir = root / "target"
+            aggregate = source_dir / "az-sdd"
+            child = aggregate / "az-sdd-next"
+            shared_script = aggregate / "shared" / "scripts" / "az_sdd.py"
+            child.mkdir(parents=True)
+            target_dir.mkdir()
+            (child / "SKILL.md").write_text("# next", encoding="utf-8")
+            shared_script.parent.mkdir(parents=True)
+            shared_script.write_text("print('ok')", encoding="utf-8")
+
+            syncer = SkillSyncer.__new__(SkillSyncer)
+            syncer.source_dir = source_dir
+            syncer.dry_run = False
+            syncer.manifest = {
+                "agent_targets": [
+                    {
+                        "name": "test-target",
+                        "path": str(target_dir),
+                        "aggregate_subdir": "",
+                        "enabled": True,
+                        "skills": ["az-sdd"],
+                    }
+                ]
+            }
+
+            result = syncer.sync_to_target("test-target")
+
+            self.assertEqual({"success": 1, "skipped": 0, "failed": 0}, result)
+            self.assertTrue((target_dir / "az-sdd-next" / "SKILL.md").exists())
+            self.assertTrue((target_dir / "az-sdd-shared" / "scripts" / "az_sdd.py").exists())
+            self.assertEqual(
+                ["az-sdd-next", "az-sdd-shared"],
+                syncer._collect_target_labels("test-target"),
+            )
 
 
 if __name__ == "__main__":

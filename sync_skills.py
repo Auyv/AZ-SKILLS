@@ -13,7 +13,7 @@ AZ-SKILLS 同步脚本
     python sync_skills.py --to cline         # 只同步到 cline
     python sync_skills.py --to codex         # 只同步到 codex
     python sync_skills.py --dry-run          # 模拟运行，不实际复制
-    python sync_skills.py --skill az-sdd.v3  # 只同步指定 skill
+    python sync_skills.py --skill az-sdd  # 只同步指定 skill
 
 无参数时进入交互式 Shell（命令风格，支持 Tab 补全），可用命令：
     help [cmd]             显示帮助（可指定命令名查看详情）
@@ -28,6 +28,7 @@ AZ-SKILLS 同步脚本
 """
 
 import os
+import re
 import sys
 import shlex
 import shutil
@@ -336,8 +337,9 @@ class SkillSyncer:
         """同步单个 skill 到目标目录。
 
         - 如果 src 根下有 SKILL.md，按 skill_name 平铺到 target_path
-        - 如果 src 是聚合容器（根下无 SKILL.md），递归扫描子目录，
+        - 如果 src 是聚合容器（根下无 SKILL.md），扫描直接子目录，
           把每个含 SKILL.md 的子目录平铺到 target_path（用 child.name 命名）
+        - 聚合容器若含 shared/，额外发布为独立的 <容器名>-shared 运行时目录
         """
         src = self.source_dir / skill_name
 
@@ -359,9 +361,21 @@ class SkillSyncer:
             for sub in sub_skills:
                 if not self._link_one(sub.name, sub, target_path):
                     all_ok = False
+            shared_dir = src / 'shared'
+            if shared_dir.is_dir():
+                shared_label = self._aggregate_shared_label(skill_name)
+                info(f"  发布共享运行时: {shared_label}")
+                if not self._link_one(shared_label, shared_dir, target_path):
+                    all_ok = False
             return all_ok
 
         return self._link_one(skill_name, src, target_path)
+
+    @staticmethod
+    def _aggregate_shared_label(skill_name: str) -> str:
+        """为聚合技能的 shared/ 生成稳定且不带版本号的目标名称。"""
+        base_name = re.sub(r'\.v\d+(?:\.\d+)*$', '', skill_name)
+        return f"{base_name}-shared"
 
     def _link_one(self, label: str, src: Path, target_path: Path) -> bool:
         """创建单个同步项：优先 symlink，Windows 失败时尝试 junction，再回退为目录复制。"""
@@ -374,9 +388,10 @@ class SkillSyncer:
         try:
             target_path.mkdir(parents=True, exist_ok=True)
 
-            # 删除已存在的目标
-            if dest.exists() or dest.is_symlink():
-                is_junction = getattr(dest, "is_junction", lambda: False)()
+            # 删除已存在的目标。Windows junction 的源目录被移动后，
+            # dest.exists() 会返回 False，因此必须独立识别悬空 junction。
+            is_junction = getattr(dest, "is_junction", lambda: False)()
+            if dest.exists() or dest.is_symlink() or is_junction:
                 if dest.is_symlink() or is_junction:
                     dest.unlink()
                 else:
@@ -436,6 +451,8 @@ class SkillSyncer:
                 for c in sorted(src.iterdir()):
                     if c.is_dir() and (c / 'SKILL.md').exists():
                         labels.append(c.name)
+                if (src / 'shared').is_dir():
+                    labels.append(self._aggregate_shared_label(sn))
         return labels
 
     def _purge_managed_links(
@@ -722,7 +739,7 @@ def main():
   python sync_skills.py              # 进入交互式 Shell
   python sync_skills.py --to cline   # 只同步到 cline
   python sync_skills.py --to codex   # 只同步到 codex
-  python sync_skills.py --skill az-sdd.v3  # 只同步指定 skill
+  python sync_skills.py --skill az-sdd  # 只同步指定 skill
   python sync_skills.py --list       # 仅列出状态
   python sync_skills.py --dry-run    # 模拟运行，不实际复制
         """

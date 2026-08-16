@@ -205,7 +205,7 @@ skills/<skill-path>/
 └── evals/          # 可选
 ```
 
-- 递归发现全部 `skills/**/SKILL.md`，因此支持顶层 Skill、`az-sdd.v3/<skill>/` 和 `hq_tester_skills/<skill>/` 等嵌套结构。
+- 递归发现全部 `skills/**/SKILL.md`，因此支持顶层 Skill、`az-sdd/<skill>/` 和 `hq_tester_skills/<skill>/` 等嵌套结构。
 - 没有 `SKILL.md` 的技能族容器不是可直接引用的 Skill。
 - Skill 的 name、version、description 直接读取 `SKILL.md` YAML front matter；不得复制到第二份元数据文件。
 - Skill 目录内的配套文件保持原位，由 `SKILL.md` 中的相对路径继续引用。
@@ -215,7 +215,7 @@ skills/<skill-path>/
 ```yaml
 skills:
   - skills/az-skill-creator
-  - skills/az-sdd.v3/az-sdd-spec/SKILL.md
+  - skills/az-sdd/az-sdd-spec/SKILL.md
   - ctp-mpu-debug-build
 ```
 
@@ -469,7 +469,7 @@ az-agent-hub draft import --target <target> --source <path>
 
 ### MT007 Skill 当前结构与实时加载
 
-- **测试步骤**：分别按路径和 name 引用顶层 Skill、`az-sdd.v3/az-sdd-spec` 和带 `scripts/` 的 Skill；修改其中一个 `SKILL.md` 后重新加载 Agent。
+- **测试步骤**：分别按路径和 name 引用顶层 Skill、`az-sdd/az-sdd-spec` 和带 `scripts/` 的 Skill；修改其中一个 `SKILL.md` 后重新加载 Agent。
 - **预期结果**：递归发现与去重正确，配套资源仍可访问；重新加载或触发时读取新内容，没有生成 `skill.yaml` 或副本。
 - **验收标准**：[008]、[009]
 

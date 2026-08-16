@@ -1,0 +1,73 @@
+{
+  "skill_name": "az-sdd-coder",
+  "version": "4.1.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "实现单个已检查 v4 change",
+      "prompt": "/az-sdd-coder CHG-0001",
+      "expected_output": "检查 baseline/delta 后按 tasks 实现并更新 evidence",
+      "criteria": [
+        "读取 proposal、delta 和 design",
+        "更新 tasks 完成状态",
+        "证据写入同一 change"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "批量开发",
+      "prompt": "/az-sdd-coder 批量开发所有已批准规范",
+      "expected_output": "按依赖生成批次计划并逐项记录结果",
+      "criteria": [
+        "只选合法状态",
+        "展示计划待批准",
+        "单功能失败不伪装成功"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "计划 dry-run",
+      "prompt": "/az-sdd-coder 0001 action=plan dry_run=true",
+      "expected_output": "只输出开发计划和修改范围",
+      "criteria": [
+        "不修改代码",
+        "不转换状态",
+        "计划可追溯"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "spec 未批准",
+      "prompt": "/az-sdd-coder 0002，但 spec 仍为草稿",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_SPEC_NOT_APPROVED",
+      "criteria": [
+        "返回指定错误码",
+        "阻止编码",
+        "建议完成审核"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "自动化测试失败",
+      "prompt": "/az-sdd-coder 0001，测试失败",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_TEST_FAILED",
+      "criteria": [
+        "保持 developing",
+        "保存失败证据",
+        "不进入 tester"
+      ],
+      "pass_score": 3
+    }
+  ]
+}

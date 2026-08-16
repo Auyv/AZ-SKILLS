@@ -1,0 +1,73 @@
+{
+  "skill_name": "az-sdd-tester",
+  "version": "4.1.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "验收 v4 change",
+      "prompt": "/az-sdd-tester CHG-0001",
+      "expected_output": "从 baseline+delta 生成测试并更新 acceptance.md",
+      "criteria": [
+        "测试追溯 delta",
+        "包含实际结果和证据",
+        "不通过时阻止 archive"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "汇总通过结果",
+      "prompt": "/az-sdd-tester summarize 0001",
+      "expected_output": "生成汇总并推进到待验收",
+      "criteria": [
+        "引用自动化证据",
+        "汇总人工结果",
+        "合法转换状态"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "无风险快速验收",
+      "prompt": "/az-sdd-tester CHG-SIMPLE-0002，risk.path=fast",
+      "expected_output": "复用自动化证据并记录关键验收后连续完成",
+      "criteria": [
+        "不询问模式",
+        "不省略验证",
+        "输出下一步"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "应用无法启动",
+      "prompt": "/az-sdd-tester 0001，但启动脚本失败",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_TEST_PREREQUISITE",
+      "criteria": [
+        "返回指定错误码",
+        "记录原始失败",
+        "不开始人工验收"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "人工验收失败",
+      "prompt": "/az-sdd-tester 0001，MT002 失败",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_TEST_FAILED",
+      "criteria": [
+        "保留失败证据",
+        "分类下一步",
+        "回退或保持合法状态"
+      ],
+      "pass_score": 3
+    }
+  ]
+}

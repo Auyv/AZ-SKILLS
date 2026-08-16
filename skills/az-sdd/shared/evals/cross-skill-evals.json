@@ -1,0 +1,176 @@
+{
+  "skill_name": "az-sdd",
+  "version": "4.1.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "未初始化导航",
+      "prompt": "/az-sdd-next",
+      "expected_output": "导航到 init，初始化后指向 spec",
+      "criteria": [
+        "不创建孤立制品",
+        "保持单一下一动作"
+      ],
+      "pass_score": 2
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "简单小改快速闭环",
+      "prompt": "按 AZ-SDD 修改一处低风险文案，不让我选择模式",
+      "expected_output": "自动 fast：精简 change → 实现/验证 → archive",
+      "criteria": [
+        "有最小规范",
+        "有验证证据",
+        "不强制完整人工工单"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "多模块风险自动展开",
+      "prompt": "按 AZ-SDD 开发跨模块设备升级",
+      "expected_output": "自动识别 multi_module/hardware/deployment 并增加设计、完整测试、人工验收和回滚门禁",
+      "criteria": [
+        "不要求用户选择 strict",
+        "critical 门禁有效",
+        "包含人工验收"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "normal",
+      "description": "测试失败回退",
+      "prompt": "AZ-SDD 功能测试失败",
+      "expected_output": "testing/acceptance 回退 developing 并保留证据",
+      "criteria": [
+        "合法状态转换",
+        "失败证据保留",
+        "反馈可追踪"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "normal",
+      "description": "反馈闭环",
+      "prompt": "把用户验收失败纳入 AZ-SDD 闭环",
+      "expected_output": "feedback → tester/coder → verify → close",
+      "criteria": [
+        "原始反馈保留",
+        "未验证不关闭",
+        "状态和索引同步"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "状态索引冲突",
+      "prompt": "STATUS=completed 但 spec=developing",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_ARTIFACT_CONFLICT",
+      "criteria": [
+        "analyze 检测冲突",
+        "critical 阻塞完成",
+        "列出双方路径"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "normal",
+      "description": "非触发边界",
+      "prompt": "帮我修复一个普通 bug",
+      "expected_output": "保持普通开发，不读取或创建 az-sdd/",
+      "criteria": [
+        "不隐式触发",
+        "不产生 AZ-SDD 档案"
+      ],
+      "pass_score": 2
+    },
+    {
+      "id": 8,
+      "category": "normal",
+      "description": "v3 档案兼容",
+      "prompt": "/az-sdd-next 读取现有 v3 项目",
+      "expected_output": "正确解析旧目录和中文状态",
+      "criteria": [
+        "无需迁移即可读取",
+        "输出合法下一步"
+      ],
+      "pass_score": 2
+    },
+    {
+      "id": 9,
+      "category": "error",
+      "description": "索引目标不可写",
+      "prompt": "/az-sdd-track rebuild，但 STATUS.md 所在目录不可写",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_WRITE_PERMISSION",
+      "criteria": [
+        "返回明确错误码",
+        "已有文件保持不变",
+        "建议先使用 dry-run 或检查权限"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 10,
+      "category": "normal",
+      "description": "v3 到 v4 无损迁移",
+      "prompt": "/az-sdd-init migrate --from v3 --to v4",
+      "expected_output": "先 dry-run，确认后复制 spec 到 baseline 并保留全部 v3 文件",
+      "criteria": [
+        "迁移前后功能编号一致",
+        "v3 原文件保持不变",
+        "状态读取切换到 v4 baseline"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 11,
+      "category": "normal",
+      "description": "v4 change 完整归档",
+      "prompt": "按 AZ-SDD v4 完成并归档 CHG-0001",
+      "expected_output": "proposal/delta/design/tasks/evidence/acceptance 收敛后合并 baseline",
+      "criteria": [
+        "归档门禁全部通过",
+        "baseline 只在 archive 时更新",
+        "archive 与备份路径可追溯"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 12,
+      "category": "error",
+      "description": "v4 baseline 哈希冲突",
+      "prompt": "CHG-0001 创建后 baseline 被其他变更修改，现在要求 archive",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_BASELINE_CONFLICT",
+      "criteria": [
+        "识别哈希变化",
+        "baseline 和 change 零写入",
+        "要求基于最新 baseline 重放 delta"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 13,
+      "category": "error",
+      "description": "v4 change 未验收禁止归档",
+      "prompt": "/az-sdd-track archive CHG-0002，但 tasks 未完成且 acceptance=pending",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_CHANGE_NOT_READY",
+      "criteria": [
+        "列出未完成门禁",
+        "不修改 baseline",
+        "保留开放 change"
+      ],
+      "pass_score": 3
+    }
+  ]
+}

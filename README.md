@@ -12,7 +12,7 @@ AZ-SKILLS/
 ├── sync_skills.py     # 同步脚本
 ├── README.md          # 说明文档
 └── skills/            # Skill 源码（唯一真相来源，17 个）
-    ├── az-sdd.v3/               # 技能族容器（含 9 个子技能，无顶层 SKILL.md）
+    ├── az-sdd/                  # 技能族容器（含 9 个子技能，无顶层 SKILL.md）
     │   ├── az-sdd-init/         # SDD 初始化
     │   ├── az-sdd-spec/         # SDD 规范编写
     │   ├── az-sdd-arch/         # SDD 架构
