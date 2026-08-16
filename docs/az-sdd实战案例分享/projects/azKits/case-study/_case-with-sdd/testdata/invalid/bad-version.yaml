@@ -1,0 +1,5 @@
+version: 2
+toolbox:
+  name: 无效入口
+  description: version 不为 1
+scripts: []

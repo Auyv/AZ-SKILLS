@@ -1,4 +1,4 @@
-last_sync: '2026-08-10T19:29:52.445765'
+last_sync: '2026-08-13T10:23:01.740070'
 agent_targets:
 - aggregate_subdir: ''
   enabled: true
@@ -34,10 +34,14 @@ agent_targets:
   - az-sdd.v3
   - core-dump-analyzer
   - hq_tester_skills
-  - az-issue-tracker
-  - docker-image-build
   - az-keil-build
   - hq-autobuild-mpu
+  - ctp-mpu-debug-build
+  - ctp-adb-debug-exec
+  - az-api-summary
+  - az-experience-capture
+  - az-experience-search
+  - az-experience-publish
 - enabled: true
   name: opencode
   path: ~/.config/opencode/skills

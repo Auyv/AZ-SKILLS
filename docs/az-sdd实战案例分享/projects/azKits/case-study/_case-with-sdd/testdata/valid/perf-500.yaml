@@ -1,0 +1,4505 @@
+﻿version: 1
+toolbox:
+  name: 五百脚本性能入口
+  description: 用于 500 条脚本候选性能验收
+scripts:
+  - id: perf-001
+    alias: alias-001
+    name: 性能脚本1
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-002
+    alias: alias-002
+    name: 性能脚本2
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-003
+    alias: alias-003
+    name: 性能脚本3
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-004
+    alias: alias-004
+    name: 性能脚本4
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-005
+    alias: alias-005
+    name: 性能脚本5
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-006
+    alias: alias-006
+    name: 性能脚本6
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-007
+    alias: alias-007
+    name: 性能脚本7
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-008
+    alias: alias-008
+    name: 性能脚本8
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-009
+    alias: alias-009
+    name: 性能脚本9
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-010
+    alias: alias-010
+    name: 性能脚本10
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-011
+    alias: alias-011
+    name: 性能脚本11
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-012
+    alias: alias-012
+    name: 性能脚本12
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-013
+    alias: alias-013
+    name: 性能脚本13
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-014
+    alias: alias-014
+    name: 性能脚本14
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-015
+    alias: alias-015
+    name: 性能脚本15
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-016
+    alias: alias-016
+    name: 性能脚本16
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-017
+    alias: alias-017
+    name: 性能脚本17
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-018
+    alias: alias-018
+    name: 性能脚本18
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-019
+    alias: alias-019
+    name: 性能脚本19
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-020
+    alias: alias-020
+    name: 性能脚本20
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-021
+    alias: alias-021
+    name: 性能脚本21
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-022
+    alias: alias-022
+    name: 性能脚本22
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-023
+    alias: alias-023
+    name: 性能脚本23
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-024
+    alias: alias-024
+    name: 性能脚本24
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-025
+    alias: alias-025
+    name: 性能脚本25
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-026
+    alias: alias-026
+    name: 性能脚本26
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-027
+    alias: alias-027
+    name: 性能脚本27
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-028
+    alias: alias-028
+    name: 性能脚本28
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-029
+    alias: alias-029
+    name: 性能脚本29
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-030
+    alias: alias-030
+    name: 性能脚本30
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-031
+    alias: alias-031
+    name: 性能脚本31
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-032
+    alias: alias-032
+    name: 性能脚本32
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-033
+    alias: alias-033
+    name: 性能脚本33
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-034
+    alias: alias-034
+    name: 性能脚本34
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-035
+    alias: alias-035
+    name: 性能脚本35
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-036
+    alias: alias-036
+    name: 性能脚本36
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-037
+    alias: alias-037
+    name: 性能脚本37
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-038
+    alias: alias-038
+    name: 性能脚本38
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-039
+    alias: alias-039
+    name: 性能脚本39
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-040
+    alias: alias-040
+    name: 性能脚本40
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-041
+    alias: alias-041
+    name: 性能脚本41
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-042
+    alias: alias-042
+    name: 性能脚本42
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-043
+    alias: alias-043
+    name: 性能脚本43
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-044
+    alias: alias-044
+    name: 性能脚本44
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-045
+    alias: alias-045
+    name: 性能脚本45
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-046
+    alias: alias-046
+    name: 性能脚本46
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-047
+    alias: alias-047
+    name: 性能脚本47
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-048
+    alias: alias-048
+    name: 性能脚本48
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-049
+    alias: alias-049
+    name: 性能脚本49
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-050
+    alias: alias-050
+    name: 性能脚本50
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-051
+    alias: alias-051
+    name: 性能脚本51
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-052
+    alias: alias-052
+    name: 性能脚本52
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-053
+    alias: alias-053
+    name: 性能脚本53
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-054
+    alias: alias-054
+    name: 性能脚本54
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-055
+    alias: alias-055
+    name: 性能脚本55
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-056
+    alias: alias-056
+    name: 性能脚本56
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-057
+    alias: alias-057
+    name: 性能脚本57
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-058
+    alias: alias-058
+    name: 性能脚本58
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-059
+    alias: alias-059
+    name: 性能脚本59
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-060
+    alias: alias-060
+    name: 性能脚本60
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-061
+    alias: alias-061
+    name: 性能脚本61
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-062
+    alias: alias-062
+    name: 性能脚本62
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-063
+    alias: alias-063
+    name: 性能脚本63
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-064
+    alias: alias-064
+    name: 性能脚本64
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-065
+    alias: alias-065
+    name: 性能脚本65
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-066
+    alias: alias-066
+    name: 性能脚本66
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-067
+    alias: alias-067
+    name: 性能脚本67
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-068
+    alias: alias-068
+    name: 性能脚本68
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-069
+    alias: alias-069
+    name: 性能脚本69
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-070
+    alias: alias-070
+    name: 性能脚本70
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-071
+    alias: alias-071
+    name: 性能脚本71
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-072
+    alias: alias-072
+    name: 性能脚本72
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-073
+    alias: alias-073
+    name: 性能脚本73
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-074
+    alias: alias-074
+    name: 性能脚本74
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-075
+    alias: alias-075
+    name: 性能脚本75
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-076
+    alias: alias-076
+    name: 性能脚本76
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-077
+    alias: alias-077
+    name: 性能脚本77
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-078
+    alias: alias-078
+    name: 性能脚本78
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-079
+    alias: alias-079
+    name: 性能脚本79
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-080
+    alias: alias-080
+    name: 性能脚本80
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-081
+    alias: alias-081
+    name: 性能脚本81
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-082
+    alias: alias-082
+    name: 性能脚本82
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-083
+    alias: alias-083
+    name: 性能脚本83
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-084
+    alias: alias-084
+    name: 性能脚本84
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-085
+    alias: alias-085
+    name: 性能脚本85
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-086
+    alias: alias-086
+    name: 性能脚本86
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-087
+    alias: alias-087
+    name: 性能脚本87
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-088
+    alias: alias-088
+    name: 性能脚本88
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-089
+    alias: alias-089
+    name: 性能脚本89
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-090
+    alias: alias-090
+    name: 性能脚本90
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-091
+    alias: alias-091
+    name: 性能脚本91
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-092
+    alias: alias-092
+    name: 性能脚本92
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-093
+    alias: alias-093
+    name: 性能脚本93
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-094
+    alias: alias-094
+    name: 性能脚本94
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-095
+    alias: alias-095
+    name: 性能脚本95
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-096
+    alias: alias-096
+    name: 性能脚本96
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-097
+    alias: alias-097
+    name: 性能脚本97
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-098
+    alias: alias-098
+    name: 性能脚本98
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-099
+    alias: alias-099
+    name: 性能脚本99
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-100
+    alias: alias-100
+    name: 性能脚本100
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-101
+    alias: alias-101
+    name: 性能脚本101
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-102
+    alias: alias-102
+    name: 性能脚本102
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-103
+    alias: alias-103
+    name: 性能脚本103
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-104
+    alias: alias-104
+    name: 性能脚本104
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-105
+    alias: alias-105
+    name: 性能脚本105
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-106
+    alias: alias-106
+    name: 性能脚本106
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-107
+    alias: alias-107
+    name: 性能脚本107
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-108
+    alias: alias-108
+    name: 性能脚本108
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-109
+    alias: alias-109
+    name: 性能脚本109
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-110
+    alias: alias-110
+    name: 性能脚本110
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-111
+    alias: alias-111
+    name: 性能脚本111
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-112
+    alias: alias-112
+    name: 性能脚本112
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-113
+    alias: alias-113
+    name: 性能脚本113
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-114
+    alias: alias-114
+    name: 性能脚本114
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-115
+    alias: alias-115
+    name: 性能脚本115
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-116
+    alias: alias-116
+    name: 性能脚本116
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-117
+    alias: alias-117
+    name: 性能脚本117
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-118
+    alias: alias-118
+    name: 性能脚本118
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-119
+    alias: alias-119
+    name: 性能脚本119
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-120
+    alias: alias-120
+    name: 性能脚本120
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-121
+    alias: alias-121
+    name: 性能脚本121
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-122
+    alias: alias-122
+    name: 性能脚本122
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-123
+    alias: alias-123
+    name: 性能脚本123
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-124
+    alias: alias-124
+    name: 性能脚本124
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-125
+    alias: alias-125
+    name: 性能脚本125
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-126
+    alias: alias-126
+    name: 性能脚本126
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-127
+    alias: alias-127
+    name: 性能脚本127
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-128
+    alias: alias-128
+    name: 性能脚本128
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-129
+    alias: alias-129
+    name: 性能脚本129
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-130
+    alias: alias-130
+    name: 性能脚本130
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-131
+    alias: alias-131
+    name: 性能脚本131
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-132
+    alias: alias-132
+    name: 性能脚本132
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-133
+    alias: alias-133
+    name: 性能脚本133
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-134
+    alias: alias-134
+    name: 性能脚本134
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-135
+    alias: alias-135
+    name: 性能脚本135
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-136
+    alias: alias-136
+    name: 性能脚本136
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-137
+    alias: alias-137
+    name: 性能脚本137
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-138
+    alias: alias-138
+    name: 性能脚本138
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-139
+    alias: alias-139
+    name: 性能脚本139
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-140
+    alias: alias-140
+    name: 性能脚本140
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-141
+    alias: alias-141
+    name: 性能脚本141
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-142
+    alias: alias-142
+    name: 性能脚本142
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-143
+    alias: alias-143
+    name: 性能脚本143
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-144
+    alias: alias-144
+    name: 性能脚本144
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-145
+    alias: alias-145
+    name: 性能脚本145
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-146
+    alias: alias-146
+    name: 性能脚本146
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-147
+    alias: alias-147
+    name: 性能脚本147
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-148
+    alias: alias-148
+    name: 性能脚本148
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-149
+    alias: alias-149
+    name: 性能脚本149
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-150
+    alias: alias-150
+    name: 性能脚本150
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-151
+    alias: alias-151
+    name: 性能脚本151
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-152
+    alias: alias-152
+    name: 性能脚本152
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-153
+    alias: alias-153
+    name: 性能脚本153
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-154
+    alias: alias-154
+    name: 性能脚本154
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-155
+    alias: alias-155
+    name: 性能脚本155
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-156
+    alias: alias-156
+    name: 性能脚本156
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-157
+    alias: alias-157
+    name: 性能脚本157
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-158
+    alias: alias-158
+    name: 性能脚本158
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-159
+    alias: alias-159
+    name: 性能脚本159
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-160
+    alias: alias-160
+    name: 性能脚本160
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-161
+    alias: alias-161
+    name: 性能脚本161
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-162
+    alias: alias-162
+    name: 性能脚本162
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-163
+    alias: alias-163
+    name: 性能脚本163
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-164
+    alias: alias-164
+    name: 性能脚本164
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-165
+    alias: alias-165
+    name: 性能脚本165
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-166
+    alias: alias-166
+    name: 性能脚本166
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-167
+    alias: alias-167
+    name: 性能脚本167
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-168
+    alias: alias-168
+    name: 性能脚本168
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-169
+    alias: alias-169
+    name: 性能脚本169
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-170
+    alias: alias-170
+    name: 性能脚本170
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-171
+    alias: alias-171
+    name: 性能脚本171
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-172
+    alias: alias-172
+    name: 性能脚本172
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-173
+    alias: alias-173
+    name: 性能脚本173
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-174
+    alias: alias-174
+    name: 性能脚本174
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-175
+    alias: alias-175
+    name: 性能脚本175
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-176
+    alias: alias-176
+    name: 性能脚本176
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-177
+    alias: alias-177
+    name: 性能脚本177
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-178
+    alias: alias-178
+    name: 性能脚本178
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-179
+    alias: alias-179
+    name: 性能脚本179
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-180
+    alias: alias-180
+    name: 性能脚本180
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-181
+    alias: alias-181
+    name: 性能脚本181
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-182
+    alias: alias-182
+    name: 性能脚本182
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-183
+    alias: alias-183
+    name: 性能脚本183
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-184
+    alias: alias-184
+    name: 性能脚本184
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-185
+    alias: alias-185
+    name: 性能脚本185
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-186
+    alias: alias-186
+    name: 性能脚本186
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-187
+    alias: alias-187
+    name: 性能脚本187
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-188
+    alias: alias-188
+    name: 性能脚本188
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-189
+    alias: alias-189
+    name: 性能脚本189
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-190
+    alias: alias-190
+    name: 性能脚本190
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-191
+    alias: alias-191
+    name: 性能脚本191
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-192
+    alias: alias-192
+    name: 性能脚本192
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-193
+    alias: alias-193
+    name: 性能脚本193
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-194
+    alias: alias-194
+    name: 性能脚本194
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-195
+    alias: alias-195
+    name: 性能脚本195
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-196
+    alias: alias-196
+    name: 性能脚本196
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-197
+    alias: alias-197
+    name: 性能脚本197
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-198
+    alias: alias-198
+    name: 性能脚本198
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-199
+    alias: alias-199
+    name: 性能脚本199
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-200
+    alias: alias-200
+    name: 性能脚本200
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-201
+    alias: alias-201
+    name: 性能脚本201
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-202
+    alias: alias-202
+    name: 性能脚本202
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-203
+    alias: alias-203
+    name: 性能脚本203
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-204
+    alias: alias-204
+    name: 性能脚本204
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-205
+    alias: alias-205
+    name: 性能脚本205
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-206
+    alias: alias-206
+    name: 性能脚本206
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-207
+    alias: alias-207
+    name: 性能脚本207
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-208
+    alias: alias-208
+    name: 性能脚本208
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-209
+    alias: alias-209
+    name: 性能脚本209
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-210
+    alias: alias-210
+    name: 性能脚本210
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-211
+    alias: alias-211
+    name: 性能脚本211
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-212
+    alias: alias-212
+    name: 性能脚本212
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-213
+    alias: alias-213
+    name: 性能脚本213
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-214
+    alias: alias-214
+    name: 性能脚本214
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-215
+    alias: alias-215
+    name: 性能脚本215
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-216
+    alias: alias-216
+    name: 性能脚本216
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-217
+    alias: alias-217
+    name: 性能脚本217
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-218
+    alias: alias-218
+    name: 性能脚本218
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-219
+    alias: alias-219
+    name: 性能脚本219
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-220
+    alias: alias-220
+    name: 性能脚本220
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-221
+    alias: alias-221
+    name: 性能脚本221
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-222
+    alias: alias-222
+    name: 性能脚本222
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-223
+    alias: alias-223
+    name: 性能脚本223
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-224
+    alias: alias-224
+    name: 性能脚本224
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-225
+    alias: alias-225
+    name: 性能脚本225
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-226
+    alias: alias-226
+    name: 性能脚本226
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-227
+    alias: alias-227
+    name: 性能脚本227
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-228
+    alias: alias-228
+    name: 性能脚本228
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-229
+    alias: alias-229
+    name: 性能脚本229
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-230
+    alias: alias-230
+    name: 性能脚本230
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-231
+    alias: alias-231
+    name: 性能脚本231
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-232
+    alias: alias-232
+    name: 性能脚本232
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-233
+    alias: alias-233
+    name: 性能脚本233
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-234
+    alias: alias-234
+    name: 性能脚本234
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-235
+    alias: alias-235
+    name: 性能脚本235
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-236
+    alias: alias-236
+    name: 性能脚本236
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-237
+    alias: alias-237
+    name: 性能脚本237
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-238
+    alias: alias-238
+    name: 性能脚本238
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-239
+    alias: alias-239
+    name: 性能脚本239
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-240
+    alias: alias-240
+    name: 性能脚本240
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-241
+    alias: alias-241
+    name: 性能脚本241
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-242
+    alias: alias-242
+    name: 性能脚本242
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-243
+    alias: alias-243
+    name: 性能脚本243
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-244
+    alias: alias-244
+    name: 性能脚本244
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-245
+    alias: alias-245
+    name: 性能脚本245
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-246
+    alias: alias-246
+    name: 性能脚本246
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-247
+    alias: alias-247
+    name: 性能脚本247
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-248
+    alias: alias-248
+    name: 性能脚本248
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-249
+    alias: alias-249
+    name: 性能脚本249
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-250
+    alias: alias-250
+    name: 性能脚本250
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-251
+    alias: alias-251
+    name: 性能脚本251
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-252
+    alias: alias-252
+    name: 性能脚本252
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-253
+    alias: alias-253
+    name: 性能脚本253
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-254
+    alias: alias-254
+    name: 性能脚本254
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-255
+    alias: alias-255
+    name: 性能脚本255
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-256
+    alias: alias-256
+    name: 性能脚本256
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-257
+    alias: alias-257
+    name: 性能脚本257
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-258
+    alias: alias-258
+    name: 性能脚本258
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-259
+    alias: alias-259
+    name: 性能脚本259
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-260
+    alias: alias-260
+    name: 性能脚本260
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-261
+    alias: alias-261
+    name: 性能脚本261
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-262
+    alias: alias-262
+    name: 性能脚本262
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-263
+    alias: alias-263
+    name: 性能脚本263
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-264
+    alias: alias-264
+    name: 性能脚本264
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-265
+    alias: alias-265
+    name: 性能脚本265
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-266
+    alias: alias-266
+    name: 性能脚本266
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-267
+    alias: alias-267
+    name: 性能脚本267
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-268
+    alias: alias-268
+    name: 性能脚本268
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-269
+    alias: alias-269
+    name: 性能脚本269
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-270
+    alias: alias-270
+    name: 性能脚本270
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-271
+    alias: alias-271
+    name: 性能脚本271
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-272
+    alias: alias-272
+    name: 性能脚本272
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-273
+    alias: alias-273
+    name: 性能脚本273
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-274
+    alias: alias-274
+    name: 性能脚本274
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-275
+    alias: alias-275
+    name: 性能脚本275
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-276
+    alias: alias-276
+    name: 性能脚本276
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-277
+    alias: alias-277
+    name: 性能脚本277
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-278
+    alias: alias-278
+    name: 性能脚本278
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-279
+    alias: alias-279
+    name: 性能脚本279
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-280
+    alias: alias-280
+    name: 性能脚本280
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-281
+    alias: alias-281
+    name: 性能脚本281
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-282
+    alias: alias-282
+    name: 性能脚本282
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-283
+    alias: alias-283
+    name: 性能脚本283
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-284
+    alias: alias-284
+    name: 性能脚本284
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-285
+    alias: alias-285
+    name: 性能脚本285
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-286
+    alias: alias-286
+    name: 性能脚本286
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-287
+    alias: alias-287
+    name: 性能脚本287
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-288
+    alias: alias-288
+    name: 性能脚本288
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-289
+    alias: alias-289
+    name: 性能脚本289
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-290
+    alias: alias-290
+    name: 性能脚本290
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-291
+    alias: alias-291
+    name: 性能脚本291
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-292
+    alias: alias-292
+    name: 性能脚本292
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-293
+    alias: alias-293
+    name: 性能脚本293
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-294
+    alias: alias-294
+    name: 性能脚本294
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-295
+    alias: alias-295
+    name: 性能脚本295
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-296
+    alias: alias-296
+    name: 性能脚本296
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-297
+    alias: alias-297
+    name: 性能脚本297
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-298
+    alias: alias-298
+    name: 性能脚本298
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-299
+    alias: alias-299
+    name: 性能脚本299
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-300
+    alias: alias-300
+    name: 性能脚本300
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-301
+    alias: alias-301
+    name: 性能脚本301
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-302
+    alias: alias-302
+    name: 性能脚本302
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-303
+    alias: alias-303
+    name: 性能脚本303
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-304
+    alias: alias-304
+    name: 性能脚本304
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-305
+    alias: alias-305
+    name: 性能脚本305
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-306
+    alias: alias-306
+    name: 性能脚本306
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-307
+    alias: alias-307
+    name: 性能脚本307
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-308
+    alias: alias-308
+    name: 性能脚本308
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-309
+    alias: alias-309
+    name: 性能脚本309
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-310
+    alias: alias-310
+    name: 性能脚本310
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-311
+    alias: alias-311
+    name: 性能脚本311
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-312
+    alias: alias-312
+    name: 性能脚本312
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-313
+    alias: alias-313
+    name: 性能脚本313
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-314
+    alias: alias-314
+    name: 性能脚本314
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-315
+    alias: alias-315
+    name: 性能脚本315
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-316
+    alias: alias-316
+    name: 性能脚本316
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-317
+    alias: alias-317
+    name: 性能脚本317
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-318
+    alias: alias-318
+    name: 性能脚本318
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-319
+    alias: alias-319
+    name: 性能脚本319
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-320
+    alias: alias-320
+    name: 性能脚本320
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-321
+    alias: alias-321
+    name: 性能脚本321
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-322
+    alias: alias-322
+    name: 性能脚本322
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-323
+    alias: alias-323
+    name: 性能脚本323
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-324
+    alias: alias-324
+    name: 性能脚本324
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-325
+    alias: alias-325
+    name: 性能脚本325
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-326
+    alias: alias-326
+    name: 性能脚本326
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-327
+    alias: alias-327
+    name: 性能脚本327
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-328
+    alias: alias-328
+    name: 性能脚本328
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-329
+    alias: alias-329
+    name: 性能脚本329
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-330
+    alias: alias-330
+    name: 性能脚本330
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-331
+    alias: alias-331
+    name: 性能脚本331
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-332
+    alias: alias-332
+    name: 性能脚本332
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-333
+    alias: alias-333
+    name: 性能脚本333
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-334
+    alias: alias-334
+    name: 性能脚本334
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-335
+    alias: alias-335
+    name: 性能脚本335
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-336
+    alias: alias-336
+    name: 性能脚本336
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-337
+    alias: alias-337
+    name: 性能脚本337
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-338
+    alias: alias-338
+    name: 性能脚本338
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-339
+    alias: alias-339
+    name: 性能脚本339
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-340
+    alias: alias-340
+    name: 性能脚本340
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-341
+    alias: alias-341
+    name: 性能脚本341
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-342
+    alias: alias-342
+    name: 性能脚本342
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-343
+    alias: alias-343
+    name: 性能脚本343
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-344
+    alias: alias-344
+    name: 性能脚本344
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-345
+    alias: alias-345
+    name: 性能脚本345
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-346
+    alias: alias-346
+    name: 性能脚本346
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-347
+    alias: alias-347
+    name: 性能脚本347
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-348
+    alias: alias-348
+    name: 性能脚本348
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-349
+    alias: alias-349
+    name: 性能脚本349
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-350
+    alias: alias-350
+    name: 性能脚本350
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-351
+    alias: alias-351
+    name: 性能脚本351
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-352
+    alias: alias-352
+    name: 性能脚本352
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-353
+    alias: alias-353
+    name: 性能脚本353
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-354
+    alias: alias-354
+    name: 性能脚本354
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-355
+    alias: alias-355
+    name: 性能脚本355
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-356
+    alias: alias-356
+    name: 性能脚本356
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-357
+    alias: alias-357
+    name: 性能脚本357
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-358
+    alias: alias-358
+    name: 性能脚本358
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-359
+    alias: alias-359
+    name: 性能脚本359
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-360
+    alias: alias-360
+    name: 性能脚本360
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-361
+    alias: alias-361
+    name: 性能脚本361
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-362
+    alias: alias-362
+    name: 性能脚本362
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-363
+    alias: alias-363
+    name: 性能脚本363
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-364
+    alias: alias-364
+    name: 性能脚本364
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-365
+    alias: alias-365
+    name: 性能脚本365
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-366
+    alias: alias-366
+    name: 性能脚本366
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-367
+    alias: alias-367
+    name: 性能脚本367
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-368
+    alias: alias-368
+    name: 性能脚本368
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-369
+    alias: alias-369
+    name: 性能脚本369
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-370
+    alias: alias-370
+    name: 性能脚本370
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-371
+    alias: alias-371
+    name: 性能脚本371
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-372
+    alias: alias-372
+    name: 性能脚本372
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-373
+    alias: alias-373
+    name: 性能脚本373
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-374
+    alias: alias-374
+    name: 性能脚本374
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-375
+    alias: alias-375
+    name: 性能脚本375
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-376
+    alias: alias-376
+    name: 性能脚本376
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-377
+    alias: alias-377
+    name: 性能脚本377
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-378
+    alias: alias-378
+    name: 性能脚本378
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-379
+    alias: alias-379
+    name: 性能脚本379
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-380
+    alias: alias-380
+    name: 性能脚本380
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-381
+    alias: alias-381
+    name: 性能脚本381
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-382
+    alias: alias-382
+    name: 性能脚本382
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-383
+    alias: alias-383
+    name: 性能脚本383
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-384
+    alias: alias-384
+    name: 性能脚本384
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-385
+    alias: alias-385
+    name: 性能脚本385
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-386
+    alias: alias-386
+    name: 性能脚本386
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-387
+    alias: alias-387
+    name: 性能脚本387
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-388
+    alias: alias-388
+    name: 性能脚本388
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-389
+    alias: alias-389
+    name: 性能脚本389
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-390
+    alias: alias-390
+    name: 性能脚本390
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-391
+    alias: alias-391
+    name: 性能脚本391
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-392
+    alias: alias-392
+    name: 性能脚本392
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-393
+    alias: alias-393
+    name: 性能脚本393
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-394
+    alias: alias-394
+    name: 性能脚本394
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-395
+    alias: alias-395
+    name: 性能脚本395
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-396
+    alias: alias-396
+    name: 性能脚本396
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-397
+    alias: alias-397
+    name: 性能脚本397
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-398
+    alias: alias-398
+    name: 性能脚本398
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-399
+    alias: alias-399
+    name: 性能脚本399
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-400
+    alias: alias-400
+    name: 性能脚本400
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-401
+    alias: alias-401
+    name: 性能脚本401
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-402
+    alias: alias-402
+    name: 性能脚本402
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-403
+    alias: alias-403
+    name: 性能脚本403
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-404
+    alias: alias-404
+    name: 性能脚本404
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-405
+    alias: alias-405
+    name: 性能脚本405
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-406
+    alias: alias-406
+    name: 性能脚本406
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-407
+    alias: alias-407
+    name: 性能脚本407
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-408
+    alias: alias-408
+    name: 性能脚本408
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-409
+    alias: alias-409
+    name: 性能脚本409
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-410
+    alias: alias-410
+    name: 性能脚本410
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-411
+    alias: alias-411
+    name: 性能脚本411
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-412
+    alias: alias-412
+    name: 性能脚本412
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-413
+    alias: alias-413
+    name: 性能脚本413
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-414
+    alias: alias-414
+    name: 性能脚本414
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-415
+    alias: alias-415
+    name: 性能脚本415
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-416
+    alias: alias-416
+    name: 性能脚本416
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-417
+    alias: alias-417
+    name: 性能脚本417
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-418
+    alias: alias-418
+    name: 性能脚本418
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-419
+    alias: alias-419
+    name: 性能脚本419
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-420
+    alias: alias-420
+    name: 性能脚本420
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-421
+    alias: alias-421
+    name: 性能脚本421
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-422
+    alias: alias-422
+    name: 性能脚本422
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-423
+    alias: alias-423
+    name: 性能脚本423
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-424
+    alias: alias-424
+    name: 性能脚本424
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-425
+    alias: alias-425
+    name: 性能脚本425
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-426
+    alias: alias-426
+    name: 性能脚本426
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-427
+    alias: alias-427
+    name: 性能脚本427
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-428
+    alias: alias-428
+    name: 性能脚本428
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-429
+    alias: alias-429
+    name: 性能脚本429
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-430
+    alias: alias-430
+    name: 性能脚本430
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-431
+    alias: alias-431
+    name: 性能脚本431
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-432
+    alias: alias-432
+    name: 性能脚本432
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-433
+    alias: alias-433
+    name: 性能脚本433
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-434
+    alias: alias-434
+    name: 性能脚本434
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-435
+    alias: alias-435
+    name: 性能脚本435
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-436
+    alias: alias-436
+    name: 性能脚本436
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-437
+    alias: alias-437
+    name: 性能脚本437
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-438
+    alias: alias-438
+    name: 性能脚本438
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-439
+    alias: alias-439
+    name: 性能脚本439
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-440
+    alias: alias-440
+    name: 性能脚本440
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-441
+    alias: alias-441
+    name: 性能脚本441
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-442
+    alias: alias-442
+    name: 性能脚本442
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-443
+    alias: alias-443
+    name: 性能脚本443
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-444
+    alias: alias-444
+    name: 性能脚本444
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-445
+    alias: alias-445
+    name: 性能脚本445
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-446
+    alias: alias-446
+    name: 性能脚本446
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-447
+    alias: alias-447
+    name: 性能脚本447
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-448
+    alias: alias-448
+    name: 性能脚本448
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-449
+    alias: alias-449
+    name: 性能脚本449
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-450
+    alias: alias-450
+    name: 性能脚本450
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-451
+    alias: alias-451
+    name: 性能脚本451
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-452
+    alias: alias-452
+    name: 性能脚本452
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-453
+    alias: alias-453
+    name: 性能脚本453
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-454
+    alias: alias-454
+    name: 性能脚本454
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-455
+    alias: alias-455
+    name: 性能脚本455
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-456
+    alias: alias-456
+    name: 性能脚本456
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-457
+    alias: alias-457
+    name: 性能脚本457
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-458
+    alias: alias-458
+    name: 性能脚本458
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-459
+    alias: alias-459
+    name: 性能脚本459
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-460
+    alias: alias-460
+    name: 性能脚本460
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-461
+    alias: alias-461
+    name: 性能脚本461
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-462
+    alias: alias-462
+    name: 性能脚本462
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-463
+    alias: alias-463
+    name: 性能脚本463
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-464
+    alias: alias-464
+    name: 性能脚本464
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-465
+    alias: alias-465
+    name: 性能脚本465
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-466
+    alias: alias-466
+    name: 性能脚本466
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-467
+    alias: alias-467
+    name: 性能脚本467
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-468
+    alias: alias-468
+    name: 性能脚本468
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-469
+    alias: alias-469
+    name: 性能脚本469
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-470
+    alias: alias-470
+    name: 性能脚本470
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-471
+    alias: alias-471
+    name: 性能脚本471
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-472
+    alias: alias-472
+    name: 性能脚本472
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-473
+    alias: alias-473
+    name: 性能脚本473
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-474
+    alias: alias-474
+    name: 性能脚本474
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-475
+    alias: alias-475
+    name: 性能脚本475
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-476
+    alias: alias-476
+    name: 性能脚本476
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-477
+    alias: alias-477
+    name: 性能脚本477
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-478
+    alias: alias-478
+    name: 性能脚本478
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-479
+    alias: alias-479
+    name: 性能脚本479
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-480
+    alias: alias-480
+    name: 性能脚本480
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-481
+    alias: alias-481
+    name: 性能脚本481
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-482
+    alias: alias-482
+    name: 性能脚本482
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-483
+    alias: alias-483
+    name: 性能脚本483
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-484
+    alias: alias-484
+    name: 性能脚本484
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-485
+    alias: alias-485
+    name: 性能脚本485
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-486
+    alias: alias-486
+    name: 性能脚本486
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-487
+    alias: alias-487
+    name: 性能脚本487
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-488
+    alias: alias-488
+    name: 性能脚本488
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-489
+    alias: alias-489
+    name: 性能脚本489
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-490
+    alias: alias-490
+    name: 性能脚本490
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-491
+    alias: alias-491
+    name: 性能脚本491
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-492
+    alias: alias-492
+    name: 性能脚本492
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-493
+    alias: alias-493
+    name: 性能脚本493
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-494
+    alias: alias-494
+    name: 性能脚本494
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-495
+    alias: alias-495
+    name: 性能脚本495
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-496
+    alias: alias-496
+    name: 性能脚本496
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-497
+    alias: alias-497
+    name: 性能脚本497
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-498
+    alias: alias-498
+    name: 性能脚本498
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-499
+    alias: alias-499
+    name: 性能脚本499
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false
+  - id: perf-500
+    alias: alias-500
+    name: 性能脚本500
+    description: 功能简述第
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false

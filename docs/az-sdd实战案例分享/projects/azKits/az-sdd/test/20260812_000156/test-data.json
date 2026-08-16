@@ -1,0 +1,25 @@
+{
+  "workOrder": "20260812_000156",
+  "workOrderPath": "az-sdd/test/20260812_000156",
+  "specs": [
+    {
+      "id": "0013",
+      "name": "本次执行日志导出",
+      "module": "azKits / log",
+      "status": "待验收",
+      "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md"
+    }
+  ],
+  "cases": [
+    {"id": "MT001", "title": "成功执行日志导出", "type": "人工", "status": "通过", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT001.md"},
+    {"id": "MT002", "title": "最近一次执行范围", "type": "人工", "status": "通过", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT002.md"},
+    {"id": "MT003", "title": "编辑器优先与回退", "type": "人工", "status": "通过", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT003.md"},
+    {"id": "MT004", "title": "编辑器均不可用", "type": "人工", "status": "通过", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT004.md"},
+    {"id": "MT005", "title": "无日志与运行中", "type": "人工", "status": "待验证", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT005.md"},
+    {"id": "MT006", "title": "失败及终止日志", "type": "人工", "status": "待验证", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT006.md"},
+    {"id": "MT007", "title": "写入失败", "type": "人工", "status": "待验证", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT007.md"},
+    {"id": "MT008", "title": "多终端实例隔离", "type": "人工", "status": "待验证", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT008.md"},
+    {"id": "MT009", "title": "响应与离线", "type": "人工", "status": "待验证", "specId": "0013", "specName": "本次执行日志导出", "specPath": "az-sdd/spec/0013-azKits-current-run-log-export.spec.md", "casePath": "cases/MT009.md"}
+  ],
+  "generatedAt": "2026-08-12T00:01:56+08:00"
+}

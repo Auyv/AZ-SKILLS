@@ -1,0 +1,45 @@
+version: 1
+toolbox:
+  name: azKits 示例工具箱
+  description: 演示 BAT、PowerShell 与 Python 脚本入口
+scripts:
+  - id: demo-bat
+    alias: demo-bat
+    name: BAT 示例
+    description: 演示运行 Windows 批处理脚本
+    path: demo.bat
+    type: bat
+    enabled: true
+    args: ["来自 Go 工具箱"]
+    encoding: utf-8
+    interactive: false
+  - id: demo-powershell
+    alias: demo-powershell
+    name: PowerShell 示例
+    description: 演示 PowerShell 进度输出
+    path: demo.ps1
+    type: powershell
+    enabled: true
+    args: ["3"]
+    encoding: utf-8
+    interactive: false
+  - id: demo-python
+    alias: demo-python
+    name: Python 示例
+    description: 演示 Python 环境变量与进度输出
+    path: demo.py
+    type: python
+    enabled: true
+    args: ["5"]
+    env:
+      AZKITS_DEMO: enabled
+    encoding: utf-8
+    interactive: false
+  - id: demo-interactive
+    alias: demo-interactive
+    name: 交互式 BAT 示例
+    description: 演示文本输入和两次按键等待
+    path: interactive-demo.bat
+    type: bat
+    enabled: true
+    encoding: utf-8

@@ -1,0 +1,9 @@
+version: 1
+toolbox:
+  name: 无效入口
+  description: 脚本缺少必填字段
+scripts:
+  - id: s1
+    alias: s1
+    name: 测试
+    description: 描述
