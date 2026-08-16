@@ -1,0 +1,114 @@
+# AZ-SDD v4.1 单一自适应流程
+# 用户不选择模式；所有 change 使用同一生命周期，风险只增加必要门禁。
+
+version: 4.1
+
+single_flow:
+  name: 单一自适应变更流程
+  stages:
+    - id: change
+      artifacts:
+        - proposal.md
+        - spec.delta.md
+    - id: design
+      conditional: design_required
+    - id: implement
+      artifacts:
+        - tasks.md
+        - evidence.md
+    - id: accept
+      artifacts:
+        - acceptance.md
+    - id: archive
+      command: change-validate + archive
+
+minimum_gate:
+  description: 简单任务也不能省略的最小闭环
+  required:
+    - proposal_complete
+    - delta_complete
+    - tasks_complete
+    - evidence_present
+    - acceptance_passed
+    - baseline_hash_unchanged
+  simple_path:
+    description: 没有风险触发时连续快速完成，不创建独立设计流程
+    stages:
+      - change
+      - implement
+      - accept
+      - archive
+
+risk_factors:
+  multi_module:
+    description: 影响两个及以上模块或子系统
+    gates: [design_required, full_test_required]
+  public_api:
+    description: 修改公共 API、协议或外部可见格式
+    gates: [design_required, full_test_required]
+  data_migration:
+    description: 修改持久化结构或需要数据迁移
+    gates: [design_required, full_test_required, rollback_plan_required]
+  new_dependency:
+    description: 引入新的运行时、构建或外部服务依赖
+    gates: [design_required]
+  security:
+    description: 涉及认证、权限、密钥、隐私或安全边界
+    gates: [design_required, full_test_required, manual_acceptance_required]
+  hardware:
+    description: 涉及硬件、实机或设备交互
+    gates: [design_required, full_test_required, manual_acceptance_required]
+  deployment:
+    description: 涉及部署、启动、升级或运行环境
+    gates: [design_required, full_test_required, rollback_plan_required]
+  irreversible:
+    description: 操作难以回滚或可能丢失数据
+    gates: [rollback_plan_required, manual_acceptance_required]
+  insufficient_tests:
+    description: 现有自动化测试不足以证明行为正确
+    gates: [full_test_required, manual_acceptance_required]
+  unknown_scope:
+    description: 影响范围尚未确认
+    gates: [scope_clarification_required, design_required]
+  user_experience:
+    description: 主观交互、视觉或操作体验变化
+    gates: [manual_acceptance_required]
+
+risk_policy:
+  selection: automatic
+  user_selectable_mode: false
+  rules:
+    - 简单任务允许连续执行多个阶段，但必须保留最小制品和证据
+    - 任一风险因子出现时自动启用其 gates
+    - 风险只能增加门禁，不能取消 minimum_gate
+    - 用户可以要求更严格审查，但不能绕过已触发门禁
+    - unknown_scope 未解决前禁止 implement
+
+artifact_rules:
+  baseline_writable_only_by_archive: true
+  code_inside_az_sdd_forbidden: true
+  change_required_for_behavior_change: true
+  feedback_close_requires_evidence_or_reason: true
+
+navigation:
+  init:
+    next: change
+  change:
+    if_design_required: arch
+    otherwise: coder
+  arch:
+    next: coder
+  coder:
+    next: tester
+  tester:
+    next: rules
+  rules:
+    next: track
+  track:
+    action: archive
+
+batch_changes:
+  rule: 每个 change 独立保存风险、任务、证据和验收；批量执行不得合并门禁结论
+
+code_directory:
+  rule: 已有项目沿用原源码结构；az-sdd/ 仅保存规范与证据，不保存业务代码

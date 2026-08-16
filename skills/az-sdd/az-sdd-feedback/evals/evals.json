@@ -1,0 +1,73 @@
+{
+  "skill_name": "az-sdd-feedback",
+  "version": "4.1.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "记录实现缺陷反馈",
+      "prompt": "/az-sdd-feedback 登录按钮无响应，请纳入闭环",
+      "expected_output": "创建反馈单并规划 coder → tester",
+      "criteria": [
+        "保留原始描述",
+        "生成编号和计划",
+        "设置可验证关闭条件"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "需求变更关联 v4 change",
+      "prompt": "/az-sdd-feedback 登录方式需要改成验证码，请纳入闭环",
+      "expected_output": "将反馈转需求并创建或关联 change",
+      "criteria": [
+        "识别需求变化",
+        "不直接当 bug 修复",
+        "同步 change/feedback.md"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "恢复未关闭反馈",
+      "prompt": "/az-sdd-feedback resume FB-2026-0001",
+      "expected_output": "从当前状态继续下一动作",
+      "criteria": [
+        "读取既有反馈",
+        "不重复创建编号",
+        "保持证据链"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "没有闭环意图",
+      "prompt": "登录按钮偶尔无响应，你怎么看？",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_INVALID_INPUT",
+      "criteria": [
+        "不强行创建反馈单",
+        "说明需要显式意图",
+        "保持普通讨论"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "验证失败仍要求关闭",
+      "prompt": "/az-sdd-feedback close FB-2026-0001，但测试失败",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_TEST_FAILED",
+      "criteria": [
+        "拒绝标记已解决",
+        "保持处理中或待验证",
+        "记录失败证据"
+      ],
+      "pass_score": 3
+    }
+  ]
+}

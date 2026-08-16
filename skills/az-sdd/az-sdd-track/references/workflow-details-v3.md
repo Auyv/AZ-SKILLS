@@ -1,0 +1,186 @@
+---
+name: az-sdd-track
+version: 3.2.0
+description: |
+  基于 SDD（规范驱动开发）流程，管理和更新项目状态追踪。
+  **触发场景**：仅当用户显式调用 "/az-sdd-track"、"az-sdd track"、"sdd track"，
+  或明确要求按 AZ-SDD/SDD 查看、更新状态或生成项目汇报时激活。
+  **不触发**：普通"查看进度"、"项目状态"或"生成报告"请求，若未显式调用 AZ-SDD/SDD，
+  不应自动读取或修改 `az-sdd/` 档案。
+  **参数**：可选。
+  **无前置条件**：可以随时调用。
+inputs:
+  required:
+    - name: user_intent
+      type: string
+      validation: 非空，且包含明确 AZ-SDD/SDD 状态或汇报意图
+  optional:
+    - name: project_path
+      type: string
+      default: 当前目录
+    - name: feature_id
+      type: string
+      default: null
+    - name: action
+      type: string
+      default: status
+      validation: status、feature、rebuild、report 或 history
+    - name: dry_run
+      type: boolean
+      default: true
+outputs:
+  - name: result
+    type: object
+    description: 状态摘要、冲突、报告路径和下一步动作
+errors:
+  - code: ERR_INVALID_INPUT
+    message: 查询参数或动作无效
+  - code: ERR_PROJECT_NOT_INITIALIZED
+    message: 项目尚未初始化 AZ-SDD
+  - code: ERR_ARTIFACT_NOT_FOUND
+    message: 状态、索引或目标功能不存在
+  - code: ERR_ARTIFACT_CONFLICT
+    message: 状态看板和制品索引不一致
+  - code: ERR_WRITE_PERMISSION
+    message: 无法重建状态或写入报告
+---
+
+# AZ-SDD-TRACK
+
+状态追踪 - 管理和更新项目工作状态，并生成可分享的项目汇报。
+
+## 执行步骤
+
+### Step 1: 检查环境
+
+```
+1. 检查 az-sdd/ 目录是否存在
+   → 不存在：提示先执行 /az-sdd-init
+   → 存在：继续
+2. 优先读取 STATUS.md 显示当前状态看板
+3. STATUS.md 缺失时，读取 SPEC.md、FEEDBACK.md、TRACK.md 重建摘要并提示补建
+4. 生成 HTML 报告时补充读取 INIT.md、SPEC.md、FEEDBACK.md、TRACK.md
+```
+
+### Step 2: 显示 STATUS 看板
+
+```
+📊 项目状态看板（来自 STATUS.md）
+
+## 功能进度
+| 状态 | 数量 |
+|------|------|
+| 草稿 | 1 |
+| 开发中 | 2 |
+| 测试中 | 1 |
+| 待验收 | 1 |
+| 已完成 | 3 |
+
+## 进度条
+[████████░░░░░░░░░░░░░░░] 50% (3/6)
+
+## 今日工作
+- 
+```
+
+### Step 3: 根据参数执行
+
+**如果带参数**（如查看特定功能状态）：
+```
+→ 显示指定功能的状态详情
+→ 显示历史变更记录
+```
+
+**如果无参数**：
+```
+→ 显示 STATUS.md 当前态
+→ 询问用户需要执行的操作
+```
+
+### Step 4: 提供操作选项
+
+```
+请选择操作：
+
+1. 📋 查看所有功能状态
+2. 📈 查看进度统计
+3. ✏️ 记录今日工作
+4. ⚠️ 记录问题
+5. 📊 生成项目汇报 HTML
+6. 📝 其他更新
+
+或者直接告诉我你想做什么。
+```
+
+## 功能状态视图
+
+```
+## 功能：{ID}-{NAME}
+
+| 字段 | 内容 |
+|------|------|
+| 当前状态 | {STATUS} |
+| 规范状态 | ✅ 完成 |
+| 开发状态 | 🔨 开发中 |
+| 测试状态 | ⬜ 待测试 |
+| 验收状态 | ⬜ 待验收 |
+
+## 状态历史
+| 日期 | 状态 | 说明 |
+|------|------|------|
+| 04-01 | 草稿 | 创建规范 |
+| 04-05 | 已批准 | 规范审核通过 |
+| 04-10 | 开发中 | 开始开发 |
+```
+
+## 项目汇报 HTML
+
+当用户要求“汇报、分享、给别人看项目进度、生成报告、导出 HTML”时，生成面向阅读者的项目状态报告，而不是只输出内部执行清单。
+
+### 报告定位
+
+- 面向：项目负责人、协作者、评审人、非当前执行 Agent。
+- 目标：让读者在 1 分钟内理解项目目标、整体进度、当前风险、未闭环反馈和下一步行动。
+- 输出：`az-sdd/reports/project-status-report.html`。
+
+### 生成方式
+
+```bash
+python az-sdd-track/references/generate-project-report-html.py {项目根目录路径}
+```
+
+报告读取：
+
+- `az-sdd/STATUS.md`：当前阶段、整体进度、当前焦点、阻塞项、下一步建议
+- `az-sdd/INIT.md`：项目名称、类型、技术栈摘要
+- `az-sdd/SPEC.md`：功能清单和状态分布
+- `az-sdd/FEEDBACK.md`：未闭环反馈
+- `az-sdd/TRACK.md`：近期关键事件
+
+### 报告内容
+
+```text
+1. 汇报结论：一句话说明当前项目状态
+2. 关键指标：整体进度、功能总数、已完成数量、未闭环反馈
+3. 功能状态分布：按状态展示进度
+4. 当前关注点：进行中事项、风险和建议下一步
+5. 未闭环反馈：反馈编号、摘要、状态、下一步动作
+6. 功能清单：编号、名称、模块、状态、最后更新
+7. 近期更新：从 TRACK.md 提取最近关键事件
+```
+
+### 分享要求
+
+- 报告必须支持浏览器直接打开。
+- 报告必须支持打印或导出 PDF。
+- 报告不应要求读者理解 AZ-SDD 内部流程。
+- 报告只展示结论和可追踪证据，不堆叠完整规范正文。
+
+## 错误处理
+
+| 情况 | 处理方式 |
+|------|---------|
+| az-sdd/ 不存在 | 提示先执行 /az-sdd-init |
+| STATUS.md 不存在 | 从 SPEC.md、FEEDBACK.md、TRACK.md 重建初始看板并提示写入 |
+| TRACK.md 不存在 | 自动创建事件日志 |
+| 用户无操作需求 | 显示状态后结束 |
