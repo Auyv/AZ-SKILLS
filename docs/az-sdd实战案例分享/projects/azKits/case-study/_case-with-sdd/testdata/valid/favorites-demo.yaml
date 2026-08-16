@@ -1,0 +1,14 @@
+version: 1
+toolbox:
+  name: 收藏与最近使用示例
+  description: 演示收藏、最近使用与 500 条脚本性能
+scripts:
+  - id: sys-001
+    alias: sys-info
+    name: 系统信息
+    description: 收集系统版本与硬件信息
+    path: scripts/device_init.bat
+    type: bat
+    enabled: true
+    encoding: utf-8
+    interactive: false

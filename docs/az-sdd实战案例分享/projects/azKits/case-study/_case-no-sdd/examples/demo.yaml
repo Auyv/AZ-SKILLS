@@ -1,0 +1,88 @@
+﻿version: 1
+name: 演示工具箱
+description: azKits 离线脚本工具箱演示入口（含收藏 / 最近使用演示）
+
+scripts:
+  - id: hello
+    alias: hello
+    name: 你好脚本
+    description: 输出中文问候语（GBK 批处理）
+    path: scripts/hello.bat
+    type: auto
+    encoding: gbk
+
+  - id: utf8py
+    alias: utf8
+    name: UTF-8 输出演示
+    description: Python 输出 UTF-8 中文，验证直通
+    path: scripts/utf8_demo.py
+    type: python
+    encoding: utf-8
+
+  - id: hello_gbk
+    alias: gbkb
+    name: GBK 批处理
+    description: 输出 GBK 编码的中文（真实 GBK 文件）
+    path: scripts/hello_gbk.bat
+    type: bat
+    encoding: gbk
+
+  - id: gbkpy
+    alias: gbkpy
+    name: GBK 输出演示
+    description: Python 输出 GBK 编码中文，验证解码
+    path: scripts/gbk_demo.py
+    type: python
+    encoding: gbk
+
+  - id: echoargs
+    alias: args
+    name: 参数回显
+    description: 回显 YAML 配置的固定参数（禁止自由参数）
+    path: scripts/echo_args.bat
+    type: bat
+    encoding: gbk
+    args:
+      - "--mode"
+      - "fast"
+      - "构建任务"
+
+  - id: ps
+    alias: ps
+    name: 系统信息
+    description: PowerShell 输出系统基本信息
+    path: scripts/info.ps1
+    type: powershell
+    encoding: utf-8
+
+  - id: fail
+    alias: fail
+    name: 失败脚本
+    description: 固定退出码 3，用于验证退出码传递
+    path: scripts/fail.bat
+    type: bat
+    encoding: gbk
+
+  - id: ask
+    alias: ask
+    name: 交互脚本
+    description: 读取一行用户输入（interactive）
+    path: scripts/interactive.bat
+    type: bat
+    encoding: gbk
+    interactive: true
+
+  - id: missing
+    alias: missing
+    name: 缺失文件
+    description: 声明的文件不存在，演示收藏/最近使用降级
+    path: scripts/missing.bat
+    type: bat
+
+  - id: off
+    alias: off
+    name: 已禁用脚本
+    description: "演示 enabled: false 的禁用状态"
+    path: scripts/hello.bat
+    type: bat
+    enabled: false

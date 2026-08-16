@@ -1,0 +1,67 @@
+# 编译输出目录
+/dist
+/.dist
+/build/*
+!/build/build.sh
+!/build/common/
+!/build/common/**
+/bin
+/obj
+/test/*/build/
+
+# IDE配置文件
+/.vs
+/.vscode
+*.sln
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.db
+*.sdf
+/trae_tmp
+/.ai_tmp
+/outputs
+/tmp
+
+# 编译中间文件
+*.o
+*.obj
+*.d
+*.gch
+*.pch
+*.so
+*.dll
+*.exe
+*.ilk
+*.pdb
+*.exp
+*.lib
+*.a
+*.out
+
+# 系统文件
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log
+*.log.*
+
+# 临时文件
+*.tmp
+*.temp
+.cache
+
+# AZ-SDD 测试报告和实施过程临时记录
+/az-sdd/coding/
+/az-sdd/reports/
+/az-sdd/test/reports/
+
+# 不随工程版本管理的供应商资料包和 SPC 生成包
+/doc/CIU98_B11C22955Q2R产品包和Linux SDK/
+/doc/hsed-spc_out/
+/doc/hsed-spc_out.zip

@@ -1,0 +1,23 @@
+version: 1
+toolbox:
+  name: 中文输入法验证工具箱
+  description: 验证中文组词、选字、上屏、补全与执行边界
+scripts:
+  - id: device-init
+    alias: device-init
+    name: 设备初始化
+    description: 初始化设备并检查连接
+    path: demo.bat
+    type: bat
+    enabled: true
+    args: ["IME 验证"]
+    encoding: utf-8
+  - id: device-check
+    alias: device-check
+    name: 设备连接检查
+    description: 检查设备连接状态
+    path: demo.bat
+    type: bat
+    enabled: true
+    args: ["IME 检查"]
+    encoding: utf-8
