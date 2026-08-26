@@ -85,3 +85,12 @@ agent_targets:
   - az-experience-capture
   - az-experience-search
   - az-experience-publish
+- aggregate_subdir: ''
+  enabled: true
+  name: pi
+  path: ~/.pi/agent/skills
+  exclude: []
+- enabled: false
+  name: dsh
+  path: ~/.dsh/skills
+  exclude: []
