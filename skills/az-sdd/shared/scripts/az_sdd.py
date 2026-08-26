@@ -281,7 +281,8 @@ def analyze_project(project: Path, rules: StateRules) -> list[dict[str, str]]:
         acceptance_count += len(re.findall(r"(?m)^#{3,4}\s+(?:\d+(?:\.\d+)*\s+)?MT\d{3}", text))
         if acceptance_count == 0:
             issues.append(issue("warning", "ERR_ARTIFACT_NOT_FOUND", f"功能 {fid} 未识别到验收标准或 MT 用例", path))
-        if state in {"developing", "testing", "acceptance", "completed", "released"} and fid not in coding_text:
+        # coding 计划仅用于开发中的可追溯性；完成态以测试/验收证据为准。
+        if state in {"developing", "testing", "acceptance"} and fid not in coding_text:
             issues.append(issue("warning", "ERR_ARTIFACT_NOT_FOUND", f"功能 {fid} 缺少可追溯的 coding 计划", path))
         if state in {"completed", "released"} and not any(fid in name for name in report_names):
             issues.append(issue("critical", "ERR_ARTIFACT_NOT_FOUND", f"已完成的功能 {fid} 缺少测试/验收证据", path))

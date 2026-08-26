@@ -152,6 +152,26 @@ class AzSddTests(unittest.TestCase):
         self.assertEqual(expected, set(result))
         json.dumps(result, ensure_ascii=False)
 
+    def test_completed_feature_requires_acceptance_evidence_not_coding_plan(self) -> None:
+        self.spec.write_text(SPEC_TEXT.replace("已批准", "已完成"), encoding="utf-8")
+        report = self.project / "az-sdd" / "test" / "reports" / "0010-acceptance.md"
+        report.parent.mkdir(parents=True, exist_ok=True)
+        report.write_text("# 验收证据\n\n用户确认通过。\n", encoding="utf-8")
+
+        issues = az_sdd.analyze_project(self.project, self.rules)
+        messages = "\n".join(item["message"] for item in issues)
+
+        self.assertNotIn("缺少可追溯的 coding 计划", messages)
+        self.assertNotIn("缺少测试/验收证据", messages)
+
+    def test_developing_feature_without_coding_plan_still_warns(self) -> None:
+        self.spec.write_text(SPEC_TEXT.replace("已批准", "开发中"), encoding="utf-8")
+
+        issues = az_sdd.analyze_project(self.project, self.rules)
+        messages = "\n".join(item["message"] for item in issues)
+
+        self.assertIn("功能 0010 缺少可追溯的 coding 计划", messages)
+
     def test_v4_migrate_dry_run_has_zero_writes(self) -> None:
         before = sorted(str(path.relative_to(self.project)) for path in self.project.rglob("*"))
         result = az_sdd.run(self.args("migrate", apply=False, source_version="v3", target_version="v4"))
