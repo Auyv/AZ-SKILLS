@@ -6,6 +6,8 @@ AZ-SKILLS 同步脚本
 同步逻辑：
 - agent_targets 列表定义每个 AI 工具目标及其 skills 列表
 - agent_targets.enabled 开关决定目标是否启用
+- 双模式：显式 skills 字段为白名单模式；省略 skills 改用 exclude 字段则为
+  黑名单模式（同步 全部源技能 - exclude），新增技能自动下发到黑名单目标
 
 用法:
     python sync_skills.py                    # 无参数: 进入交互式 Shell
@@ -13,7 +15,7 @@ AZ-SKILLS 同步脚本
     python sync_skills.py --to cline         # 只同步到 cline
     python sync_skills.py --to codex         # 只同步到 codex
     python sync_skills.py --dry-run          # 模拟运行，不实际复制
-    python sync_skills.py --skill az-sdd  # 只同步指定 skill
+    python sync_skills.py --skill az-skill-creator  # 只同步指定 skill
 
 无参数时进入交互式 Shell（命令风格，支持 Tab 补全），可用命令：
     help [cmd]             显示帮助（可指定命令名查看详情）
@@ -22,7 +24,7 @@ AZ-SKILLS 同步脚本
                            同步 skills（--all / --dry-run / --skills s1,s2）
     enable <target>...     启用一个或多个平台
     disable <target>...    禁用一个或多个平台
-    target <name> ...      管理平台 skills (list/add/remove/clear)
+    target <name> ...      管理平台 skills (list/add/remove/clear/convert/policy/exclude)
     skills <name>          查看平台已配置的 skills
     quit, q, exit          退出
 """
@@ -90,8 +92,9 @@ def _simple_yaml_load_manifest(text: str) -> dict:
                 key, value = item.split(":", 1)
                 key = key.strip()
                 value = value.strip()
-                current = {key: [] if key in ("targets", "skills") and not value else _simple_yaml_value(value)}
-                current_list_key = key if key in ("targets", "skills") and not value else None
+                list_keys = ("targets", "skills", "exclude")
+                current = {key: [] if key in list_keys and not value else _simple_yaml_value(value)}
+                current_list_key = key if key in list_keys and not value else None
                 if section in ("skills", "sync_targets", "agent_targets"):
                     data[section].append(current)
             else:
@@ -109,8 +112,9 @@ def _simple_yaml_load_manifest(text: str) -> dict:
             key, value = stripped.split(":", 1)
             key = key.strip()
             value = value.strip()
-            current[key] = [] if key in ("targets", "skills") and not value else _simple_yaml_value(value)
-            current_list_key = key if key in ("targets", "skills") and not value else None
+            list_keys = ("targets", "skills", "exclude")
+            current[key] = [] if key in list_keys and not value else _simple_yaml_value(value)
+            current_list_key = key if key in list_keys and not value else None
 
     return data
 
@@ -135,9 +139,14 @@ def _simple_yaml_dump_manifest(manifest: dict) -> str:
             lines.append(f"- enabled: {enabled}")
         lines.append(f"  name: {target['name']}")
         lines.append(f"  path: {target['path']}")
-        lines.append("  skills:")
-        for skill in target.get("skills", []):
-            lines.append(f"  - {skill}")
+        if "skills" in target:
+            lines.append("  skills:")
+            for skill in target.get("skills") or []:
+                lines.append(f"  - {skill}")
+        else:
+            lines.append("  exclude:")
+            for skill in target.get("exclude") or []:
+                lines.append(f"  - {skill}")
 
     return "\n".join(lines) + "\n"
 
@@ -270,11 +279,37 @@ class SkillSyncer:
                 return t
         return None
 
-    def _get_target_skill_names(self, target_name: str) -> List[str]:
-        """获取指定 target 配置的 skills；兼容旧版 skills[].targets。"""
-        config = self._get_target_config(target_name)
+    @staticmethod
+    def _target_mode(config: Optional[Dict]) -> str:
+        """返回 target 同步模式：'include'（白名单）或 'exclude'（黑名单）。
+
+        判定规则：显式存在 ``skills`` 字段即为白名单；否则为黑名单，
+        使用 ``exclude`` 列表（缺省视为空）。
+        """
         if config and 'skills' in config:
-            return list(config.get('skills') or [])
+            return 'include'
+        return 'exclude'
+
+    def _get_target_exclude(self, target_name: str) -> List[str]:
+        """获取黑名单模式下 target 的 exclude 列表。"""
+        config = self._get_target_config(target_name)
+        if not config:
+            return []
+        return list(config.get('exclude') or [])
+
+    def _get_target_skill_names(self, target_name: str) -> List[str]:
+        """获取指定 target 应同步的 skills。
+
+        - 白名单模式（显式 ``skills`` 字段）：直接使用该列表
+        - 黑名单模式：全部源技能 − exclude
+        - 兼容旧版 manifest 顶层 skills[].targets
+        """
+        config = self._get_target_config(target_name)
+        if config:
+            if 'skills' in config:
+                return list(config.get('skills') or [])
+            excluded = set(config.get('exclude') or [])
+            return [s for s in self._get_source_skills() if s not in excluded]
 
         skill_names = []
         for skill_info in self.manifest.get('skills', []):
@@ -283,13 +318,20 @@ class SkillSyncer:
         return skill_names
 
     def _get_skill_targets(self, skill_name: str) -> List[str]:
-        """获取指定 skill 要同步到的 target 列表。"""
+        """获取指定 skill 要同步到的 target 列表（含黑名单模式目标）。"""
         if self.manifest.get('agent_targets'):
-            return [
-                target.get('name')
-                for target in self._get_agent_targets()
-                if skill_name in target.get('skills', [])
-            ]
+            result = []
+            for target in self._get_agent_targets():
+                name = target.get('name')
+                if not name:
+                    continue
+                if 'skills' in target:
+                    if skill_name in (target.get('skills') or []):
+                        result.append(name)
+                else:
+                    if skill_name not in set(target.get('exclude') or []):
+                        result.append(name)
+            return result
 
         for skill_info in self.manifest.get('skills', []):
             if skill_info.get('name') == skill_name:
@@ -297,12 +339,24 @@ class SkillSyncer:
         return []
 
     def _get_manifest_skill_names(self) -> List[str]:
-        """获取 manifest 管理的 skill 名称。"""
+        """获取 manifest 管理的 skill 名称。
+
+        存在任一黑名单模式 target 时，全部源技能均视为受管。
+        """
         if self.manifest.get('agent_targets'):
             names = []
             seen = set()
+            has_blacklist = False
             for target in self._get_agent_targets():
-                for skill_name in target.get('skills', []):
+                if 'skills' not in target:
+                    has_blacklist = True
+                    continue
+                for skill_name in target.get('skills') or []:
+                    if skill_name not in seen:
+                        seen.add(skill_name)
+                        names.append(skill_name)
+            if has_blacklist:
+                for skill_name in self._get_source_skills():
                     if skill_name not in seen:
                         seen.add(skill_name)
                         names.append(skill_name)
@@ -707,19 +761,29 @@ class SkillSyncer:
         targets = self._get_agent_targets()
         for target in targets:
             name = target['name']
-            path = Path(target['path']).expanduser() if target.get('path') else None
+            raw_path = target.get('path')
+            path = Path(raw_path).expanduser() if raw_path else None
             enabled = "✓" if target.get('enabled', True) else "✗"
 
-            # 使用配置的聚合子文件夹（claude_code 等为平铺）
-            az_skills_path = self._get_az_skills_path(name, path) if path else None
-            exists = "存在" if az_skills_path and az_skills_path.exists() else "不存在"
+            if self._target_mode(target) == 'include':
+                mode_desc = "白名单"
+            else:
+                excluded = len(target.get('exclude') or [])
+                mode_desc = f"黑名单, 排除{excluded}"
 
-            if az_skills_path and az_skills_path.exists():
+            if not path:
+                info(f"  [{enabled}] {name} ({mode_desc}): (未配置路径)")
+                continue
+
+            # 使用配置的聚合子文件夹（claude_code 等为平铺）
+            az_skills_path = self._get_az_skills_path(name, path)
+
+            if az_skills_path.exists():
                 labels = self._collect_target_labels(name)
                 synced = len([label for label in labels if (az_skills_path / label).exists()])
-                info(f"  [{enabled}] {name}: {az_skills_path} ({synced}/{len(labels)}) 个 skill")
+                info(f"  [{enabled}] {name} ({mode_desc}): {az_skills_path} ({synced}/{len(labels)}) 个 skill")
             else:
-                info(f"  [{enabled}] {name}: {path} (az-skills 子文件夹不存在)")
+                info(f"  [{enabled}] {name} ({mode_desc}): {path} (目标目录不存在)")
 
         # 最后同步时间
         last_sync = self.manifest.get('last_sync')
@@ -739,12 +803,14 @@ def main():
   python sync_skills.py              # 进入交互式 Shell
   python sync_skills.py --to cline   # 只同步到 cline
   python sync_skills.py --to codex   # 只同步到 codex
-  python sync_skills.py --skill az-sdd  # 只同步指定 skill
+  python sync_skills.py --skill az-skill-creator  # 只同步指定 skill
   python sync_skills.py --list       # 仅列出状态
   python sync_skills.py --dry-run    # 模拟运行，不实际复制
+  python sync_skills.py --convert pi # 将 pi 从白名单转为黑名单模式
         """
     )
-    parser.add_argument('--to', choices=['hermes', 'cline', 'claude_code', 'opencode', 'openclaw', 'codex'], help='指定同步目标')
+    parser.add_argument('--to', choices=['hermes', 'cline', 'claude_code', 'opencode', 'openclaw', 'codex', 'pi', 'dsh'], help='指定同步目标')
+    parser.add_argument('--convert', metavar='TARGET', help='将指定目标从白名单转为黑名单模式 (可见集合不变)')
     parser.add_argument('--skill', help='指定同步的 skill 名称')
     parser.add_argument('--list', action='store_true', help='仅列出当前状态')
     parser.add_argument('--dry-run', action='store_true', help='模拟运行，不实际复制')
@@ -776,6 +842,15 @@ def main():
         syncer.list_status()
         return
 
+    if args.convert:
+        config = syncer._get_target_config(args.convert)
+        if not config:
+            error(f"未找到目标配置: {args.convert}")
+            sys.exit(1)
+        shell = InteractiveShell(syncer)
+        shell._target_convert(config)
+        return
+
     if args.skill:
         # 同步指定 skill
         result = syncer.sync_skill(args.skill)
@@ -805,7 +880,10 @@ class CommandCompleter:
     COMMANDS = ['help', 'status', 'sync', 'enable', 'disable',
                 'target', 'skills', 'quit']
     SYNC_FLAGS = ['--all', '--dry-run', '-n', '--skills']
-    TARGET_SUBCMDS = ['list', 'add', 'remove', 'clear']
+    TARGET_SUBCMDS = ['list', 'add', 'remove', 'clear',
+                      'convert', 'policy', 'exclude']
+    POLICY_VALUES = ['include', 'exclude']
+    EXCLUDE_SUBCMDS = ['list', 'add', 'remove', 'clear']
     ALIASES = {
         'h': 'help', '?': 'help',
         'ls': 'status', 'list': 'status',
@@ -923,6 +1001,19 @@ class CommandCompleter:
             return self.skills
         if subcmd == 'remove':
             return self.target_skills(target_name)
+        if subcmd == 'policy':
+            if n == 3 or (n == 4 and not after_space):
+                return self.POLICY_VALUES
+            return []
+        if subcmd == 'exclude':
+            if n == 3 or (n == 4 and not after_space):
+                return self.EXCLUDE_SUBCMDS
+            excl_sub = words[3]
+            if excl_sub == 'add':
+                return self.skills
+            if excl_sub == 'remove':
+                return self.syncer._get_target_exclude(target_name)
+            return []
         return []
 
 
@@ -1145,17 +1236,23 @@ class InteractiveShell:
             self.syncer._save_manifest()
 
     def cmd_target(self, args):
-        """管理平台 skills: target <name> [list|add|remove|clear] [skill...]
+        """管理平台 skills: target <name> [list|add|remove|clear|convert|policy|exclude] [args...]
 
         示例:
-          target hermes                列出 hermes 的 skills
+          target hermes                列出 hermes 的同步配置
           target hermes list           同上
-          target hermes add foo bar    添加 skills
-          target hermes remove foo     移除 skill
-          target hermes clear          清空全部
+          target hermes add foo bar    白名单模式: 添加 skills
+          target hermes remove foo     白名单模式: 移除 skill
+          target hermes clear          清空白名单
+          target hermes convert        转为黑名单模式 (可见集合不变)
+          target hermes policy         查看当前模式
+          target hermes policy exclude 切换到黑名单模式
+          target hermes exclude add foo       黑名单加入 foo
+          target hermes exclude remove foo    黑名单移除 foo
+          target hermes exclude list          查看黑名单
         """
         if not args:
-            warning("用法: target <name> [list|add|remove|clear] [skill...]")
+            warning("用法: target <name> [list|add|remove|clear|convert|policy|exclude] [args...]")
             return
         target_name = args[0]
         config = self.syncer._get_target_config(target_name)
@@ -1163,21 +1260,27 @@ class InteractiveShell:
             warning(f"未找到目标: {target_name}")
             return
         if len(args) == 1:
-            self._show_target_skills(config)
+            self._show_target_config(config)
             return
         subcmd = args[1].lower()
         rest = args[2:]
         if subcmd in ('list', 'ls', 'show'):
-            self._show_target_skills(config)
+            self._show_target_config(config)
         elif subcmd == 'add':
             self._target_add(config, rest)
         elif subcmd == 'remove':
             self._target_remove(config, rest)
         elif subcmd == 'clear':
             self._target_clear(config)
+        elif subcmd == 'convert':
+            self._target_convert(config)
+        elif subcmd == 'policy':
+            self._target_policy(config, rest)
+        elif subcmd == 'exclude':
+            self._target_exclude(config, rest)
         else:
             warning(f"未知子命令: {subcmd}")
-            info("可用: list, add, remove, clear")
+            info("可用: list, add, remove, clear, convert, policy, exclude")
 
     def _show_target_skills(self, config: Dict):
         skills = list(config.get('skills') or [])
@@ -1188,7 +1291,143 @@ class InteractiveShell:
         else:
             info("    (空)")
 
+    def _show_target_excludes(self, config: Dict):
+        excludes = list(config.get('exclude') or [])
+        info(f"  {config['name']} 黑名单 (排除 {len(excludes)} 个):")
+        if excludes:
+            for sk in excludes:
+                info(f"    - {sk}")
+        else:
+            info("    (空)")
+
+    def _show_target_config(self, config: Dict):
+        mode = self.syncer._target_mode(config)
+        mode_desc = "白名单 (skills)" if mode == 'include' else "黑名单 (exclude)"
+        info(f"  {config['name']} — 模式: {mode_desc}, 启用: {'是' if config.get('enabled', True) else '否'}")
+        if 'skills' in config:
+            self._show_target_skills(config)
+        else:
+            self._show_target_excludes(config)
+
+    def _target_convert(self, config: Dict):
+        """白名单 → 黑名单：exclude = 全部源技能 − 当前 skills，可见集合不变。"""
+        if 'skills' not in config:
+            info(f"  {config['name']} 已是黑名单模式，无需转换")
+            return
+        current = set(config.get('skills') or [])
+        all_source = self.syncer._get_source_skills()
+        excluded = [s for s in all_source if s not in current]
+        missing = current - set(all_source)
+        if missing:
+            warning(f"  以下白名单项在源目录中不存在，转换后将不再被任何方式引用: "
+                    f"{', '.join(sorted(missing))}")
+        del config['skills']
+        config['exclude'] = excluded
+        self.syncer._save_manifest()
+        success(f"  已转换 {config['name']}: 黑名单排除 {len(excluded)} 个"
+                f"，同步 {len(all_source) - len(excluded)} 个 (与转换前一致)")
+        if not all_source:
+            warning("  源目录为空，请检查后重新执行同步")
+
+    def _target_policy(self, config: Dict, args: List[str]):
+        """查看或切换 target 同步模式。"""
+        if not args:
+            mode = self.syncer._target_mode(config)
+            mode_desc = "include (白名单)" if mode == 'include' else "exclude (黑名单)"
+            info(f"  {config['name']} 当前模式: {mode_desc}")
+            info("  切换用法: policy include | policy exclude")
+            return
+        action = args[0].lower()
+        if action == 'include':
+            if 'skills' in config:
+                info(f"  {config['name']} 已是白名单模式")
+                return
+            excluded = set(config.get('exclude') or [])
+            all_source = self.syncer._get_source_skills()
+            config['skills'] = [s for s in all_source if s not in excluded]
+            if 'exclude' in config:
+                del config['exclude']
+            self.syncer._save_manifest()
+            success(f"  已切换 {config['name']} 为白名单模式 ({len(config['skills'])} 个)")
+        elif action == 'exclude':
+            if 'skills' not in config:
+                info(f"  {config['name']} 已是黑名单模式")
+                return
+            self._target_convert(config)
+        else:
+            warning(f"  未知模式: {action}（可用: include / exclude）")
+
+    def _target_exclude(self, config: Dict, args: List[str]):
+        """维护黑名单: exclude [list|add|remove|clear] [skill...]"""
+        if 'skills' in config:
+            warning(f"  {config['name']} 是白名单模式，请先执行: "
+                    f"target {config['name']} convert")
+            return
+        if not args or args[0].lower() in ('list', 'ls', 'show'):
+            self._show_target_excludes(config)
+            return
+        subcmd = args[0].lower()
+        skills = args[1:]
+        if subcmd == 'add':
+            self._target_exclude_add(config, skills)
+        elif subcmd == 'remove':
+            self._target_exclude_remove(config, skills)
+        elif subcmd == 'clear':
+            self._target_exclude_clear(config)
+        else:
+            warning(f"  未知子命令: {subcmd}（可用: list, add, remove, clear）")
+
+    def _target_exclude_add(self, config: Dict, skills: List[str]):
+        if not skills:
+            warning("请指定要排除的 skill")
+            return
+        current = list(config.get('exclude') or [])
+        current_set = set(current)
+        changed = False
+        for sk in skills:
+            if sk in current_set:
+                info(f"  已在黑名单中: {sk}")
+                continue
+            current.append(sk)
+            current_set.add(sk)
+            success(f"  已排除: {sk}")
+            changed = True
+        if changed:
+            config['exclude'] = current
+            self.syncer._save_manifest()
+
+    def _target_exclude_remove(self, config: Dict, skills: List[str]):
+        if not skills:
+            warning("请指定要取消排除的 skill")
+            return
+        current = list(config.get('exclude') or [])
+        current_set = set(current)
+        changed = False
+        for sk in skills:
+            if sk not in current_set:
+                warning(f"  不在黑名单中: {sk}")
+                continue
+            current.remove(sk)
+            current_set.discard(sk)
+            info(f"  已取消排除: {sk}")
+            changed = True
+        if changed:
+            config['exclude'] = current
+            self.syncer._save_manifest()
+
+    def _target_exclude_clear(self, config: Dict):
+        if not config.get('exclude'):
+            info(f"  {config['name']} 黑名单已为空")
+            return
+        config['exclude'] = []
+        self.syncer._save_manifest()
+        warning(f"  已清空 {config['name']} 的黑名单")
+
     def _target_add(self, config: Dict, skills: List[str]):
+        if 'skills' not in config:
+            warning(f"  {config['name']} 是黑名单模式，添加请用: "
+                    f"target {config['name']} exclude remove <skill>")
+            return
         if not skills:
             warning("请指定要添加的 skill")
             return
@@ -1208,6 +1447,10 @@ class InteractiveShell:
             self.syncer._save_manifest()
 
     def _target_remove(self, config: Dict, skills: List[str]):
+        if 'skills' not in config:
+            warning(f"  {config['name']} 是黑名单模式，移除请用: "
+                    f"target {config['name']} exclude add <skill>")
+            return
         if not skills:
             warning("请指定要移除的 skill")
             return
@@ -1227,6 +1470,10 @@ class InteractiveShell:
             self.syncer._save_manifest()
 
     def _target_clear(self, config: Dict):
+        if 'skills' not in config:
+            warning(f"  {config['name']} 是黑名单模式，清空请用: "
+                    f"target {config['name']} exclude clear")
+            return
         if not config.get('skills'):
             info(f"  {config['name']} 已为空")
             return
@@ -1243,7 +1490,7 @@ class InteractiveShell:
         if not config:
             warning(f"未找到目标: {args[0]}")
             return
-        self._show_target_skills(config)
+        self._show_target_config(config)
 
     def cmd_quit(self, args):
         """退出交互式 Shell"""

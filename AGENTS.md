@@ -10,7 +10,6 @@ AZ-SKILLS/
 ├── sync_skills.py        # 同步到各 AI 平台
 ├── manifest_update.py    # 从 SKILL.md front matter 自动发现并追加到 manifest
 ├── skills/               # 所有技能源码（唯一真相来源）
-│   ├── az-sdd/           # SDD 技能族容器（含 9 个子技能，无顶层 SKILL.md）
 │   ├── issue-tracker/    # 每个技能：目录名 = 技能名，含 SKILL.md
 │   └── ...
 ```
@@ -47,7 +46,7 @@ python manifest_update.py --auto
 
 ## 结构要点
 
-- `az-sdd/` 是技能族容器，无顶层 SKILL.md，不作为独立技能同步。其下的 9 个子目录才是独立技能（如 `az-sdd-coder`, `az-sdd-tester` 等）。
+- AZ-SDD 已迁移到独立仓库 `git@gitee.com:AZ-TOOLS/azSdd.git`，不再由本仓库同步。
 - 子技能目录如 `hq_tester_skills/hq_adb_srtget/` 也能被 `manifest_update.py` 正确发现（递归扫描 SKILL.md）。
 - 没有 .gitignore。`manifest.yaml` 的 `last_sync` 字段会被 `sync_skills.py` 自动更新。
 

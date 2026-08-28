@@ -1,4 +1,4 @@
-last_sync: '2026-08-16T13:34:06.141367'
+last_sync: '2026-08-28T11:08:03.485996'
 agent_targets:
 - aggregate_subdir: ''
   enabled: true
@@ -6,7 +6,6 @@ agent_targets:
   path: ~/AppData/Local/hermes/skills
   skills:
   - az-skill-creator
-  - auto-skill-creator
   - az-pdf2md
   - az-todo-tracker
   - az-issue-tracker
@@ -15,10 +14,8 @@ agent_targets:
   path: ~/.agents/skills
   skills:
   - az-skill-creator
-  - auto-skill-creator
   - az-c-macro2ini-config
   - az-pdf2md
-  - az-sdd
   - core-dump-analyzer
   - hq_tester_skills
   - az-issue-tracker
@@ -28,10 +25,8 @@ agent_targets:
   path: ~/.claude/skills
   skills:
   - az-skill-creator
-  - auto-skill-creator
   - az-c-macro2ini-config
   - az-pdf2md
-  - az-sdd
   - core-dump-analyzer
   - hq_tester_skills
   - az-keil-build
@@ -44,10 +39,8 @@ agent_targets:
   path: ~/.config/opencode/skills
   skills:
   - az-skill-creator
-  - auto-skill-creator
   - az-c-macro2ini-config
   - az-pdf2md
-  - az-sdd
   - core-dump-analyzer
   - hq_tester_skills
   - docker-image-build
@@ -60,7 +53,6 @@ agent_targets:
   path: ~/.openclaw/skills
   skills:
   - az-skill-creator
-  - auto-skill-creator
   - az-pdf2md
   - az-issue-tracker
 - enabled: true
@@ -68,10 +60,8 @@ agent_targets:
   path: ~/.codex/skills
   skills:
   - az-skill-creator
-  - auto-skill-creator
   - az-c-macro2ini-config
   - az-pdf2md
-  - az-sdd
   - core-dump-analyzer
   - hq_tester_skills
   - az-keil-build
@@ -79,3 +69,13 @@ agent_targets:
   - ctp-mpu-debug-build
   - ctp-adb-debug-exec
   - az-api-summary
+  - az-gitlab-merge-request
+- aggregate_subdir: ''
+  enabled: true
+  name: pi
+  path: ~/.pi/agent/skills
+  exclude: []
+- enabled: false
+  name: dsh
+  path: ~/.dsh/skills
+  exclude: []

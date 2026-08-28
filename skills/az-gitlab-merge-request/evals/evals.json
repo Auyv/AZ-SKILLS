@@ -1,0 +1,63 @@
+{
+  "skill_name": "az-gitlab-merge-request",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "明确源/目标分支，创建前等待确认",
+      "prompt": "将 feature/payment 合并到 master。",
+      "expected_output": "核验远端分支、差异和已有 MR，填写 MR 但不提交，要求最终确认。",
+      "criteria": ["正确解析两个分支", "检查已有 MR", "默认保留源分支", "提交前请求确认"],
+      "pass_score": 4
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "收到确认后创建 MR",
+      "prompt": "将 jpz_ai@master 合并到 master；页面已准备好，提交。",
+      "expected_output": "创建 MR 并返回编号、URL、开放状态和流水线信息。",
+      "criteria": ["仅在明确提交后提交", "不执行实际合并", "返回可访问 MR URL", "保留源分支"],
+      "pass_score": 4
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "已有相同 MR",
+      "prompt": "将 feature/log 合并到 release，若已有合并请求请告诉我。",
+      "expected_output": "返回现有开放 MR，不创建重复请求。",
+      "criteria": ["查询源/目标组合", "返回已有 URL", "不重复提交"],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "error",
+      "description": "源分支不存在",
+      "prompt": "将 missing-branch 合并到 master。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_SOURCE_BRANCH_NOT_FOUND",
+      "criteria": ["检查远端分支", "不打开或提交伪造 MR", "说明恢复方式"],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "error",
+      "description": "源目标相同",
+      "prompt": "将 master 合并到 master。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_INVALID_BRANCH",
+      "criteria": ["拒绝相同分支", "不访问提交页", "给出清晰原因"],
+      "pass_score": 3
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "未确认最终提交",
+      "prompt": "将 feature/a 合并到 master，创建好后直接发出去。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_USER_CONFIRMATION_REQUIRED",
+      "criteria": ["准备 MR 信息", "明确要求当次确认", "不点击提交", "不执行合并"],
+      "pass_score": 4
+    }
+  ]
+}
