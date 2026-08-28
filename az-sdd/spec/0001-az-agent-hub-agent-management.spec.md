@@ -215,7 +215,7 @@ skills/<skill-path>/
 ```yaml
 skills:
   - skills/az-skill-creator
-  - skills/az-sdd/az-sdd-spec/SKILL.md
+  - skills/hq_tester_skills/hq_adb_srtget/SKILL.md
   - ctp-mpu-debug-build
 ```
 

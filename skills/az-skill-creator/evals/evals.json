@@ -1,102 +1,85 @@
 {
   "skill_name": "az-skill-creator",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "evals": [
     {
       "id": 1,
       "category": "normal",
-      "description": "正常创建技能流程",
-      "prompt": "创建一个技能，用于自动整理会议纪要",
-      "expected_output": "技能目录结构完整，包含 SKILL.md、MANUAL.md、evals/evals.json",
+      "description": "低风险技能默认快速创建",
+      "prompt": "创建一个技能，在用户要求评审 Markdown 标题层级时给出问题清单。",
+      "expected_output": "直接生成最小可用 SKILL.md，不强制创建脚本、MANUAL 或完整错误码。",
       "criteria": [
-        "skill_name 符合命名规范",
-        "inputs.required 包含 user_intent",
-        "outputs 包含 skill_md 和 manual_md",
-        "errors 包含至少 3 个错误码",
-        "evals.json 包含至少 5 个测试用例"
+        "从请求中推断名称和触发场景",
+        "最小交付包含 SKILL.md",
+        "没有无价值的空目录或包装脚本",
+        "没有逐项访谈输入输出和异常"
       ],
-      "pass_score": 5
+      "pass_score": 4
     },
     {
       "id": 2,
       "category": "normal",
-      "description": "优化现有技能",
-      "prompt": "优化 core-dump-analyzer 技能，添加对 ARM64 的支持",
-      "expected_output": "在现有技能基础上扩展 inputs/outputs/errors",
+      "description": "工程化文件处理技能",
+      "prompt": "创建一个批量解析日志并生成 JSON 报告的跨平台技能，要求严格测试。",
+      "expected_output": "启用工程化模式，设计标准库优先的 Python 脚本、失败处理和相称测试矩阵。",
       "criteria": [
-        "inputs 新增 architecture 可选字段",
-        "outputs 新增 arm64_analysis_report",
-        "errors 新增 ERR_ARCH_UNSUPPORTED",
-        "保留原有功能不被破坏"
+        "识别批量文件解析和严格测试触发工程化模式",
+        "Agent 与 Python 职责划分明确",
+        "第三方依赖有必要性和降级说明",
+        "测试覆盖主路径、边界和关键失败"
       ],
       "pass_score": 4
     },
     {
       "id": 3,
-      "category": "error",
-      "description": "技能名称非法",
-      "prompt": "创建一个技能，名字叫 my skill (有问题)",
-      "expected_behavior": "error",
-      "expected_error_code": "ERR_INVALID_NAME",
+      "category": "normal",
+      "description": "优先从上下文推断",
+      "prompt": "把刚才已经验证通过的 GitLab 合并请求创建流程做成技能。",
+      "expected_output": "复用对话中的目标、步骤和边界，只对无法推断且会影响结果的信息集中提问。",
       "criteria": [
-        "返回错误状态",
-        "错误码为 ERR_INVALID_NAME",
-        "提示正确的命名规范"
+        "使用已有对话上下文",
+        "不重复询问已知信息",
+        "阻塞问题一次性集中提出"
       ],
       "pass_score": 3
     },
     {
       "id": 4,
-      "category": "error",
-      "description": "技能目录已存在",
-      "prompt": "创建名为 core-dump-analyzer 的技能",
-      "expected_behavior": "error",
-      "expected_error_code": "ERR_SKILL_EXISTS",
+      "category": "boundary",
+      "description": "创建与发布分离",
+      "prompt": "先在项目里起草一个设备巡检技能，不要发布。",
+      "expected_output": "只创建项目内技能草稿或源码包，不登记 manifest、不运行正式同步。",
       "criteria": [
-        "返回错误状态",
-        "错误码为 ERR_SKILL_EXISTS",
-        "提示覆盖或重命名选项"
+        "明确交付范围",
+        "不登记 manifest",
+        "不执行正式同步",
+        "说明实际路径和加载状态"
       ],
-      "pass_score": 3
+      "pass_score": 4
     },
     {
       "id": 5,
-      "category": "error",
-      "description": "测试用例为空",
-      "prompt": "创建一个技能，只有一个空空的框架，不要测试用例",
-      "expected_behavior": "warning",
-      "expected_error_code": "ERR_EMPTY_EVALS",
+      "category": "boundary",
+      "description": "优化现有技能时保护名称和引用",
+      "prompt": "优化 core-dump-analyzer 的触发描述，并顺便把它自动改名为 crash-helper。",
+      "expected_output": "先完成触发描述优化；改名需要检查调用方并确认迁移范围，不能擅自执行。",
       "criteria": [
-        "警告提示 evals.json 为空",
-        "自动生成默认测试用例",
-        "或提示用户补充"
+        "不擅自修改现有名称",
+        "检查 manifest 和调用方引用",
+        "说明改名影响和所需确认"
       ],
       "pass_score": 3
     },
     {
       "id": 6,
-      "category": "normal",
-      "description": "从对话上下文创建技能",
-      "prompt": "创建一个技能，把我们之前做的那个图片格式转换的过程总结一下",
-      "expected_output": "技能名称和描述从对话中提取",
-      "criteria": [
-        "正确识别对话主题",
-        "提取触发关键词",
-        "inputs.optional.dialog_context 被使用"
-      ],
-      "pass_score": 3
-    },
-    {
-      "id": 7,
       "category": "error",
-      "description": "缺少必需输入",
-      "prompt": "创建一个技能",
-      "expected_behavior": "error",
-      "expected_error_code": "ERR_INVALID_INPUT",
+      "description": "非法名称处理",
+      "prompt": "创建名为 My Skill (Final) 的技能。",
+      "expected_output": "指出名称不符合小写字母、数字和连字符规则，并给出可用名称；不会创建非法目录。",
       "criteria": [
-        "返回错误状态",
-        "错误码为 ERR_INVALID_INPUT",
-        "提示缺少 user_intent 或 trigger_phrase"
+        "识别非法名称",
+        "提供符合规范的候选名称",
+        "不创建非法目录"
       ],
       "pass_score": 3
     }

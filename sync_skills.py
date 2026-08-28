@@ -15,7 +15,7 @@ AZ-SKILLS 同步脚本
     python sync_skills.py --to cline         # 只同步到 cline
     python sync_skills.py --to codex         # 只同步到 codex
     python sync_skills.py --dry-run          # 模拟运行，不实际复制
-    python sync_skills.py --skill az-sdd  # 只同步指定 skill
+    python sync_skills.py --skill az-skill-creator  # 只同步指定 skill
 
 无参数时进入交互式 Shell（命令风格，支持 Tab 补全），可用命令：
     help [cmd]             显示帮助（可指定命令名查看详情）
@@ -803,7 +803,7 @@ def main():
   python sync_skills.py              # 进入交互式 Shell
   python sync_skills.py --to cline   # 只同步到 cline
   python sync_skills.py --to codex   # 只同步到 codex
-  python sync_skills.py --skill az-sdd  # 只同步指定 skill
+  python sync_skills.py --skill az-skill-creator  # 只同步指定 skill
   python sync_skills.py --list       # 仅列出状态
   python sync_skills.py --dry-run    # 模拟运行，不实际复制
   python sync_skills.py --convert pi # 将 pi 从白名单转为黑名单模式

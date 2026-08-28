@@ -2,6 +2,8 @@
 
 > 跨 AI 工具的 Skill 管理与同步系统
 
+> AZ-SDD 技能族已迁移到独立仓库：`git@gitee.com:AZ-TOOLS/azSdd.git`
+
 ---
 
 ## 📁 目录结构
@@ -11,20 +13,9 @@ AZ-SKILLS/
 ├── manifest.yaml       # 全局清单配置
 ├── sync_skills.py     # 同步脚本
 ├── README.md          # 说明文档
-└── skills/            # Skill 源码（唯一真相来源，17 个）
-    ├── az-sdd/                  # 技能族容器（含 9 个子技能，无顶层 SKILL.md）
-    │   ├── az-sdd-init/         # SDD 初始化
-    │   ├── az-sdd-spec/         # SDD 规范编写
-    │   ├── az-sdd-arch/         # SDD 架构
-    │   ├── az-sdd-coding/       # SDD 编码
-    │   ├── az-sdd-test/         # SDD 人工测试
-    │   ├── az-sdd-next/         # SDD 流程导航
-    │   ├── az-sdd-rules/        # SDD 规范守卫
-    │   ├── az-sdd-track/        # SDD 状态追踪
-    │   └── az-sdd-feedback/     # SDD 反馈处理
+└── skills/            # Skill 源码（唯一真相来源）
     ├── issue-tracker/           # 问题排查记录（事后）
     ├── az-skill-creator/        # 技能创建（手动版）
-    ├── auto-skill-creator/      # 技能创建（自动触发版）
     ├── az-pdf2md/               # PDF 转 Markdown
     ├── core-dump-analyzer/      # ARM core dump 分析
     ├── network-debug/           # 网络连接异常排查
