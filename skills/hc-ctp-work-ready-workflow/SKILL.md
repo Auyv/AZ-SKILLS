@@ -1,5 +1,5 @@
 ---
-name: hq-workflow
+name: hc-ctp-work-ready-workflow
 description: |
   当用户要求为鸿泉 CTP/HQT MPU 工程创建独立工作空间、按指定 XML 拉取代码、准备开始开发或等待任务安排时使用。
   统一完成工作目录隔离、manifest 拉取、仓库状态核验与后续开发交付门禁；在用户给出具体任务前不修改业务代码。

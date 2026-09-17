@@ -34,7 +34,7 @@ agent_targets:
   - ctp-mpu-debug-build
   - ctp-adb-debug-exec
   - az-api-summary
-  - hq-workflow
+  - hc-ctp-work-ready-workflow
 - enabled: true
   name: opencode
   path: ~/.config/opencode/skills
@@ -49,7 +49,7 @@ agent_targets:
   - ctp-adb-debug-exec
   - ctp-mpu-debug-build
   - hq-autobuild-mpu
-  - hq-workflow
+  - hc-ctp-work-ready-workflow
 - enabled: false
   name: openclaw
   path: ~/.openclaw/skills
@@ -73,7 +73,7 @@ agent_targets:
   - az-api-summary
   - az-gitlab-merge-request
   - hq-autobuild-mpu
-  - hq-workflow
+  - hc-ctp-work-ready-workflow
 - aggregate_subdir: ''
   enabled: true
   name: pi
