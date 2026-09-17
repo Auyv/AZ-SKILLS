@@ -1,4 +1,4 @@
-last_sync: '2026-08-28T11:08:03.485996'
+last_sync: '2026-09-14T15:33:53.935806'
 agent_targets:
 - aggregate_subdir: ''
   enabled: true
@@ -70,6 +70,7 @@ agent_targets:
   - ctp-adb-debug-exec
   - az-api-summary
   - az-gitlab-merge-request
+  - hq-autobuild-mpu
 - aggregate_subdir: ''
   enabled: true
   name: pi

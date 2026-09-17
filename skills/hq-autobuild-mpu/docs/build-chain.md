@@ -1,7 +1,7 @@
 # 通用 MPU 自动构建链路
 
 ```text
-Windows: autobuild/test_mpu/autobuild-mpu.bat
+Windows: <ci-repository>/build/autobuild-mpu.bat
   ├─ where docker / docker info
   ├─ docker inspect <config.json 中的容器名>
   ├─ 必要时 docker start <容器名>
@@ -15,7 +15,7 @@ Windows: autobuild/test_mpu/autobuild-mpu.bat
 |---|---|
 | 容器名 | `tools/docker_cmd/config.json` 的 `containers[].name` |
 | 容器挂载点 | `containers[].volumes` 中当前工作区对应的目标路径 |
-| 工程名 | `autobuild/test_mpu/**/build/mpu/build.sh` 所属工程目录 |
+| 工程名 | `<ci-repository>/build/mpu/build.sh` 所属持续集成仓库目录 |
 | 产品名 | `<project>/config/<product>/list.env` 的目录名 |
 | 构建模型 | `list.env` 中的 `G_PRODUCT_BUILD_MPU_MODEL` |
 

@@ -7,9 +7,39 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Workspace = (Resolve-Path -LiteralPath $Workspace).Path
-$configPath = Join-Path $Workspace 'tools\docker_cmd\config.json'
-if (-not (Test-Path -LiteralPath $configPath)) {
-    throw "ERR_CONFIG_MISSING: $configPath"
+
+$workspaceItem = Get-Item -LiteralPath $Workspace
+$directBuildScript = Join-Path $workspaceItem.FullName 'build\mpu\build.sh'
+if (Test-Path -LiteralPath $directBuildScript -PathType Leaf) {
+    $projectDir = $workspaceItem
+    $buildScript = Get-Item -LiteralPath $directBuildScript
+} else {
+    $legacyRoot = Join-Path $workspaceItem.FullName 'autobuild\test_mpu'
+    if (-not (Test-Path -LiteralPath $legacyRoot -PathType Container)) {
+        throw "ERR_BUILD_TREE_AMBIGUOUS: expected '$directBuildScript' or a legacy build tree under '$legacyRoot'"
+    }
+    $buildScripts = @(Get-ChildItem -LiteralPath $legacyRoot -Recurse -File -Filter 'build.sh' |
+        Where-Object { $_.FullName -match '[\\/]build[\\/]mpu[\\/]build\.sh$' })
+    if ($buildScripts.Count -ne 1) {
+        $candidates = ($buildScripts.FullName -join '; ')
+        throw "ERR_BUILD_TREE_AMBIGUOUS: expected one MPU build.sh, found $($buildScripts.Count). Candidates: $candidates"
+    }
+    $buildScript = $buildScripts[0]
+    $projectDir = $buildScript.Directory.Parent.Parent
+}
+
+$configPath = $null
+$configRoot = $projectDir
+while ($null -ne $configRoot) {
+    $candidate = Join-Path $configRoot.FullName 'tools\docker_cmd\config.json'
+    if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+        $configPath = $candidate
+        break
+    }
+    $configRoot = $configRoot.Parent
+}
+if (-not $configPath) {
+    throw "ERR_CONFIG_MISSING: tools\docker_cmd\config.json not found in '$($projectDir.FullName)' or any parent directory"
 }
 
 $config = Get-Content -Raw -Encoding UTF8 -LiteralPath $configPath | ConvertFrom-Json
@@ -25,37 +55,35 @@ if (-not $containerImage) {
 }
 
 $mountPoint = $null
+$volumeHostPath = $null
 foreach ($volume in @($container.volumes)) {
     $text = [string]$volume
     $match = [regex]::Match($text, '^(?<host>[A-Za-z]:/[^:]*):(?<guest>/.*)$')
     if ($match.Success) {
         $hostPath = $match.Groups['host'].Value.Replace('/', '\').TrimEnd('\')
-        if ([string]::Equals($hostPath, $Workspace.TrimEnd('\'), [StringComparison]::OrdinalIgnoreCase)) {
+        $hostPrefix = $hostPath + '\'
+        $containsProject = [string]::Equals($hostPath, $projectDir.FullName.TrimEnd('\'), [StringComparison]::OrdinalIgnoreCase) -or
+            $projectDir.FullName.StartsWith($hostPrefix, [StringComparison]::OrdinalIgnoreCase)
+        if ($containsProject -and ($null -eq $volumeHostPath -or $hostPath.Length -gt $volumeHostPath.Length)) {
             $mountPoint = $match.Groups['guest'].Value.TrimEnd('/')
-            break
+            $volumeHostPath = $hostPath
         }
     }
 }
 if (-not $mountPoint) {
-    throw "ERR_CONFIG_MISSING: no volume maps workspace '$Workspace' into container '$containerName'"
+    throw "ERR_CONFIG_MISSING: no configured volume contains project '$($projectDir.FullName)' in container '$containerName'"
 }
 
-$testRoot = Join-Path $Workspace 'autobuild\test_mpu'
-$buildScripts = @(Get-ChildItem -LiteralPath $testRoot -Recurse -File -Filter 'build.sh' |
-    Where-Object { $_.FullName -match '[\\/]build[\\/]mpu[\\/]build\.sh$' })
-if ($buildScripts.Count -ne 1) {
-    $candidates = ($buildScripts.FullName -join '; ')
-    throw "ERR_BUILD_TREE_AMBIGUOUS: expected one MPU build.sh, found $($buildScripts.Count). Candidates: $candidates"
-}
-
-$buildScript = $buildScripts[0]
 $mpuDir = $buildScript.Directory
 $buildDir = $mpuDir.Parent
-$projectDir = $buildDir.Parent
 $projectName = $projectDir.Name
 $buildRoot = $projectDir.Parent
 
-$listEnvFiles = @(Get-ChildItem -LiteralPath (Join-Path $projectDir.FullName 'config') -Recurse -File -Filter 'list.env')
+$projectConfigDir = Join-Path $projectDir.FullName 'config'
+if (-not (Test-Path -LiteralPath $projectConfigDir -PathType Container)) {
+    throw "ERR_PRODUCT_CONFIG_MISSING: project config directory not found: $projectConfigDir"
+}
+$listEnvFiles = @(Get-ChildItem -LiteralPath $projectConfigDir -Recurse -File -Filter 'list.env')
 if ($listEnvFiles.Count -ne 1) {
     $candidates = ($listEnvFiles.FullName -join '; ')
     throw "ERR_PRODUCT_CONFIG_MISSING: expected one list.env, found $($listEnvFiles.Count). Candidates: $candidates"
@@ -72,21 +100,23 @@ if (-not $BuildModel) {
     $BuildModel = $modelMatch.Groups['model'].Value
 }
 
-$workspacePrefix = $Workspace.TrimEnd('\') + '\'
-if (-not $buildRoot.FullName.StartsWith($workspacePrefix, [StringComparison]::OrdinalIgnoreCase)) {
-    throw "ERR_BUILD_TREE_AMBIGUOUS: build root '$($buildRoot.FullName)' is outside workspace '$Workspace'"
+$volumePrefix = $volumeHostPath.TrimEnd('\') + '\'
+if (-not $buildRoot.FullName.StartsWith($volumePrefix, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "ERR_BUILD_WORKDIR: build root '$($buildRoot.FullName)' is outside configured volume '$volumeHostPath'"
 }
-$relativeBuildRoot = $buildRoot.FullName.Substring($workspacePrefix.Length).Replace('\', '/')
-$dockerBuildDir = "$mountPoint/$relativeBuildRoot"
+$relativeBuildRoot = $buildRoot.FullName.Substring($volumePrefix.Length).Replace('\', '/')
+$dockerBuildDir = if ($relativeBuildRoot) { "$mountPoint/$relativeBuildRoot" } else { $mountPoint }
 if (-not $OutputPath) {
-    $OutputPath = Join-Path $testRoot 'autobuild-mpu.bat'
+    $OutputPath = Join-Path $projectDir.FullName 'build\autobuild-mpu.bat'
+} elseif (-not [IO.Path]::IsPathRooted($OutputPath)) {
+    $OutputPath = Join-Path $projectDir.FullName $OutputPath
 }
 $outputDirectory = Split-Path -Parent $OutputPath
 if (-not (Test-Path -LiteralPath $outputDirectory)) {
     New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
 }
 if (Test-Path -LiteralPath $OutputPath) {
-    $backupDir = Join-Path $Workspace '.ai_tmp\bak'
+    $backupDir = Join-Path $projectDir.FullName '.ai_tmp\bak'
     New-Item -ItemType Directory -Force -Path $backupDir | Out-Null
     $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
     Copy-Item -LiteralPath $OutputPath -Destination (Join-Path $backupDir "autobuild-mpu_$stamp.bat")
@@ -159,6 +189,7 @@ $content = $template.Replace('__CONTAINER__', $containerName).
     Replace('__PROJECT__', $projectName).
     Replace('__PRODUCT__', $productName).
     Replace('__MODEL_OVERRIDE__', $(if ($useExplicitBuildModel) { $BuildModel } else { '' }))
+$content = $content -replace "(?<!`r)`n", "`r`n"
 [IO.File]::WriteAllText($OutputPath, $content, [Text.UTF8Encoding]::new($false))
 
 [pscustomobject]@{

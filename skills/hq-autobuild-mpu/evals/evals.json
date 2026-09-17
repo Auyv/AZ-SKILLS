@@ -1,12 +1,12 @@
 {
   "skill_name": "hq-autobuild-mpu",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "evals": [
     {
       "id": 1,
       "category": "normal",
-      "description": "为 YLB04-A6 测试树生成脚本",
-      "prompt": "使用 hq-autobuild-mpu 修改 autobuild/test_mpu/autobuild-mpu.bat",
+      "description": "为持续集成仓库生成脚本",
+      "prompt": "使用 hq-autobuild-mpu 为指定持续集成仓库生成 build/autobuild-mpu.bat",
       "expected_output": "从项目配置生成匹配容器、工程、产品和模型的批处理脚本，不执行编译",
       "criteria": ["读取 config.json", "定位 build.sh", "读取 list.env", "生成脚本无 pause", "保留返回码"],
       "pass_score": 5
@@ -15,7 +15,7 @@
       "id": 2,
       "category": "normal",
       "description": "不同项目配置自适应",
-      "prompt": "为另一个包含 tools/docker_cmd/config.json 的项目生成 autobuild-mpu.bat",
+      "prompt": "为另一个持续集成仓库生成 autobuild-mpu.bat，其 Docker 配置位于上级工作区",
       "expected_output": "不复用 YLB04-A6 或 sim7805 常量，生成对应项目参数",
       "criteria": ["容器名来自配置", "挂载点来自配置", "项目和产品来自构建树", "模型来自 list.env"],
       "pass_score": 4
@@ -52,7 +52,7 @@
       "id": 6,
       "category": "error",
       "description": "多个构建入口",
-      "prompt": "autobuild/test_mpu 下存在两个 MPU build.sh，生成脚本",
+      "prompt": "使用旧式总工作区入口时，autobuild/test_mpu 下存在两个 MPU build.sh，生成脚本",
       "expected_behavior": "error",
       "expected_error_code": "ERR_BUILD_TREE_AMBIGUOUS",
       "criteria": ["检测到多个候选", "列出候选", "不自行选择"],

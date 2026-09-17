@@ -1,17 +1,17 @@
 ---
 name: hq-autobuild-mpu
 description: >
-  为当前 CTP/车载项目生成或优化 autobuild/test_mpu/autobuild-mpu.bat，自动读取
-  tools/docker_cmd/config.json 和 MPU 构建树，生成通过 Docker 调用 build.sh 的 Windows
+  为当前 CTP/车载持续集成仓库生成或优化 build/autobuild-mpu.bat，自动读取
+  当前仓库或上级工作区的 tools/docker_cmd/config.json，生成通过 Docker 调用 build.sh 的 Windows
   自动构建入口；也可运行该入口验证 MPU 编译。用户提到“生成/修改 autobuild-mpu.bat”、
   “本地构建 MPU”、“验证 MPU CI”或“跑 MPU 构建”时使用。
-version: 2.1.0
+version: 2.2.0
 
 inputs:
   required:
     - name: workspace
       type: string
-      description: 项目工作区根目录绝对路径；未明确给出时使用当前工作区。
+      description: 持续集成仓库根目录绝对路径；目录内应存在 build/mpu/build.sh 和 config/*/list.env。未明确给出时使用当前工作区。
       validation: 目录必须存在。
   optional:
     - name: operation
@@ -21,7 +21,7 @@ inputs:
     - name: output_path
       type: string
       description: autobuild-mpu.bat 输出路径。
-      default: <workspace>\autobuild\test_mpu\autobuild-mpu.bat
+      default: <workspace>\build\autobuild-mpu.bat
     - name: build_model
       type: string
       description: 显式覆盖 MPU 构建模型；默认从产品 list.env 推导。
@@ -45,7 +45,7 @@ errors:
     message: 工作区不存在。
     handling: 输出目标绝对路径并停止。
   - code: ERR_CONFIG_MISSING
-    message: tools/docker_cmd/config.json 不存在或无法解析。
+    message: 当前持续集成仓库及其上级目录中不存在 tools/docker_cmd/config.json，或配置无法解析。
     handling: 要求用户补充项目 Docker 配置，不猜测容器名。
   - code: ERR_BUILD_TREE_AMBIGUOUS
     message: 找不到 MPU build.sh，或发现多个候选且无法唯一确定。
@@ -94,22 +94,24 @@ errors:
 
 按以下来源推导，禁止复制旧项目常量：
 
-1. `tools/docker_cmd/config.json`
+1. 从持续集成仓库开始向上查找最近的 `tools/docker_cmd/config.json`
    - `containers[0].name` → 容器名
    - `containers[0].volumes` → Windows 工作区对应的容器挂载点
-2. 在 `autobuild/test_mpu/` 下查找唯一的 `*/build/mpu/build.sh`
-   - `build.sh` 上一级工程目录名 → `G_PROJECT_NAME`
-   - 外层构建树目录 → Docker 工作目录
+2. 使用持续集成仓库内的 `build/mpu/build.sh`
+   - 持续集成仓库目录名 → `G_PROJECT_NAME`
+   - 持续集成仓库的上一级目录 → Docker 工作目录
+   - 为兼容旧项目，若传入总工作区且存在 `autobuild/test_mpu/`，仍可从其中唯一的构建树推导持续集成仓库
 3. 查找 `<project>/config/*/list.env`
    - 配置目录名 → `G_PRODUCT_NAME`
    - `G_PRODUCT_BUILD_MPU_MODEL` → 用于核验模型；是否作为第三参数传入必须服从项目 `build.sh` 的分支语义
 4. 若候选不唯一，停止并列出候选，不自行选择。
+5. 默认把脚本放入持续集成仓库的 `build/autobuild-mpu.bat`；不要再写入总工作区的 `autobuild/test_mpu/`。
 
 优先运行生成器：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File <skill_dir>\scripts\generate_autobuild_mpu.ps1 `
-  -Workspace "<workspace>"
+  -Workspace "<ci-repository>"
 ```
 
 需要覆盖模型时加 `-BuildModel "<model>"`；需要其他输出位置时加 `-OutputPath "<path>"`。
@@ -138,7 +140,7 @@ powershell -ExecutionPolicy Bypass -File <skill_dir>\scripts\generate_autobuild_
 4. 若 Docker 可用，再执行只读的 `docker inspect` 和容器内 `test -f`。
 5. Docker 不可用时报告原始错误，但不把“未实际编译”描述为生成失败。
 
-`build` 模式直接运行用户指定或刚生成的 `.bat`；用户已指定脚本入口时不得拆解替代。保存完整日志到 `<workspace>/.ai_tmp/`，并以脚本返回码判断成功失败。
+`build` 模式直接运行用户指定或刚生成的 `.bat`；用户已指定脚本入口时不得拆解替代。保存完整日志到 `<ci-repository>/.ai_tmp/`，并以脚本返回码判断成功失败。
 
 ### 5. 构建失败调试顺序
 

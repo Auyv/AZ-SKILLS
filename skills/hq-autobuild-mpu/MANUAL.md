@@ -7,13 +7,13 @@
 ```powershell
 $SkillDir = "C:\JPZ_Workspace\笔记仓库-jpz\hq-jpz\AZ-SKILLS\skills\hq-autobuild-mpu"
 powershell -ExecutionPolicy Bypass -File "$SkillDir\scripts\generate_autobuild_mpu.ps1" `
-  -Workspace "C:\path\to\workspace"
+  -Workspace "C:\path\to\ci-repository"
 ```
 
 默认输出：
 
 ```text
-<workspace>\autobuild\test_mpu\autobuild-mpu.bat
+<ci-repository>\build\autobuild-mpu.bat
 ```
 
 可选参数：
@@ -25,9 +25,9 @@ powershell -ExecutionPolicy Bypass -File "$SkillDir\scripts\generate_autobuild_m
 
 生成器会读取：
 
-- `tools/docker_cmd/config.json`：容器名与容器挂载点
-- `autobuild/test_mpu/**/build/mpu/build.sh`：工程名与构建工作目录
-- `<project>/config/*/list.env`：产品名与 MPU 构建模型
+- 当前持续集成仓库或上级目录中的 `tools/docker_cmd/config.json`：容器名与容器挂载点
+- `<ci-repository>/build/mpu/build.sh`：工程名与构建工作目录
+- `<ci-repository>/config/*/list.env`：产品名与 MPU 构建模型
 
 若存在多个容器、多个构建入口或多个产品配置，生成器会停止并列出候选，避免生成到错误项目。
 
@@ -36,14 +36,14 @@ powershell -ExecutionPolicy Bypass -File "$SkillDir\scripts\generate_autobuild_m
 先启动 Docker Desktop，然后运行：
 
 ```powershell
-& "<workspace>\autobuild\test_mpu\autobuild-mpu.bat"
+& "<ci-repository>\build\autobuild-mpu.bat"
 ```
 
 只有目标项目明确要求第三参数时，重新生成带模型覆盖的脚本：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File "$SkillDir\scripts\generate_autobuild_mpu.ps1" `
-  -Workspace "<workspace>" -BuildModel "<build-model>"
+  -Workspace "<ci-repository>" -BuildModel "<build-model>"
 ```
 
 默认不要传模型参数，让项目 `build.sh` 按 `list.env` 选择正确的通用构建分支。
@@ -65,12 +65,12 @@ open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specifie
 执行项目已有入口：
 
 ```powershell
-& "<workspace>\tools\docker_cmd\ctp_docker_run.bat"
+& "<docker-workspace>\tools\docker_cmd\ctp_docker_run.bat"
 ```
 
 ### 无法唯一识别项目或产品
 
-检查 `autobuild/test_mpu/` 是否混入多个构建树。保留目标树，或由 Agent 根据用户指定路径生成。
+直接把 `-Workspace` 指向包含 `build/mpu/build.sh` 的持续集成仓库。旧式总工作区模式下，检查 `autobuild/test_mpu/` 是否混入多个构建树。
 
 ### 构建失败
 

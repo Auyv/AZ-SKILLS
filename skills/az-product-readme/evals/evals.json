@@ -1,0 +1,76 @@
+{
+  "skill_name": "az-product-readme",
+  "version": "1.1.0",
+  "evals": [
+    {
+      "id": 1,
+      "category": "normal",
+      "description": "为有 GUI 和 HTML 报告的 Windows 工具完善 README",
+      "prompt": "为这个桌面扫描工具重写 README，用户只需选择工程文件，报告会自动打开。",
+      "expected_output": "包含真实首屏视觉、30 秒 GUI 上手、输入输出和报告定位路径的 README。",
+      "criteria": ["先确认入口与输出", "快速路径不暴露内部实现", "含异常定位说明"],
+      "pass_score": 3
+    },
+    {
+      "id": 2,
+      "category": "normal",
+      "description": "为纯 CLI 工具编写发布说明",
+      "prompt": "给一个返回 0、1、2、3 的命令行检查工具写 README。",
+      "expected_output": "包含可复制命令、退出码解释、终端效果图和 CI 最小示例。",
+      "criteria": ["命令可复制", "风险退出码与工具错误区分", "CI 示例最小化"],
+      "pass_score": 3
+    },
+    {
+      "id": 3,
+      "category": "normal",
+      "description": "为存在 REVIEW 状态的静态分析工具补充风险解释",
+      "prompt": "报告有 REVIEW，用户误以为已经失败，请补充 README。",
+      "expected_output": "解释 REVIEW 的不确定性来源、人工复核方式和与 FAIL 的差异。",
+      "criteria": ["不把 REVIEW 写成失败", "给出常见原因", "给出可执行建议"],
+      "pass_score": 3
+    },
+    {
+      "id": 4,
+      "category": "normal",
+      "description": "产品改名后的 README 同步",
+      "prompt": "工具从旧名称改为新名称，请准备正式发布文档。",
+      "expected_output": "同步文档、脚本、报告标题和截图/GIF 中的可见产品名。",
+      "criteria": ["检查所有入口名称", "更新图片与 GIF", "不改变兼容输出文件名除非用户要求"],
+      "pass_score": 3
+    },
+    {
+      "id": 5,
+      "category": "normal",
+      "description": "README 中的 ASCII 流程图升级为图片",
+      "prompt": "README 的流程章节是一大段 ASCII 箭头流程，用户反馈不够直观，请优化。",
+      "expected_output": "流程改为 SVG 图片展示，图片后保留逐条文字解释，删除 ASCII 流程。",
+      "criteria": [
+        "图示内容与实际入口和产物一致，不虚构",
+        "文字解释紧随图片之后，覆盖阶段、产物和异常路径",
+        "不保留与图片重复的 ASCII 流程",
+        "SVG 渲染检查无文字截断和元素重叠"
+      ],
+      "pass_score": 4
+    },
+    {
+      "id": 6,
+      "category": "error",
+      "description": "缺少产品上下文",
+      "prompt": "帮我写 README。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_PRODUCT_CONTEXT_MISSING",
+      "criteria": ["先检查项目现有信息", "无法判断时提出最小澄清问题", "不虚构功能"],
+      "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "error",
+      "description": "没有可验证演示资源",
+      "prompt": "给尚未构建成功的工具加真实运行截图。",
+      "expected_behavior": "error",
+      "expected_error_code": "ERR_DEMO_ASSET_MISSING",
+      "criteria": ["不伪造运行截图", "说明缺失条件", "建议生成真实产物后再补图"],
+      "pass_score": 3
+    }
+  ]
+}
