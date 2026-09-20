@@ -1,6 +1,6 @@
 # AGENTS.md — AZ-SKILLS
 
-跨 AI 工具的 Skill 管理仓库。单一真相来源: `skills/` 目录。
+跨 AI 工具的 Skill 管理仓库。普通技能源码位于 `skills/`，工作流技能源码位于 `workflow/`。
 
 ## 仓库结构
 
@@ -9,9 +9,10 @@ AZ-SKILLS/
 ├── manifest.yaml         # 中心注册表：技能列表 + 平台目标路径
 ├── sync_skills.py        # 同步到各 AI 平台
 ├── manifest_update.py    # 从 SKILL.md front matter 自动发现并追加到 manifest
-├── skills/               # 所有技能源码（唯一真相来源）
+├── skills/               # 普通技能源码
 │   ├── issue-tracker/    # 每个技能：目录名 = 技能名，含 SKILL.md
 │   └── ...
+├── workflow/             # 工作流技能源码：<name>-workflow/SKILL.md
 ```
 
 ## 关键命令
@@ -41,13 +42,15 @@ python manifest_update.py --auto
 
 ## 工作流
 
-- **新增技能**: 在 `skills/<name>/` 下创建含 YAML front matter 的 `SKILL.md` → 运行 `manifest_update.py --auto` → 运行 `sync_skills.py`
-- **更新技能**: 直接修改 `skills/<name>/` 下的文件 → 运行 `sync_skills.py`（增量同步，只复制变更的文件）
+- **新增普通技能**: 在 `skills/<name>/` 下创建含 YAML front matter 的 `SKILL.md` → 更新 `manifest.yaml` → 运行 `sync_skills.py`
+- **新增工作流技能**: 在 `workflow/<name>-workflow/` 下创建含 YAML front matter 的 `SKILL.md` → 更新 `manifest.yaml` → 运行 `sync_skills.py`
+- **更新技能**: 直接修改对应源码目录下的文件 → 运行 `sync_skills.py`（增量同步，只复制变更的文件）
 
 ## 结构要点
 
 - AZ-SDD 已迁移到独立仓库 `git@gitee.com:AZ-TOOLS/azSdd.git`，不再由本仓库同步。
 - 子技能目录如 `hq_tester_skills/hq_adb_srtget/` 也能被 `manifest_update.py` 正确发现（递归扫描 SKILL.md）。
+- `sync_skills.py` 同时发现 `skills/` 与 `workflow/`；两个目录不得使用相同的技能名称。
 - 没有 .gitignore。`manifest.yaml` 的 `last_sync` 字段会被 `sync_skills.py` 自动更新。
 
 ## 平台目标
