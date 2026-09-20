@@ -1,0 +1,561 @@
+{"kind":"deck","id":"pr/ufz6p5","name":"Deck"}
+{"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"","type":"master"}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"AZ-SDD · V4.2 DEVELOPMENT PRACTICE","textShapes":4}
+{"kind":"textbox","id":"sh/ts7md4r2","slide":1,"name":"s01_base_eyebrow","text":"AZ-SDD · V4.2 DEVELOPMENT PRACTICE","textPreview":"AZ-SDD · V4.2 DEVELOPMENT PRACTICE","textChars":34,"textLines":1,"bbox":[42,42,430,30]}
+{"kind":"textbox","id":"sh/547294r6","slide":1,"name":"s01_base_title","text":"AZ-SDD 驱动的 AI\n完整开发流程实战","textPreview":"AZ-SDD 驱动的 AI | 完整开发流程实战","textChars":22,"textLines":2,"bbox":[42,208,720,170]}
+{"kind":"shape","id":"sh/j2pkne14","slide":1,"name":"s01_c1_accent_line","bbox":[44,410,382,0.03]}
+{"kind":"textbox","id":"sh/7qp4be9c","slide":1,"name":"s01_c1_subtitle","text":"从变更立项到规范、实现、验收与 complete，用当前真相完成可持续交付","textPreview":"从变更立项到规范、实现、验收与 complete，用当前真相完成可持续交付","textChars":37,"textLines":1,"bbox":[42,438,760,64]}
+{"kind":"textbox","id":"sh/65g3298r","slide":1,"name":"s01_c2_promise","text":"1条完整主线  →  1个小工具实战  →  3类一等制品\n\n\n靳普诏  2026-09-02","textPreview":"1条完整主线  →  1个小工具实战  →  3类一等制品 |  |  | 靳普诏  2026-09-02","textChars":47,"textLines":4,"bbox":[42,552,1040,98.67]}
+{"kind":"notes","id":"nt/y90nupkv","slide":1,"text":"【建议时长】1分钟\n\n【开场句】\n大家好，今天不再重复介绍 AZ-SDD 是什么，而是结合真实项目，回答一个更实际的问题：AZ-SDD 加入 AI 开发流程以后，究竟给我的开发工作带来了什么？\n\n【核心讲述】\n整场分享围绕一条主线展开：AI 不再根据一次对话直接生成代码，而是先理解并确认规范，再按规范实现，用测试证据完成闭环。我会用三个案例说明这种变化，最后再安排同一道重构题，让普通 AI 流程和 AZ-SDD 流程做一次正面对比。请大家在后面的案例里始终关注四个结果：规范是否更明确、实现是否更准确、需求和测试是否可追溯，以及整体效率是否提高。\n\n【动画 / 翻页提示】\nClick 1：先出现副标题，点明 AI 开发流程的变化。\nClick 2：再出现整场路线：三个案例、双 AI 对比、四项收益。\n\n【转场句】\n在介绍 AZ-SDD 优化了什么之前，我们先回到过去的开发方式，看看真正消耗时间的地方在哪里。\n\n[Sources]\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-spec/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-coder/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-tester/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-feedback/SKILL.md\n[/Sources]"}
+{"kind":"slide","id":"sl/hwbqtkby","slide":2,"title":"AZ-SDD PRACTICE","textShapes":16}
+{"kind":"textbox","id":"sh/s72xofmh","slide":2,"name":"s05_base_section","text":"AZ-SDD PRACTICE","textPreview":"AZ-SDD PRACTICE","textChars":15,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/9072xkry","slide":2,"name":"s05_base_title","text":"没有稳定开发契约，AI 的速度也可能变成返工速度","textPreview":"没有稳定开发契约，AI 的速度也可能变成返工速度","textChars":24,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/ozy1ofad","slide":2,"name":"s05_base_page","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/b29kza94","slide":2,"name":"s05_c1_pain0_box","bbox":[90,264,240,190]}
+{"kind":"textbox","id":"sh/a10jqpsj","slide":2,"name":"s05_c1_pain0_num","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[112,282,54,48]}
+{"kind":"textbox","id":"sh/x4r21kru","slide":2,"name":"s05_c1_pain0_label","text":"需求不明确","textPreview":"需求不明确","textChars":5,"textLines":1,"bbox":[172,282,136,34]}
+{"kind":"textbox","id":"sh/w3i1sfa9","slide":2,"name":"s05_c1_pain0_detail","text":"AI 输入散落且容易遗漏","textPreview":"AI 输入散落且容易遗漏","textChars":12,"textLines":1,"bbox":[114,326,192,112]}
+{"kind":"shape","id":"sh/r65knqtk","slide":2,"name":"s05_c2_pain1_box","bbox":[382,264,240,190]}
+{"kind":"textbox","id":"sh/q5wjelsz","slide":2,"name":"s05_c2_pain1_num","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[404,282,54,48]}
+{"kind":"textbox","id":"sh/ove9o7yd","slide":2,"name":"s05_c2_pain1_label","text":"实现不准确","textPreview":"实现不准确","textChars":5,"textLines":1,"bbox":[464,282,136,34]}
+{"kind":"textbox","id":"sh/9wnqhczy","slide":2,"name":"s05_c2_pain1_detail","text":"AI 用临时假设补全空白","textPreview":"AI 用临时假设补全空白","textChars":12,"textLines":1,"bbox":[406,326,192,112]}
+{"kind":"shape","id":"sh/mtwrmxg7","slide":2,"name":"s05_c3_pain2_box","bbox":[674,264,240,190]}
+{"kind":"textbox","id":"sh/nu58f2hs","slide":2,"name":"s05_c3_pain2_num","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[696,282,54,48]}
+{"kind":"textbox","id":"sh/wjy9sry9","slide":2,"name":"s05_c3_pain2_label","text":"需求测试断链","textPreview":"需求测试断链","textChars":6,"textLines":1,"bbox":[756,282,136,34]}
+{"kind":"textbox","id":"sh/xk7qlczu","slide":2,"name":"s05_c3_pain2_detail","text":"不知道测试证明了哪条需求","textPreview":"不知道测试证明了哪条需求","textChars":12,"textLines":1,"bbox":[698,326,192,112]}
+{"kind":"shape","id":"sh/ahwrqhgj","slide":2,"name":"s05_c4_pain3_box","bbox":[966,264,240,190]}
+{"kind":"textbox","id":"sh/bip8jmho","slide":2,"name":"s05_c4_pain3_num","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[988,282,54,48]}
+{"kind":"textbox","id":"sh/cnupgny5","slide":2,"name":"s05_c4_pain3_label","text":"效率被返工抵消","textPreview":"效率被返工抵消","textChars":7,"textLines":1,"bbox":[1048,282,136,34]}
+{"kind":"textbox","id":"sh/do3q9szq","slide":2,"name":"s05_c4_pain3_detail","text":"重复澄清、修正和重新验证","textPreview":"重复澄清、修正和重新验证","textChars":12,"textLines":1,"bbox":[990,326,192,112]}
+{"kind":"textbox","id":"sh/t8byxkn2","slide":2,"name":"s05_c5_question","text":"接下来用三个项目验证：AZ-SDD 是否真的改善了 AI 开发结果？","textPreview":"接下来用三个项目验证：AZ-SDD 是否真的改善了 AI 开发结果？","textChars":34,"textLines":1,"bbox":[230,540,820,54]}
+{"kind":"notes","id":"nt/hwbqtkby","slide":2,"text":"【建议时长】2分钟\n\n【开场句】\n我以前使用 AI 开发时，最明显的问题并不是 AI 不会写代码，而是它没有一份稳定的开发契约。\n\n【核心讲述】\n第一个痛点是需求不明确。需求散落在聊天、代码和个人理解里，AI 很容易遗漏。第二个痛点是实现不准确。当信息不足时，AI 会主动补全空白，但这些假设未必符合真实业务。第三个痛点是需求和测试断链。测试可能通过了，却说不清它证明了哪条需求；需求变化后，也不知道该重测什么。第四个痛点是效率被返工抵消。AI 第一次生成代码很快，但后续澄清、修正、补文档和重新验证占用了更多时间。所以问题不是生成速度，而是能否降低结果的不确定性。\n\n【动画 / 翻页提示】\nClick 1：出现需求不明确。\nClick 2：出现实现不准确。\nClick 3：出现需求测试断链。\nClick 4：出现效率被返工抵消。\nClick 5：最后强调：先看 AZ-SDD 如何回应这些痛点，再用项目验证。\n\n【转场句】\n针对这四类痛点，我把 AZ-SDD 给 AI 开发流程带来的变化归纳成四项收益。\n\n[Sources]\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-spec/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-coder/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-tester/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-feedback/SKILL.md\n[/Sources]"}
+{"kind":"slide","id":"sl/ofy9wn61","slide":3,"title":"AZ-SDD PRACTICE","textShapes":12}
+{"kind":"textbox","id":"sh/ja54na9g","slide":3,"name":"s02_base_section","text":"AZ-SDD PRACTICE","textPreview":"AZ-SDD PRACTICE","textChars":15,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/cza94vmx","slide":3,"name":"s02_base_title","text":"AZ-SDD 给 AI 开发流程带来了什么？","textPreview":"AZ-SDD 给 AI 开发流程带来了什么？","textChars":22,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/d0jax03i","slide":3,"name":"s02_base_page","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/298ryl4v","slide":3,"name":"s02_c1_center_circle","bbox":[560,302,160,160]}
+{"kind":"textbox","id":"sh/3ah8rqlg","slide":3,"name":"s02_c1_center_text","text":"AZ-SDD 驱动的\nAI 开发流程","textPreview":"AZ-SDD 驱动的 | AI 开发流程","textChars":18,"textLines":2,"bbox":[568,337,144,88]}
+{"kind":"shape","id":"sh/obq90bml","slide":3,"name":"s02_c2_out1_box","bbox":[250,232,230,116]}
+{"kind":"textbox","id":"sh/pcjqtg36","slide":3,"name":"s02_c2_out1_label","text":"功能规范明确化","textPreview":"功能规范明确化","textChars":7,"textLines":1,"bbox":[274,250,182,34]}
+{"kind":"textbox","id":"sh/m5cra54z","slide":3,"name":"s02_c2_out1_detail","text":"先明确范围、边界和验收","textPreview":"先明确范围、边界和验收","textChars":11,"textLines":1,"bbox":[274,294,182,38]}
+{"kind":"shape","id":"sh/n6ls3alk","slide":3,"name":"s02_c3_out2_box","bbox":[820,232,230,116]}
+{"kind":"textbox","id":"sh/n2l4fq98","slide":3,"name":"s02_c3_out2_label","text":"功能实现更准确","textPreview":"功能实现更准确","textChars":7,"textLines":1,"bbox":[844,250,182,34]}
+{"kind":"textbox","id":"sh/m1c3mlsn","slide":3,"name":"s02_c3_out2_detail","text":"AI 只实现批准的功能契约","textPreview":"AI 只实现批准的功能契约","textChars":13,"textLines":1,"bbox":[844,294,182,38]}
+{"kind":"shape","id":"sh/943mhgre","slide":3,"name":"s02_c4_out3_box","bbox":[250,470,230,116]}
+{"kind":"textbox","id":"sh/83ulovat","slide":3,"name":"s02_c4_out3_label","text":"需求 ⇄ 测试可追溯","textPreview":"需求 ⇄ 测试可追溯","textChars":10,"textLines":1,"bbox":[274,488,182,34]}
+{"kind":"textbox","id":"sh/v6l4jq94","slide":3,"name":"s02_c4_out3_detail","text":"验收条件与测试证据双向映射","textPreview":"验收条件与测试证据双向映射","textChars":13,"textLines":1,"bbox":[274,532,182,38]}
+{"kind":"shape","id":"sh/a5c3ql8z","slide":3,"name":"s02_c5_out4_box","bbox":[820,470,230,116]}
+{"kind":"textbox","id":"sh/x8nml0ra","slide":3,"name":"s02_c5_out4_label","text":"工作效率提高","textPreview":"工作效率提高","textChars":6,"textLines":1,"bbox":[844,488,182,34]}
+{"kind":"textbox","id":"sh/w7ulsvqp","slide":3,"name":"s02_c5_out4_detail","text":"减少澄清、返工和重复验证","textPreview":"减少澄清、返工和重复验证","textChars":12,"textLines":1,"bbox":[844,532,182,38]}
+{"kind":"notes","id":"nt/ofy9wn61","slide":3,"text":"【建议时长】2分钟\n\n【开场句】\nAZ-SDD 的价值不是多生成几份文档，而是让 AI 的整个开发过程有明确输入、有边界、有证据。\n\n【核心讲述】\n第一，功能规范明确化。在编码之前明确范围、边界和验收条件。第二，功能实现更准确。AI 不再自由发挥，而是只实现已经批准的功能契约。第三，需求与测试可以双向追溯。每条验收条件都能找到对应证据，测试发现的问题也能反向更新需求和状态。第四，工作效率提高。这里的效率不只是第一次写代码更快，而是减少澄清、返工、重复分析和重复验证。后面三个案例并不是为了展示项目本身有多复杂，而是要逐项验证这四个结果。\n\n【动画 / 翻页提示】\nClick 1：先出现中心：AZ-SDD 驱动的 AI 开发流程。\nClick 2：依次出现规范明确化。\nClick 3：出现实现更准确。\nClick 4：出现需求与测试可追溯。\nClick 5：出现工作效率提高。\n\n【转场句】\n这四项收益来自一个开发范式上的变化。\n\n[Sources]\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-spec/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-coder/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-tester/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-feedback/SKILL.md\n[/Sources]"}
+{"kind":"slide","id":"sl/jyx0ra1s","slide":4,"title":"AZ-SDD PRACTICE","textShapes":16}
+{"kind":"textbox","id":"sh/ilwf69kv","slide":4,"name":"s03_base_section","text":"AZ-SDD PRACTICE","textPreview":"AZ-SDD PRACTICE","textChars":15,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/1cj2d8b6","slide":4,"name":"s03_base_title","text":"AI 开发范式的变化：从直接生成代码，到基于规范交付","textPreview":"AI 开发范式的变化：从直接生成代码，到基于规范交付","textChars":26,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/0ba143al","slide":4,"name":"s03_base_page","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"textbox","id":"sh/rm1k7yt4","slide":4,"name":"s03_c1_traditional_label","text":"未使用 AZ-SDD 的 AI","textPreview":"未使用 AZ-SDD 的 AI","textChars":15,"textLines":1,"bbox":[84,184,300,42]}
+{"kind":"shape","id":"sh/ql8jytsj","slide":4,"name":"s03_c1_idea_box","bbox":[84,256,208,126]}
+{"kind":"shape","id":"sh/doj29oba","slide":4,"name":"s03_c1_idea_dot_circle","bbox":[103,277,18,18]}
+{"kind":"textbox","id":"sh/sna103ap","slide":4,"name":"s03_c1_idea_title","text":"理解需求","textPreview":"理解需求","textChars":4,"textLines":1,"bbox":[136,270,140,36]}
+{"kind":"textbox","id":"sh/3ihk3et8","slide":4,"name":"s03_c1_idea_detail","text":"依赖当前对话和代码上下文","textPreview":"依赖当前对话和代码上下文","textChars":12,"textLines":1,"bbox":[106,316,164,52]}
+{"kind":"shape","id":"sh/ih8ju9sn","slide":4,"name":"s03_c1_a1_arrow","bbox":[312,298,88,34]}
+{"kind":"shape","id":"sh/kbm987y5","slide":4,"name":"s03_c1_code_box","bbox":[420,256,208,126]}
+{"kind":"shape","id":"sh/5cva1cfq","slide":4,"name":"s03_c1_code_dot_circle","bbox":[439,277,18,18]}
+{"kind":"textbox","id":"sh/i94r6xgz","slide":4,"name":"s03_c1_code_title","text":"直接生成代码","textPreview":"直接生成代码","textChars":6,"textLines":1,"bbox":[472,270,140,36]}
+{"kind":"textbox","id":"sh/jadsz2xk","slide":4,"name":"s03_c1_code_detail","text":"缺失信息由 AI 自行假设","textPreview":"缺失信息由 AI 自行假设","textChars":13,"textLines":1,"bbox":[442,316,164,52]}
+{"kind":"shape","id":"sh/w72947yt","slide":4,"name":"s03_c2_a2_arrow","bbox":[648,298,88,34]}
+{"kind":"shape","id":"sh/x8vaxsfe","slide":4,"name":"s03_c2_drift_box","bbox":[756,256,208,126]}
+{"kind":"shape","id":"sh/a5kr2xg3","slide":4,"name":"s03_c2_drift_dot_circle","bbox":[775,277,18,18]}
+{"kind":"textbox","id":"sh/v6tsv2xo","slide":4,"name":"s03_c2_drift_title","text":"结果可能偏移","textPreview":"结果可能偏移","textChars":6,"textLines":1,"bbox":[808,270,140,36]}
+{"kind":"textbox","id":"sh/g36tgryd","slide":4,"name":"s03_c2_drift_detail","text":"完成后再解释、补文档和返工","textPreview":"完成后再解释、补文档和返工","textChars":13,"textLines":1,"bbox":[778,316,164,52]}
+{"kind":"textbox","id":"sh/h4fa9wfy","slide":4,"name":"s03_c3_sdd_label","text":"使用 AZ-SDD 的 AI","textPreview":"使用 AZ-SDD 的 AI","textChars":14,"textLines":1,"bbox":[84,462,300,42]}
+{"kind":"shape","id":"sh/p0batw72","slide":4,"name":"s03_c3_spec_box","bbox":[360,444,220,126]}
+{"kind":"shape","id":"sh/oz29krqh","slide":4,"name":"s03_c3_spec_dot_circle","bbox":[379,465,18,18]}
+{"kind":"textbox","id":"sh/3ytsrmpw","slide":4,"name":"s03_c3_spec_title","text":"先确认功能规范","textPreview":"先确认功能规范","textChars":7,"textLines":1,"bbox":[412,458,152,36]}
+{"kind":"textbox","id":"sh/2xkrih8b","slide":4,"name":"s03_c3_spec_detail","text":"范围 + 边界 + 验收条件","textPreview":"范围 + 边界 + 验收条件","textChars":14,"textLines":1,"bbox":[382,504,176,52]}
+{"kind":"shape","id":"sh/1wbapc7q","slide":4,"name":"s03_c4_a3_arrow","bbox":[600,486,88,34]}
+{"kind":"shape","id":"sh/gv29g7q5","slide":4,"name":"s03_c4_impl_box","bbox":[708,444,220,126]}
+{"kind":"shape","id":"sh/fu9sn2p0","slide":4,"name":"s03_c4_impl_dot_circle","bbox":[727,465,18,18]}
+{"kind":"textbox","id":"sh/et0reh8f","slide":4,"name":"s03_c4_impl_title","text":"再实现并验证","textPreview":"再实现并验证","textChars":6,"textLines":1,"bbox":[760,458,152,36]}
+{"kind":"textbox","id":"sh/tsrqlc7u","slide":4,"name":"s03_c4_impl_detail","text":"代码与测试围绕同一契约","textPreview":"代码与测试围绕同一契约","textChars":11,"textLines":1,"bbox":[730,504,176,52]}
+{"kind":"textbox","id":"sh/sri9s7q9","slide":4,"name":"s03_c5_claim","text":"规范不是 AI 输出后的说明，而是 AI 开发前的输入","textPreview":"规范不是 AI 输出后的说明，而是 AI 开发前的输入","textChars":27,"textLines":1,"bbox":[352,610,580,42]}
+{"kind":"notes","id":"nt/jyx0ra1s","slide":4,"text":"【建议时长】2分钟\n\n【开场句】\n未使用 AZ-SDD 时，AI 的典型路径是理解需求以后直接生成代码。\n\n【核心讲述】\n这条路径的问题是：AI 依赖当前对话和代码上下文。当信息缺失时，它只能自行假设。代码可能能编译、能运行，但方向可能已经偏移，最后再靠解释、补文档和返工纠正。使用 AZ-SDD 后，顺序发生变化：先确认功能规范，把范围、边界和验收条件写清楚；再让 AI 实现并验证。这样代码和测试围绕的是同一份契约。这里最关键的一句话是：规范不是 AI 输出代码以后的说明，而是 AI 开发之前的输入。\n\n【动画 / 翻页提示】\nClick 1：展示未使用 AZ-SDD 的理解需求阶段。\nClick 2：展示直接生成代码和自行假设。\nClick 3：展示结果偏移与返工。\nClick 4：展示使用 AZ-SDD 后先确认规范。\nClick 5：展示实现和验证围绕同一契约，并落到结论句。\n\n【转场句】\n把这个范式展开，就是 AZ-SDD 的完整闭环。\n\n[Sources]\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-spec/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-coder/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-tester/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-feedback/SKILL.md\n[/Sources]"}
+{"kind":"slide","id":"sl/i107q5of","slide":5,"title":"AZ-SDD PRACTICE","textShapes":15}
+{"kind":"textbox","id":"sh/2h0ni107","slide":5,"name":"s04_base_section","text":"AZ-SDD PRACTICE","textPreview":"AZ-SDD PRACTICE","textChars":15,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/dgbulwnm","slide":5,"name":"s04_base_title","text":"AZ-SDD v4.2：一条 change 从立项到 complete 的完整闭环","textPreview":"AZ-SDD v4.2：一条 change 从立项到 complete 的完整闭环","textChars":41,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/cf2tcr61","slide":5,"name":"s04_base_page","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/z2tcnm5s","slide":5,"name":"s04_c1_flow0_arrow","bbox":[246,338,54,28]}
+{"kind":"shape","id":"sh/yhkbe1o7","slide":5,"name":"s04_c1_node0_box","bbox":[70,276,176,150]}
+{"kind":"textbox","id":"sh/l4bupwny","slide":5,"name":"s04_c1_node0_title","text":"INIT","textPreview":"INIT","textChars":4,"textLines":1,"bbox":[88,294,140,34]}
+{"kind":"textbox","id":"sh/032tgr6d","slide":5,"name":"s04_c1_node0_detail","text":"项目档案\n选择 history.mode","textPreview":"项目档案 | 选择 history.mode","textChars":20,"textLines":2,"bbox":[88,344,140,60]}
+{"kind":"shape","id":"sh/n6dcr65o","slide":5,"name":"s04_c2_flow1_arrow","bbox":[468,338,54,28]}
+{"kind":"shape","id":"sh/m5kbi1oj","slide":5,"name":"s04_c2_node1_box","bbox":[292,276,176,150]}
+{"kind":"textbox","id":"sh/w32dkbuh","slide":5,"name":"s04_c2_node1_title","text":"CHANGE","textPreview":"CHANGE","textChars":6,"textLines":1,"bbox":[310,294,140,34]}
+{"kind":"textbox","id":"sh/x4vedgvm","slide":5,"name":"s04_c2_node1_detail","text":"spec delta\narch delta（按需）","textPreview":"spec delta | arch delta（按需）","textChars":25,"textLines":2,"bbox":[310,344,140,60]}
+{"kind":"shape","id":"sh/ahkvi1cb","slide":5,"name":"s04_c3_flow2_arrow","bbox":[690,338,54,28]}
+{"kind":"shape","id":"sh/v2twb6dw","slide":5,"name":"s04_c3_node2_box","bbox":[514,276,176,150]}
+{"kind":"textbox","id":"sh/k7mxovud","slide":5,"name":"s04_c3_node2_title","text":"CODER","textPreview":"CODER","textChars":5,"textLines":1,"bbox":[532,294,140,34]}
+{"kind":"textbox","id":"sh/58vehgvy","slide":5,"name":"s04_c3_node2_detail","text":"按批准 change\n实现代码","textPreview":"按批准 change | 实现代码","textChars":15,"textLines":2,"bbox":[532,344,140,60]}
+{"kind":"shape","id":"sh/i54fmlc7","slide":5,"name":"s04_c4_flow3_arrow","bbox":[912,338,54,28]}
+{"kind":"shape","id":"sh/j6dwfqds","slide":5,"name":"s04_c4_node3_box","bbox":[736,276,176,150]}
+{"kind":"textbox","id":"sh/sb6xsvu9","slide":5,"name":"s04_c4_node3_title","text":"TESTER","textPreview":"TESTER","textChars":6,"textLines":1,"bbox":[754,294,140,34]}
+{"kind":"textbox","id":"sh/tcfel0vu","slide":5,"name":"s04_c4_node3_detail","text":"自动化 + 人工\n回写 evidence","textPreview":"自动化 + 人工 | 回写 evidence","textChars":20,"textLines":2,"bbox":[754,344,140,60]}
+{"kind":"shape","id":"sh/hgrmpwj2","slide":5,"name":"s04_c5_node4_box","bbox":[958,276,176,150]}
+{"kind":"textbox","id":"sh/gfi5grih","slide":5,"name":"s04_c5_node4_title","text":"COMPLETE","textPreview":"COMPLETE","textChars":8,"textLines":1,"bbox":[976,294,140,34]}
+{"kind":"textbox","id":"sh/fe94nm1w","slide":5,"name":"s04_c5_node4_detail","text":"合并 baseline\n更新 TRACK","textPreview":"合并 baseline | 更新 TRACK","textChars":20,"textLines":2,"bbox":[976,344,140,60]}
+{"kind":"shape","id":"sh/m9s7qp0j","slide":5,"name":"s04_c5_feedback_return_line","bbox":[150,462,960,0.03]}
+{"kind":"shape","id":"sh/9c3qlkza","slide":5,"name":"s04_c5_feedback_up_line","bbox":[150,438,0.03,24]}
+{"kind":"textbox","id":"sh/4ji5kbid","slide":5,"name":"s04_c5_feedback_label","text":"Feedback 保留独立原件；引用到 change，必要时驱动下一轮","textPreview":"Feedback 保留独立原件；引用到 change，必要时驱动下一轮","textChars":35,"textLines":1,"bbox":[390,478,510,34]}
+{"kind":"textbox","id":"sh/3i94r61s","slide":5,"name":"s04_c6_track","text":"BASELINE：spec 是当前功能真相｜arch 是当前技术真相｜Git 默认承担历史","textPreview":"BASELINE：spec 是当前功能真相｜arch 是当前技术真相｜Git 默认承担历史","textChars":45,"textLines":1,"bbox":[262,560,760,52]}
+{"kind":"notes","id":"nt/i107q5of","slide":5,"text":"【建议时长】2.5分钟\n\n【开场句】\nAZ-SDD 给 AI 建立的不是一条单向流水线，而是规范、实现、验证和反馈之间的闭环。\n\n【核心讲述】\nSpec 回答做什么、怎样验收，给 AI 一份明确的功能契约。复杂功能再通过 Arch 明确技术边界，避免 AI 在局部实现中破坏整体架构。Coder 只实现已经批准的范围。Tester 根据验收条件组织验证并留下证据。Feedback 把测试结果、缺陷或新变化重新写回需求与架构，驱动下一轮开发。最后由 STATUS 和 TRACK 保存依据、证据和下一步。这样即使更换会话或换一个 AI 接手，也不需要从头理解。双向可追溯就体现在这里：需求指导测试，测试结果也能反向更新需求和项目状态。\n\n【动画 / 翻页提示】\nClick 1：出现 Spec。\nClick 2：出现 Arch。\nClick 3：出现 Coder。\nClick 4：出现 Tester。\nClick 5：出现 Feedback 和回写路径。\nClick 6：最后出现 STATUS / TRACK 的持续交接价值。\n\n【转场句】\n基础流程回顾到这里。下面不继续讲概念，而是用三个真实项目验证它。\n\n[Sources]\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-spec/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-coder/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-tester/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-feedback/SKILL.md\n[/Sources]\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/x8f69ofe","slide":6,"title":"AZ-SDD PRACTICE","textShapes":12}
+{"kind":"textbox","id":"sh/twfux0ne","slide":6,"name":"s02_base_section","text":"AZ-SDD PRACTICE","textPreview":"AZ-SDD PRACTICE","textChars":15,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/yhg7epsj","slide":6,"name":"s02_base_title","text":"V4.2 用“当前真相 + 变更事务”区分功能、技术与反馈","textPreview":"V4.2 用“当前真相 + 变更事务”区分功能、技术与反馈","textChars":29,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/zi98nu94","slide":6,"name":"s02_base_page","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/87ipkzal","slide":6,"name":"s02_c1_center_circle","bbox":[560,302,160,160]}
+{"kind":"textbox","id":"sh/98rqt4r6","slide":6,"name":"s02_c1_center_text","text":"CHANGE\n一次变更事务","textPreview":"CHANGE | 一次变更事务","textChars":13,"textLines":2,"bbox":[568,337,144,88]}
+{"kind":"shape","id":"sh/ml07i9sv","slide":6,"name":"s02_c2_out1_box","bbox":[250,232,230,116]}
+{"kind":"textbox","id":"sh/7m98ru9g","slide":6,"name":"s02_c2_out1_label","text":"baseline/spec","textPreview":"baseline/spec","textChars":13,"textLines":1,"bbox":[274,250,182,34]}
+{"kind":"textbox","id":"sh/oryp8fah","slide":6,"name":"s02_c2_out1_detail","text":"当前生效的功能规范","textPreview":"当前生效的功能规范","textChars":9,"textLines":1,"bbox":[274,294,182,38]}
+{"kind":"shape","id":"sh/pc76hkr2","slide":6,"name":"s02_c3_out2_box","bbox":[820,232,230,116]}
+{"kind":"textbox","id":"sh/h4bupgn6","slide":6,"name":"s02_c3_out2_label","text":"baseline/arch","textPreview":"baseline/arch","textChars":13,"textLines":1,"bbox":[844,250,182,34]}
+{"kind":"textbox","id":"sh/w32twb6l","slide":6,"name":"s02_c3_out2_detail","text":"当前生效的技术规范","textPreview":"当前生效的技术规范","textChars":9,"textLines":1,"bbox":[844,294,182,38]}
+{"kind":"shape","id":"sh/v2tcn650","slide":6,"name":"s02_c4_out3_box","bbox":[250,470,230,116]}
+{"kind":"textbox","id":"sh/u1kbu1ov","slide":6,"name":"s02_c4_out3_label","text":"feedback","textPreview":"feedback","textChars":8,"textLines":1,"bbox":[274,488,182,34]}
+{"kind":"textbox","id":"sh/5svutgni","slide":6,"name":"s02_c4_out3_detail","text":"用户反馈原件，独立保存","textPreview":"用户反馈原件，独立保存","textChars":11,"textLines":1,"bbox":[274,532,182,38]}
+{"kind":"shape","id":"sh/47mt0b6x","slide":6,"name":"s02_c5_out4_box","bbox":[820,470,230,116]}
+{"kind":"textbox","id":"sh/j6dcr65c","slide":6,"name":"s02_c5_out4_label","text":"TRACK / Git","textPreview":"TRACK / Git","textChars":11,"textLines":1,"bbox":[844,488,182,34]}
+{"kind":"textbox","id":"sh/i54bylor","slide":6,"name":"s02_c5_out4_detail","text":"状态摘要与历史追溯","textPreview":"状态摘要与历史追溯","textChars":9,"textLines":1,"bbox":[844,532,182,38]}
+{"kind":"notes","id":"nt/x8f69ofe","slide":6,"text":"【建议时长】2分钟\n\n【开场句】\nAZ-SDD 的价值不是多生成几份文档，而是让 AI 的整个开发过程有明确输入、有边界、有证据。\n\n【核心讲述】\n第一，功能规范明确化。在编码之前明确范围、边界和验收条件。第二，功能实现更准确。AI 不再自由发挥，而是只实现已经批准的功能契约。第三，需求与测试可以双向追溯。每条验收条件都能找到对应证据，测试发现的问题也能反向更新需求和状态。第四，工作效率提高。这里的效率不只是第一次写代码更快，而是减少澄清、返工、重复分析和重复验证。后面三个案例并不是为了展示项目本身有多复杂，而是要逐项验证这四个结果。\n\n【动画 / 翻页提示】\nClick 1：先出现中心：AZ-SDD 驱动的 AI 开发流程。\nClick 2：依次出现规范明确化。\nClick 3：出现实现更准确。\nClick 4：出现需求与测试可追溯。\nClick 5：出现工作效率提高。\n\n【转场句】\n这四项收益来自一个开发范式上的变化。\n\n[Sources]\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-spec/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-coder/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-tester/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-feedback/SKILL.md\n[/Sources]\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/gnmp4jqx","slide":7,"title":"AZ-SDD PRACTICE","textShapes":13}
+{"kind":"textbox","id":"sh/id4ju1oz","slide":7,"name":"s06_base_section","text":"AZ-SDD PRACTICE","textPreview":"AZ-SDD PRACTICE","textChars":15,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/cb2tkvap","slide":7,"name":"s06_base_title","text":"三个案例，分别验证 AI 开发流程的四项收益","textPreview":"三个案例，分别验证 AI 开发流程的四项收益","textChars":22,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/dcbud0ra","slide":7,"name":"s06_base_page","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/ydkbm5sv","slide":7,"name":"s06_c1_case0_box","bbox":[88,226,330,300]}
+{"kind":"shape","id":"sh/zedcfa9g","slide":7,"name":"s06_c1_case0_icon_circle","bbox":[115,257,54,54]}
+{"kind":"textbox","id":"sh/kzmdova1","slide":7,"name":"s06_c1_case0_title","text":"azKits","textPreview":"azKits","textChars":6,"textLines":1,"bbox":[188,252,188,44]}
+{"kind":"textbox","id":"sh/l0vuh0rm","slide":7,"name":"s06_c1_case0_type","text":"新工具开发","textPreview":"新工具开发","textChars":5,"textLines":1,"bbox":[112,326,282,34]}
+{"kind":"textbox","id":"sh/eh0ba1sr","slide":7,"name":"s06_c1_case0_detail","text":"验证：规范明确 → 实现准确 → 测试闭环","textPreview":"验证：规范明确 → 实现准确 → 测试闭环","textChars":21,"textLines":1,"bbox":[112,388,282,96]}
+{"kind":"shape","id":"sh/fi9c369c","slide":7,"name":"s06_c2_case1_box","bbox":[474,226,330,300]}
+{"kind":"shape","id":"sh/baxkjqlk","slide":7,"name":"s06_c2_case1_icon_circle","bbox":[501,257,54,54]}
+{"kind":"textbox","id":"sh/a9ojq5kz","slide":7,"name":"s06_c2_case1_title","text":"HSED","textPreview":"HSED","textChars":4,"textLines":1,"bbox":[574,252,188,44]}
+{"kind":"textbox","id":"sh/xcz2l03q","slide":7,"name":"s06_c2_case1_type","text":"高风险嵌入式功能","textPreview":"高风险嵌入式功能","textChars":8,"textLines":1,"bbox":[498,326,282,34]}
+{"kind":"textbox","id":"sh/cbq1sv25","slide":7,"name":"s06_c2_case1_detail","text":"验证：复杂边界明确，测试门禁可追溯","textPreview":"验证：复杂边界明确，测试门禁可追溯","textChars":17,"textLines":1,"bbox":[498,388,282,96]}
+{"kind":"shape","id":"sh/n6x0fqlo","slide":7,"name":"s06_c3_case2_box","bbox":[860,226,330,300]}
+{"kind":"shape","id":"sh/25ojml43","slide":7,"name":"s06_c3_case2_icon_circle","bbox":[887,257,54,54]}
+{"kind":"textbox","id":"sh/p8fih03e","slide":7,"name":"s06_c3_case2_title","text":"mcu_upgrade_app","textPreview":"mcu_upgrade_app","textChars":15,"textLines":1,"bbox":[960,252,188,44]}
+{"kind":"textbox","id":"sh/o761ov2t","slide":7,"name":"s06_c3_case2_type","text":"老项目新增平台适配","textPreview":"老项目新增平台适配","textChars":9,"textLines":1,"bbox":[884,326,282,34]}
+{"kind":"textbox","id":"sh/f2d0b6lc","slide":7,"name":"s06_c3_case2_detail","text":"验证：复用旧契约，提高维护效率","textPreview":"验证：复用旧契约，提高维护效率","textChars":15,"textLines":1,"bbox":[884,388,282,96]}
+{"kind":"textbox","id":"sh/eh4jil4r","slide":7,"name":"s06_c4_weights","text":"不是展示项目成果，而是验证 AZ-SDD 如何改善 AI 开发流程","textPreview":"不是展示项目成果，而是验证 AZ-SDD 如何改善 AI 开发流程","textChars":33,"textLines":1,"bbox":[276,574,728,40]}
+{"kind":"notes","id":"nt/gnmp4jqx","slide":7,"text":"【建议时长】1分钟\n\n【开场句】\n我选择了三个不同类型的项目，因为它们分别代表新工具开发、高风险嵌入式功能和老项目维护。\n\n【核心讲述】\nazKits 是主案例，用来完整展示从规范明确、准确实现到测试闭环。HSED 的错误代价更高，用它说明复杂技术边界和测试门禁为什么必须进入规范。mcu_upgrade_app 则通过新增 N725A 模组适配，说明 AZ-SDD 如何复用老项目契约，减少维护时的分析和改动范围。三个案例观察的是同样四个结果，而不是项目完成了多少代码。\n\n【动画 / 翻页提示】\nClick 1：出现 azKits。\nClick 2：出现 HSED。\nClick 3：出现 mcu_upgrade_app / N725A。\nClick 4：强调案例用于验证 AI 开发流程的改进。\n\n【转场句】\n先从最容易代入的 azKits 开始。\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/STATUS.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/TRACK.md\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/STATUS.md\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/TRACK.md\n[/Sources]"}
+{"kind":"slide","id":"sl/fu1gfa1s","slide":8,"title":"CASE 01 · PROJECT FIRST","textShapes":14}
+{"kind":"textbox","id":"sh/5sne5wne","slide":8,"name":"s07_base_section","text":"CASE 01 · PROJECT FIRST","textPreview":"CASE 01 · PROJECT FIRST","textChars":23,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/18byd4zy","slide":8,"name":"s07_base_title","text":"azKits：把分散测试脚本变成一个离线工具入口","textPreview":"azKits：把分散测试脚本变成一个离线工具入口","textChars":24,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/g72x4zyd","slide":8,"name":"s07_base_page","text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"textbox","id":"sh/ri9g7uhw","slide":8,"name":"s07_c1_user","text":"开发 / 测试人员","textPreview":"开发 / 测试人员","textChars":9,"textLines":1,"bbox":[58,188,210,40]}
+{"kind":"shape","id":"sh/6h0fypgb","slide":8,"name":"s07_c1_user_circle","bbox":[101,263,126,126]}
+{"kind":"textbox","id":"sh/tkby9kzm","slide":8,"name":"s07_c1_user_need","text":"频繁运行\n多组测试任务","textPreview":"频繁运行 | 多组测试任务","textChars":11,"textLines":2,"bbox":[105,286,118,80]}
+{"kind":"shape","id":"sh/sjix0zy1","slide":8,"name":"s07_c2_to_entry","bbox":[264,310,82,34]}
+{"kind":"shape","id":"sh/je9g3ahk","slide":8,"name":"s07_c2_entry_box","bbox":[374,220,250,220]}
+{"kind":"textbox","id":"sh/id0fu50z","slide":8,"name":"s07_c2_entry_title","text":"统一 YAML 入口","textPreview":"统一 YAML 入口","textChars":10,"textLines":1,"bbox":[410,248,178,40]}
+{"kind":"textbox","id":"sh/o7ydoret","slide":8,"name":"s07_c2_entry_types","text":"BAT · PowerShell\nPython · Shell · EXE","textPreview":"BAT · PowerShell | Python · Shell · EXE","textChars":37,"textLines":2,"bbox":[410,316,178,72]}
+{"kind":"shape","id":"sh/98rehwve","slide":8,"name":"s07_c3_to_tui","bbox":[648,310,82,34]}
+{"kind":"shape","id":"sh/m5gvmhwn","slide":8,"name":"s07_c3_tui_box","bbox":[758,196,420,268]}
+{"kind":"textbox","id":"sh/n6pwfmd8","slide":8,"name":"s07_c3_tui_title","text":"离线终端工具箱","textPreview":"离线终端工具箱","textChars":7,"textLines":1,"bbox":[806,226,324,46]}
+{"kind":"shape","id":"sh/0jydkreh","slide":8,"name":"s07_c3_cap0_box","bbox":[794,310,138,58]}
+{"kind":"textbox","id":"sh/1k7edwv2","slide":8,"name":"s07_c3_cap0_text","text":"脚本发现","textPreview":"脚本发现","textChars":4,"textLines":1,"bbox":[806,322,114,32]}
+{"kind":"shape","id":"sh/ehgvihwr","slide":8,"name":"s07_c3_cap1_box","bbox":[956,310,138,58]}
+{"kind":"textbox","id":"sh/zipwbmdc","slide":8,"name":"s07_c3_cap1_text","text":"任务执行","textPreview":"任务执行","textChars":4,"textLines":1,"bbox":[968,322,114,32]}
+{"kind":"shape","id":"sh/kfixwbe1","slide":8,"name":"s07_c3_cap2_box","bbox":[875,388,138,58]}
+{"kind":"textbox","id":"sh/lgbepgvm","slide":8,"name":"s07_c3_cap2_text","text":"状态 / 日志","textPreview":"状态 / 日志","textChars":7,"textLines":1,"bbox":[887,400,114,32]}
+{"kind":"shape","id":"sh/tw7e9gnq","slide":8,"name":"s07_c4_question_box","bbox":[214,542,852,76]}
+{"kind":"textbox","id":"sh/svydgb65","slide":8,"name":"s07_c4_question_text","text":"Thinking：你会怎样定义工具箱交互逻辑？如何让AI开始干活","textPreview":"Thinking：你会怎样定义工具箱交互逻辑？如何让AI开始干活","textChars":32,"textLines":1,"bbox":[246,558,788,44]}
+{"kind":"textbox","id":"sh/7u5w765k","slide":8,"name":"s07_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[42,646,84,22]}
+{"kind":"textbox","id":"sh/6twve1oz","slide":8,"name":"s07_base_link_1","text":"↗ 打开 azKits 项目","textPreview":"↗ 打开 azKits 项目","textChars":14,"textLines":1,"bbox":[132,646,190,22]}
+{"kind":"notes","id":"nt/fu1gfa1s","slide":8,"text":"【建议时长】2分钟\n\n【开场句】\n在讲 AZ-SDD 怎么做之前，我先只介绍项目本身，请大家暂时在心里形成自己的设计方案。\n\n【核心讲述】\nazKits 面向开发和测试人员，目标是把 BAT、PowerShell、Python、Shell 和 EXE 等分散脚本，统一到一个离线终端工具入口中。它需要完成脚本发现、任务执行、状态展示和日志查看。看起来像是把命令放进一个菜单，但真正的问题是：不同任务怎样统一描述？参数、工作目录和环境怎样表达？什么叫执行成功？失败后保留什么信息？大家可以先想一下，如果直接把这个需求交给 AI，它会从哪里开始，又会做出哪些默认假设。\n\n【动画 / 翻页提示】\nClick 1：出现使用者和多组任务。\nClick 2：出现 YAML 与多种脚本入口。\nClick 3：出现统一工具箱及核心能力。\nClick 4：显示思考题和项目跳转入口。\n\n【转场句】\n有了自己的初步答案后，再看 AZ-SDD 首先做了什么。\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n[/Sources]"}
+{"kind":"slide","id":"sl/udsvah03","slide":9,"title":"CASE 01 · AZKITS","textShapes":19}
+{"kind":"textbox","id":"sh/u9sja98z","slide":9,"name":"s08_base_section","text":"CASE 01 · AZKITS","textPreview":"CASE 01 · AZKITS","textChars":16,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/1cfmhgne","slide":9,"name":"s08_base_title","text":"azKits：先创建 change，再用 spec delta 明确要改变什么","textPreview":"azKits：先创建 change，再用 spec delta 明确要改变什么","textChars":39,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/0b65obm9","slide":9,"name":"s08_base_page","text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"textbox","id":"sh/nex4jq5k","slide":9,"name":"s08_c1_before_title","text":"原状态","textPreview":"原状态","textChars":3,"textLines":1,"bbox":[55,172,180,30]}
+{"kind":"shape","id":"sh/mdonql4z","slide":9,"name":"s08_c1_src0_circle","bbox":[67.74,263,63.96,63.96]}
+{"kind":"textbox","id":"sh/9gzml0nq","slide":9,"name":"s08_c1_src0_text","text":"BAT","textPreview":"BAT","textChars":3,"textLines":1,"bbox":[70.84,284,55.76,29.52]}
+{"kind":"shape","id":"sh/ofq5svm5","slide":9,"name":"s08_c1_src1_circle","bbox":[155.78,211,63.96,63.96]}
+{"kind":"textbox","id":"sh/bih4na5w","slide":9,"name":"s08_c1_src1_text","text":"PS","textPreview":"PS","textChars":2,"textLines":1,"bbox":[158.88,232,55.76,29.52]}
+{"kind":"shape","id":"sh/ah8nu54b","slide":9,"name":"s08_c1_src2_circle","bbox":[184.3,351,63.96,63.96]}
+{"kind":"textbox","id":"sh/oza1gfyh","slide":9,"name":"s08_c1_src2_text","text":"PY","textPreview":"PY","textChars":2,"textLines":1,"bbox":[187.4,372,55.76,29.52]}
+{"kind":"shape","id":"sh/p0ji9kf2","slide":9,"name":"s08_c1_src3_circle","bbox":[97.5,413,63.96,63.96]}
+{"kind":"textbox","id":"sh/2xsjepgb","slide":9,"name":"s08_c1_src3_text","text":"EXE","textPreview":"EXE","textChars":3,"textLines":1,"bbox":[100.6,434,55.76,29.52]}
+{"kind":"textbox","id":"sh/3y107axw","slide":9,"name":"s08_c1_before_desc","text":"入口、参数、目录、环境各自维护","textPreview":"入口、参数、目录、环境各自维护","textChars":15,"textLines":1,"bbox":[55,500,390,48]}
+{"kind":"shape","id":"sh/cnu1kzyd","slide":9,"name":"s08_c2_transform_arrow","bbox":[340,320,90,44]}
+{"kind":"textbox","id":"sh/do3id4fy","slide":9,"name":"s08_c2_decision","text":"不是“加几个命令”\n而是立一笔变更事务","textPreview":"不是“加几个命令” | 而是立一笔变更事务","textChars":19,"textLines":2,"bbox":[285,235,190,75]}
+{"kind":"shape","id":"sh/qlcjipgn","slide":9,"name":"s08_c3_tui_box","bbox":[594.67,495,535.33,85]}
+{"kind":"textbox","id":"sh/bml0buxs","slide":9,"name":"s08_c3_tui_head","text":"spec delta：统一任务执行","textPreview":"spec delta：统一任务执行","textChars":17,"textLines":1,"bbox":[609.73,503.67,213.8,56.67]}
+{"kind":"shape","id":"sh/0ru1ozyp","slide":9,"name":"s08_c3_discover_box","bbox":[920,502,90,62]}
+{"kind":"shape","id":"sh/lsn2h4fa","slide":9,"name":"s08_c3_discover_dot_circle","bbox":[928,516,12,12]}
+{"kind":"textbox","id":"sh/98ji147e","slide":9,"name":"s08_c3_discover_title","text":"发现","textPreview":"发现","textChars":2,"textLines":1,"bbox":[944,509,60,20]}
+{"kind":"textbox","id":"sh/87a18zqt","slide":9,"name":"s08_c3_discover_detail","text":"统一入口","textPreview":"统一入口","textChars":4,"textLines":1,"bbox":[924,535,80,20]}
+{"kind":"shape","id":"sh/76h0zup8","slide":9,"name":"s08_c3_execute_box","bbox":[1020,502,90,62]}
+{"kind":"shape","id":"sh/ml8j6p8n","slide":9,"name":"s08_c3_execute_dot_circle","bbox":[1028,516,12,12]}
+{"kind":"textbox","id":"sh/hcji5o7a","slide":9,"name":"s08_c3_execute_title","text":"执行","textPreview":"执行","textChars":2,"textLines":1,"bbox":[1044,509,60,20]}
+{"kind":"textbox","id":"sh/wba1cjqp","slide":9,"name":"s08_c3_execute_detail","text":"统一状态","textPreview":"统一状态","textChars":4,"textLines":1,"bbox":[1024,535,80,20]}
+{"kind":"textbox","id":"sh/va103ep4","slide":9,"name":"s08_c4_claim","text":"真实指令 → AI 澄清默认行为 → 人确认后形成可验收的功能增量","textPreview":"真实指令 → AI 澄清默认行为 → 人确认后形成可验收的功能增量","textChars":33,"textLines":1,"bbox":[540,585,590,35]}
+{"kind":"textbox","id":"sh/xgzitk76","slide":9,"name":"s08_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[42,646,84,22]}
+{"kind":"textbox","id":"sh/cf6h0fql","slide":9,"name":"s08_base_link_1","text":"↗ 打开 azKits 项目","textPreview":"↗ 打开 azKits 项目","textChars":14,"textLines":1,"bbox":[132,646,190,22]}
+{"kind":"textbox","id":"sh/2l4faloj","slide":9,"name":"s08_base_link_2","text":"↗ 查看项目架构","textPreview":"↗ 查看项目架构","textChars":8,"textLines":1,"bbox":[340,646,170,22]}
+{"kind":"image","id":"im/szqtczy9","slide":9,"name":"s08_c3_spec_conversation_screenshot","geometry":"roundRect","bbox":[571.88,145,546.23,330]}
+{"kind":"notes","id":"nt/udsvah03","slide":9,"text":"【建议时长】2分钟\n\n【开场句】\nazKits 的第一步不是让 AI 加几个命令，而是先确认产品方向。\n\n【核心讲述】\n原来的脚本各自维护入口、参数、目录和环境。如果需求只写成‘做一个脚本管理工具’，AI 很可能快速生成一个菜单，但任务模型、状态语义和扩展方式仍然分散。Spec 把目标明确为统一的 Go TUI，并把脚本发现、统一入口、任务执行和统一状态写成产品能力。这个过程把一个模糊想法变成可验收的功能规范。它直接证明第一项收益：规范明确化不是额外步骤，而是实现准确性的前提；方向没有确认，AI 写得越快，偏离也可能越快。\n\n【动画 / 翻页提示】\nClick 1：展示原来分散维护的状态。\nClick 2：强调问题不是简单增加命令。\nClick 3：展示统一任务模型和 Go TUI 的目标。\nClick 4：落到收益①：规范明确化。\n\n【转场句】\n产品方向明确以后，还需要约束 AI 具体可以怎样实现。\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n[/Sources]\n\n\n【实操提示】\n本页先念出截图中的 /az-sdd-spec 指令，再指出 AI 没有立即编码，而是提炼出五条默认行为等待确认。强调这一步就是‘功能规范明确化’的真实操作。截图来源：用户提供的真实对话截图。\n[Sources]\n- C:/Users/jpz/AppData/Local/Temp/codex-clipboard-b70d2572-d8eb-4732-b0cd-1bc8297fb363.png\n[/Sources]\n\n\n【截图替换说明】\n本页已有真实 /az-sdd-spec 截图。如需换图，直接替换右侧现有截图并保持其位置和尺寸，不要覆盖左侧原状态与底部项目跳转。\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/m90b6t0r","slide":10,"title":"CASE 01 · AZKITS","textShapes":13}
+{"kind":"textbox","id":"sh/bu5cnqd8","slide":10,"name":"s09_base_section","text":"CASE 01 · AZKITS","textPreview":"CASE 01 · AZKITS","textChars":16,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/xc3mho32","slide":10,"name":"s09_base_title","text":"azKits：spec delta 定义行为，arch delta 约束实现边界","textPreview":"azKits：spec delta 定义行为，arch delta 约束实现边界","textChars":40,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/cbu58j2h","slide":10,"name":"s09_base_page","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/0jqt8bqd","slide":10,"name":"s09_c1_rail_line","bbox":[59.02,337.38,532.01,0.03]}
+{"kind":"shape","id":"sh/ydcnatkn","slide":10,"name":"s09_c1_p0_circle","bbox":[83.61,325,13.05,24.76]}
+{"kind":"shape","id":"sh/l036l83y","slide":10,"name":"s09_c1_p0_box","bbox":[55,185,105.4,120]}
+{"kind":"textbox","id":"sh/kzu5c32t","slide":10,"name":"s09_c1_p0_title","text":"SPEC DELTA","textPreview":"SPEC DELTA","textChars":10,"textLines":1,"bbox":[64.03,202.14,87.33,28.57]}
+{"kind":"textbox","id":"sh/725onyl4","slide":10,"name":"s09_c1_p0_detail","text":"入口、选择\n完成与失败行为","textPreview":"入口、选择 | 完成与失败行为","textChars":13,"textLines":2,"bbox":[64.03,240.24,87.33,47.62]}
+{"kind":"shape","id":"sh/m1cnetkj","slide":10,"name":"s09_c2_p1_circle","bbox":[225.14,325,13.05,24.76]}
+{"kind":"shape","id":"sh/s7yt4b21","slide":10,"name":"s09_c2_p1_box","bbox":[196.53,385,105.4,120]}
+{"kind":"textbox","id":"sh/d87uxg3m","slide":10,"name":"s09_c2_p1_title","text":"批准","textPreview":"批准","textChars":2,"textLines":1,"bbox":[205.57,402.14,87.33,28.57]}
+{"kind":"textbox","id":"sh/q5gb21kb","slide":10,"name":"s09_c2_p1_detail","text":"范围与验收\n先得到确认","textPreview":"范围与验收 | 先得到确认","textChars":11,"textLines":2,"bbox":[205.57,440.24,87.33,47.62]}
+{"kind":"shape","id":"sh/r6pcv6lw","slide":10,"name":"s09_c3_p2_circle","bbox":[366.68,325,13.05,24.76]}
+{"kind":"shape","id":"sh/0bit8b2d","slide":10,"name":"s09_c3_p2_box","bbox":[338.07,185,105.4,120]}
+{"kind":"textbox","id":"sh/1cru1g3y","slide":10,"name":"s09_c3_p2_title","text":"ARCH DELTA","textPreview":"ARCH DELTA","textChars":10,"textLines":1,"bbox":[347.1,202.14,87.33,28.57]}
+{"kind":"textbox","id":"sh/e9gb61k7","slide":10,"name":"s09_c3_p2_detail","text":"统一 TUI\n统一任务模型","textPreview":"统一 TUI | 统一任务模型","textChars":13,"textLines":2,"bbox":[347.1,240.24,87.33,47.62]}
+{"kind":"shape","id":"sh/fapcz6ls","slide":10,"name":"s09_c4_p3_circle","bbox":[508.21,325,13.05,24.76]}
+{"kind":"shape","id":"sh/ozitcv29","slide":10,"name":"s09_c4_p3_box","bbox":[479.6,385,105.4,120]}
+{"kind":"textbox","id":"sh/p0ru503u","slide":10,"name":"s09_c4_p3_title","text":"CODER","textPreview":"CODER","textChars":5,"textLines":1,"bbox":[488.64,402.14,87.33,28.57]}
+{"kind":"textbox","id":"sh/xwnupgvy","slide":10,"name":"s09_c4_p3_detail","text":"只实现已批准\nchange 范围","textPreview":"只实现已批准 | change 范围","textChars":16,"textLines":2,"bbox":[488.64,440.24,87.33,47.62]}
+{"kind":"textbox","id":"sh/wvetgbud","slide":10,"name":"s09_c5_value","text":"门禁：功能说“做什么”，技术说“怎样落地”","textPreview":"门禁：功能说“做什么”，技术说“怎样落地”","textChars":21,"textLines":1,"bbox":[55,535,530,55]}
+{"kind":"textbox","id":"sh/4j2xwzet","slide":10,"name":"s09_c6_command_bar","text":"本阶段指令\n/az-sdd-spec → /az-sdd-arch（按需）→ /az-sdd-coder","textPreview":"本阶段指令 | /az-sdd-spec → /az-sdd-arch（按需）→ /az-sdd-coder","textChars":52,"textLines":2,"bbox":[55,595,530,54]}
+{"kind":"image","id":"im/cvyl07yx","slide":10,"name":"图片 22","bbox":[783.67,402.13,425.67,290.47]}
+{"kind":"image","id":"im/dg7mtczi","slide":10,"name":"图片 3","bbox":[670.27,125.67,412,334]}
+{"kind":"notes","id":"nt/m90b6t0r","slide":10,"text":"【建议时长】2分钟\n\n【开场句】\n这一页体现的是批准机制：Spec 和 Arch 不是写完就算，而是确认后才成为 AI 的实现依据。\n\n【核心讲述】\nSpec 先回答用户怎样进入、怎样选择任务以及什么状态算完成。经过批准后，范围和验收条件稳定下来。Arch 再确定统一 TUI 和统一任务模型，解决复杂实现中的技术边界。到了 Coder 阶段，AI 只实现批准范围。如果开发过程中出现新想法，不直接塞进代码，而是先回到规范判断它属于变更、缺陷还是后续能力。这样做减少了临时假设，也让评审者能够判断代码是否偏离。这里证明第二项收益：功能实现准确性来自明确并经过批准的契约。\n\n【动画 / 翻页提示】\nClick 1：出现 Spec 的用户行为问题。\nClick 2：出现批准与验收条件。\nClick 3：出现 Arch 的统一模型。\nClick 4：出现 Coder 只实现批准范围。\nClick 5：强调变化先回规范。\n\n【转场句】\n实现准确还不够，我们还要证明代码确实满足同一份需求。\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n[/Sources]\n\n\n【实操提示】\n指着底部指令条说明：先用 spec 固定功能契约，复杂决策再进入 arch，确认后才进入 coder。这里可现场打开 Spec 与 Arch 文件，不需要现场重新运行 AI。\n\n\n【截图替换说明】\n本页右侧已预留“Spec / Arch / Coder 真实交互”截图区域。补图时删除虚线占位框，将截图裁剪到相同位置和大小；不要移动左侧流程、底部结论及项目跳转链接。\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/jetc3ut0","slide":11,"title":"CASE 01 · AZKITS","textShapes":19}
+{"kind":"textbox","id":"sh/y1czalob","slide":11,"name":"s10_base_section","text":"CASE 01 · AZKITS","textPreview":"CASE 01 · AZKITS","textChars":16,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/xcryxg7y","slide":11,"name":"s10_base_title","text":"azKits：同一 acceptance 同时约束实现与验收","textPreview":"azKits：同一 acceptance 同时约束实现与验收","textChars":30,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/wbih4b6d","slide":11,"name":"s10_base_page","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/n69grmpw","slide":11,"name":"s10_c1_accept_box","bbox":[55,262,100.27,122.06]}
+{"kind":"shape","id":"sh/250zy18b","slide":11,"name":"s10_c1_accept_dot_circle","bbox":[64.07,282.34,8.59,17.44]}
+{"kind":"textbox","id":"sh/98rytw72","slide":11,"name":"s10_c1_accept_title","text":"验收条件","textPreview":"验收条件","textChars":4,"textLines":1,"bbox":[79.83,275.56,67.8,34.87]}
+{"kind":"textbox","id":"sh/o7ih0r6h","slide":11,"name":"s10_c1_accept_detail","text":"成功/失败行为写入 spec delta","textPreview":"成功/失败行为写入 spec delta","textChars":20,"textLines":1,"bbox":[65.5,320.13,79.26,50.38]}
+{"kind":"shape","id":"sh/72t03qp0","slide":11,"name":"s10_c2_to_code_arrow","bbox":[164.82,306.56,38.2,32.94]}
+{"kind":"shape","id":"sh/61kzalof","slide":11,"name":"s10_c2_code_box","bbox":[212.57,262,100.27,122.06]}
+{"kind":"shape","id":"sh/ofqtgnyt","slide":11,"name":"s10_c2_code_dot_circle","bbox":[221.64,282.34,8.59,17.44]}
+{"kind":"textbox","id":"sh/9gza9sze","slide":11,"name":"s10_c2_code_title","text":"代码实现","textPreview":"代码实现","textChars":4,"textLines":1,"bbox":[237.4,275.56,67.8,34.87]}
+{"kind":"textbox","id":"sh/mdobedg3","slide":11,"name":"s10_c2_code_detail","text":"Coder 只消费已通过门禁的 change","textPreview":"Coder 只消费已通过门禁的 change","textChars":22,"textLines":1,"bbox":[223.07,320.13,79.26,50.38]}
+{"kind":"shape","id":"sh/nehs7iho","slide":11,"name":"s10_c3_to_auto_arrow","bbox":[322.39,306.56,38.2,32.94]}
+{"kind":"shape","id":"sh/0b6tc3yx","slide":11,"name":"s10_c3_auto_box","bbox":[370.14,200,100.27,122.06]}
+{"kind":"shape","id":"sh/1cfa58zi","slide":11,"name":"s10_c3_auto_dot_circle","bbox":[379.21,220.34,8.59,17.44]}
+{"kind":"textbox","id":"sh/epobatgr","slide":11,"name":"s10_c3_auto_title","text":"自动化","textPreview":"自动化","textChars":3,"textLines":1,"bbox":[394.96,213.56,67.8,34.87]}
+{"kind":"textbox","id":"sh/zaxs3yhc","slide":11,"name":"s10_c3_auto_detail","text":"单测 / race / build","textPreview":"单测 / race / build","textChars":17,"textLines":1,"bbox":[380.64,258.13,79.26,50.38]}
+{"kind":"shape","id":"sh/cn6t83y1","slide":11,"name":"s10_c4_manual_box","bbox":[370.14,387.94,100.27,122.06]}
+{"kind":"shape","id":"sh/dofa18z6","slide":11,"name":"s10_c4_manual_dot_circle","bbox":[379.21,408.28,8.59,17.44]}
+{"kind":"textbox","id":"sh/tsnip0ny","slide":11,"name":"s10_c4_manual_title","text":"人工验收","textPreview":"人工验收","textChars":4,"textLines":1,"bbox":[394.96,401.5,67.8,34.87]}
+{"kind":"textbox","id":"sh/87ehgv6d","slide":11,"name":"s10_c4_manual_detail","text":"真实 TUI / 中文 IME","textPreview":"真实 TUI / 中文 IME","textChars":15,"textLines":1,"bbox":[380.64,446.06,79.26,50.38]}
+{"kind":"shape","id":"sh/h83e54fq","slide":11,"name":"s10_c3_branch1_line","bbox":[360.59,260.06,0.01,62.97]}
+{"kind":"shape","id":"sh/gnudwze5","slide":11,"name":"s10_c4_branch2_line","bbox":[360.59,323.03,0.01,123.03]}
+{"kind":"shape","id":"sh/l43ilgn2","slide":11,"name":"s10_c5_evidence_box","bbox":[499.05,262,85.95,203.44]}
+{"kind":"textbox","id":"sh/k3uhcb6h","slide":11,"name":"s10_c5_evidence_title","text":"证据","textPreview":"证据","textChars":2,"textLines":1,"bbox":[514.33,291.06,55.39,36.81]}
+{"kind":"textbox","id":"sh/j2lgjq5w","slide":11,"name":"s10_c5_evidence_text","text":"需求条目\n代码差异\n测试证据","textPreview":"需求条目 | 代码差异 | 测试证据","textChars":14,"textLines":3,"bbox":[514.33,351.13,55.39,83.31]}
+{"kind":"textbox","id":"sh/c3mpof6h","slide":11,"name":"s10_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[55,620,84,22]}
+{"kind":"textbox","id":"sh/x4vqhknm","slide":11,"name":"s10_base_link_1","text":"↗ 查看验收 Spec","textPreview":"↗ 查看验收 Spec","textChars":11,"textLines":1,"bbox":[145,620,170,22]}
+{"kind":"textbox","id":"sh/a147m5ob","slide":11,"name":"s10_base_link_2","text":"↗ 查看核心实现","textPreview":"↗ 查看核心实现","textChars":8,"textLines":1,"bbox":[315,620,160,22]}
+{"kind":"textbox","id":"sh/b2d8fa5w","slide":11,"name":"s10_base_link_3","text":"↗ 查看测试证据","textPreview":"↗ 查看测试证据","textChars":8,"textLines":1,"bbox":[455,620,160,22]}
+{"kind":"textbox","id":"sh/jq5gr6h4","slide":11,"name":"s10_c6_command_bar","text":"本阶段指令  /az-sdd-tester <change>｜按 acceptance 逐项验证并回写 evidence","textPreview":"本阶段指令  /az-sdd-tester <change>｜按 acceptance 逐项验证并回写 evidence","textChars":60,"textLines":1,"bbox":[55,535,530,50]}
+{"kind":"textbox","id":"sh/czuho3a5","slide":11,"name":"s10_c7_screenshot_slot","text":"截图预留区\nTester 执行结果 / 测试证据截图\n\n建议截图：验收用例、通过/失败状态或真实 TUI 验收记录\n\n替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textPreview":"截图预留区 | Tester 执行结果 / 测试证据截图 |  | 建议截图：验收用例、通过/失败状态或真实 TUI 验收记录 |  | 替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textChars":88,"textLines":6,"bbox":[660,190,520,330]}
+{"kind":"image","id":"im/ehw7ah8j","slide":11,"name":"图片 21","bbox":[621.33,118.07,610.6,533.8]}
+{"kind":"notes","id":"nt/jetc3ut0","slide":11,"text":"【建议时长】2分钟\n\n【开场句】\n在 AZ-SDD 中，验收条件同时约束 AI 编码和后续测试。\n\n【核心讲述】\n例如执行成功和失败时应怎样表现，首先写进 Spec。AI Coder 在实现时引用这份批准规范，而不是根据口头理解自行决定。自动化测试覆盖单元测试、race 和构建，人工验收再检查真实 TUI 和中文输入法等难以完全自动化的场景。最终保存的不是一句‘测试通过’，而是需求条目、代码差异和测试证据之间的映射。现场演示时可以分别打开验收 Spec、核心实现和测试证据，让大家看到三者确实指向同一个行为。\n\n【动画 / 翻页提示】\nClick 1：出现验收条件。\nClick 2：出现 AI Coder 的实现依据。\nClick 3：出现自动化验证。\nClick 4：出现人工验收。\nClick 5：出现三个真实项目跳转入口。\n\n【转场句】\n当测试发现需求本身还不完整时，闭环会继续向前。\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n[/Sources]\n\n\n【实操提示】\n说明 tester 的输入不是一句‘测一下’，而是批准 Spec 中的验收条件；自动化与人工测试都要留下可定位证据。\n\n\n【截图替换说明】\n本页右侧已预留“Tester 执行与测试证据”截图区域。补图时删除虚线占位框，将截图裁剪到相同位置和大小；不要移动左侧流程、底部结论及项目跳转链接。\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/8f2psfyx","slide":12,"title":"CASE 01 · AZKITS","textShapes":20}
+{"kind":"textbox","id":"sh/tgrm1wzy","slide":12,"name":"s11_base_section","text":"CASE 01 · AZKITS","textPreview":"CASE 01 · AZKITS","textChars":16,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/1gbm9s3a","slide":12,"name":"s11_base_title","text":"azKits：反馈保留原件，修正通过 change 回到当前规范","textPreview":"azKits：反馈保留原件，修正通过 change 回到当前规范","textChars":32,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/0f2lgnmp","slide":12,"name":"s11_base_page","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/ra943il8","slide":12,"name":"s11_c1_a0_arrow","bbox":[136.9,298.72,22.59,29.3]}
+{"kind":"shape","id":"sh/q903ad4n","slide":12,"name":"s11_c1_l0_box","bbox":[55,215,81.9,180]}
+{"kind":"textbox","id":"sh/dcbm583y","slide":12,"name":"s11_c1_l0_title","text":"发现","textPreview":"发现","textChars":2,"textLines":1,"bbox":[63.47,235.93,64.96,35.58]}
+{"kind":"textbox","id":"sh/sb2lcnmd","slide":12,"name":"s11_c1_l0_detail","text":"执行后清空输入\n需要上下键历史","textPreview":"执行后清空输入 | 需要上下键历史","textChars":15,"textLines":2,"bbox":[63.47,294.53,64.96,69.07]}
+{"kind":"shape","id":"sh/b6d4f2lc","slide":12,"name":"s11_c2_a1_arrow","bbox":[248.93,298.72,22.59,29.3]}
+{"kind":"shape","id":"sh/a543mx4r","slide":12,"name":"s11_c2_l1_box","bbox":[167.02,215,81.9,180]}
+{"kind":"textbox","id":"sh/wvupgz6t","slide":12,"name":"s11_c2_l1_title","text":"引用反馈","textPreview":"引用反馈","textChars":4,"textLines":1,"bbox":[175.5,235.93,64.96,35.58]}
+{"kind":"textbox","id":"sh/xw3q94ne","slide":12,"name":"s11_c2_l1_detail","text":"feedback 原件不搬走\nchange 只保留引用","textPreview":"feedback 原件不搬走 | change 只保留引用","textChars":27,"textLines":2,"bbox":[175.5,294.53,64.96,69.07]}
+{"kind":"shape","id":"sh/atc7epon","slide":12,"name":"s11_c3_a2_arrow","bbox":[360.95,298.72,22.59,29.3]}
+{"kind":"shape","id":"sh/bulo7u58","slide":12,"name":"s11_c3_l2_box","bbox":[279.05,215,81.9,180]}
+{"kind":"textbox","id":"sh/orapcf6h","slide":12,"name":"s11_c3_l2_title","text":"实现","textPreview":"实现","textChars":2,"textLines":1,"bbox":[287.52,235.93,64.96,35.58]}
+{"kind":"textbox","id":"sh/9sj65kn2","slide":12,"name":"s11_c3_l2_detail","text":"Model 增加\n历史状态","textPreview":"Model 增加 | 历史状态","textChars":13,"textLines":2,"bbox":[287.52,294.53,64.96,69.07]}
+{"kind":"shape","id":"sh/mps7a5or","slide":12,"name":"s11_c4_a3_arrow","bbox":[472.98,298.72,22.59,29.3]}
+{"kind":"shape","id":"sh/nq1o3a5w","slide":12,"name":"s11_c4_l3_box","bbox":[391.07,215,81.9,180]}
+{"kind":"textbox","id":"sh/0nap8f6l","slide":12,"name":"s11_c4_l3_title","text":"验证","textPreview":"验证","textChars":2,"textLines":1,"bbox":[399.55,235.93,64.96,35.58]}
+{"kind":"textbox","id":"sh/1oj61kn6","slide":12,"name":"s11_c4_l3_detail","text":"自动化 +\nMT010/MT011","textPreview":"自动化 + | MT010/MT011","textChars":17,"textLines":2,"bbox":[399.55,294.53,64.96,69.07]}
+{"kind":"shape","id":"sh/hkbm5wzu","slide":12,"name":"s11_c5_l4_box","bbox":[503.1,215,81.9,180]}
+{"kind":"textbox","id":"sh/gj25cry9","slide":12,"name":"s11_c5_l4_title","text":"归并","textPreview":"归并","textChars":2,"textLines":1,"bbox":[511.57,235.93,64.96,35.58]}
+{"kind":"textbox","id":"sh/fit436ho","slide":12,"name":"s11_c5_l4_detail","text":"验收通过\n准备归并","textPreview":"验收通过 | 准备归并","textChars":9,"textLines":2,"bbox":[511.57,294.53,64.96,69.07]}
+{"kind":"textbox","id":"sh/uh0na1g3","slide":12,"name":"s11_c6_claim","text":"feedback 是问题事实；spec / arch 是经确认后的规范变化","textPreview":"feedback 是问题事实；spec / arch 是经确认后的规范变化","textChars":37,"textLines":1,"bbox":[55,490,530,58]}
+{"kind":"textbox","id":"sh/sfi58ryd","slide":12,"name":"s11_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[55,620,84,22]}
+{"kind":"textbox","id":"sh/7u94zmhs","slide":12,"name":"s11_base_link_1","text":"↗ 查看 Feedback","textPreview":"↗ 查看 Feedback","textChars":13,"textLines":1,"bbox":[145,620,160,22]}
+{"kind":"textbox","id":"sh/6t0n6hg7","slide":12,"name":"s11_base_link_2","text":"↗ 查看测试摘要","textPreview":"↗ 查看测试摘要","textChars":8,"textLines":1,"bbox":[305,620,160,22]}
+{"kind":"textbox","id":"sh/dcv6dgz2","slide":12,"name":"s11_base_link_3","text":"↗ 查看状态轨迹","textPreview":"↗ 查看状态轨迹","textChars":8,"textLines":1,"bbox":[465,620,160,22]}
+{"kind":"textbox","id":"sh/cbm5kbyh","slide":12,"name":"s11_c7_command_bar","text":"本阶段指令  /az-sdd-feedback → 关联 change → 验证关闭","textPreview":"本阶段指令  /az-sdd-feedback → 关联 change → 验证关闭","textChars":42,"textLines":1,"bbox":[55,420,530,48]}
+{"kind":"textbox","id":"sh/alwbitsn","slide":12,"name":"s11_c8_screenshot_slot","text":"截图预留区\nFeedback 记录与关闭截图\n\n建议截图：问题澄清、Spec 回写、验证完成或 Feedback 状态关闭\n\n替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textPreview":"截图预留区 | Feedback 记录与关闭截图 |  | 建议截图：问题澄清、Spec 回写、验证完成或 Feedback 状态关闭 |  | 替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textChars":92,"textLines":6,"bbox":[660,190,520,330]}
+{"kind":"image","id":"im/4relsru9","slide":12,"name":"图片 30","bbox":[647.53,133.2,617.33,525.13]}
+{"kind":"notes","id":"nt/8f2psfyx","slide":12,"text":"【建议时长】2分钟\n\n【开场句】\n这个 Feedback 很适合说明什么叫需求和测试双向可追溯。\n\n【核心讲述】\n测试发现命令执行后输入框会被清空，但用户希望可以通过上下键访问历史。这个问题不是直接修改代码，而是先回写到 Spec：成功命令进入历史，失败时保留输入。随后 Model 增加历史状态，自动化测试覆盖相关行为，再通过真实 TUI 的 MT010、MT011 验收。关闭 Feedback 时，可以从问题找到规范变化、代码实现和测试证据；反过来从测试也能定位它验证的需求。它证明第三项收益：追溯不是单向记录，而是测试结果能够反向推动需求完善。\n\n【动画 / 翻页提示】\nClick 1：出现测试发现的问题。\nClick 2：出现回写后的明确规则。\nClick 3：出现 Model 实现。\nClick 4：出现自动化与人工验证。\nClick 5：出现 Feedback、测试摘要和状态轨迹跳转。\nClick 6：最后强调双向可追溯。\n\n【转场句】\n把 azKits 的过程合在一起，就能看到四项收益是怎样同时出现的。\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n[/Sources]\n\n\n【实操提示】\n说明发现上下键历史需求后，不直接口头让 AI 改代码，而是用 feedback 记录问题、回写 Spec、实现、验证后再关闭。\n\n\n【截图替换说明】\n本页右侧已预留“Feedback 闭环过程”截图区域。补图时删除虚线占位框，将截图裁剪到相同位置和大小；不要移动左侧流程、底部结论及项目跳转链接。\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/hgzapcr6","slide":13,"title":"CASE 01 · AZKITS","textShapes":15}
+{"kind":"textbox","id":"sh/3yxgbqdg","slide":13,"name":"s04_base_section","text":"CASE 01 · AZKITS","textPreview":"CASE 01 · AZKITS","textChars":16,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/q50nydsj","slide":13,"name":"s04_base_title","text":"azKits：complete 后删除工作 change，只留下当前真相","textPreview":"azKits：complete 后删除工作 change，只留下当前真相","textChars":36,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/bq9orito","slide":13,"name":"s04_base_page","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/o3i5w3ad","slide":13,"name":"s04_c1_flow0_arrow","bbox":[246,338,54,28]}
+{"kind":"shape","id":"sh/p4r6p8by","slide":13,"name":"s04_c1_node0_box","bbox":[70,276,176,150]}
+{"kind":"textbox","id":"sh/21gnuts7","slide":13,"name":"s04_c1_node0_title","text":"CHANGE","textPreview":"CHANGE","textChars":6,"textLines":1,"bbox":[88,294,140,34]}
+{"kind":"textbox","id":"sh/32ponyts","slide":13,"name":"s04_c1_node0_detail","text":"spec / arch delta","textPreview":"spec / arch delta","textChars":17,"textLines":1,"bbox":[88,344,140,60]}
+{"kind":"shape","id":"sh/gzy5s3a1","slide":13,"name":"s04_c2_flow1_arrow","bbox":[468,338,54,28]}
+{"kind":"shape","id":"sh/1076lobm","slide":13,"name":"s04_c2_node1_box","bbox":[292,276,176,150]}
+{"kind":"textbox","id":"sh/hcfy9k3u","slide":13,"name":"s04_c2_node1_title","text":"TESTER","textPreview":"TESTER","textChars":6,"textLines":1,"bbox":[310,294,140,34]}
+{"kind":"textbox","id":"sh/gb6x0zm9","slide":13,"name":"s04_c2_node1_detail","text":"acceptance\nevidence","textPreview":"acceptance | evidence","textChars":19,"textLines":2,"bbox":[310,344,140,60]}
+{"kind":"shape","id":"sh/vaxg7ulo","slide":13,"name":"s04_c3_flow2_arrow","bbox":[690,338,54,28]}
+{"kind":"shape","id":"sh/u9ofyp43","slide":13,"name":"s04_c3_node2_box","bbox":[514,276,176,150]}
+{"kind":"textbox","id":"sh/t8fy5k3i","slide":13,"name":"s04_c3_node2_title","text":"COMPLETE","textPreview":"COMPLETE","textChars":8,"textLines":1,"bbox":[532,294,140,34]}
+{"kind":"textbox","id":"sh/876xwfmx","slide":13,"name":"s04_c3_node2_detail","text":"校验并合并","textPreview":"校验并合并","textChars":5,"textLines":1,"bbox":[532,344,140,60]}
+{"kind":"shape","id":"sh/7mdg3als","slide":13,"name":"s04_c4_flow3_arrow","bbox":[912,338,54,28]}
+{"kind":"shape","id":"sh/6l4fu547","slide":13,"name":"s04_c4_node3_box","bbox":[736,276,176,150]}
+{"kind":"textbox","id":"sh/lkvy103m","slide":13,"name":"s04_c4_node3_title","text":"BASELINE","textPreview":"BASELINE","textChars":8,"textLines":1,"bbox":[754,294,140,34]}
+{"kind":"textbox","id":"sh/kjmxsfm1","slide":13,"name":"s04_c4_node3_detail","text":"spec + arch\n当前规范","textPreview":"spec + arch | 当前规范","textChars":16,"textLines":2,"bbox":[754,344,140,60]}
+{"kind":"shape","id":"sh/cnqh8fux","slide":13,"name":"s04_c5_node4_box","bbox":[958,276,176,150]}
+{"kind":"textbox","id":"sh/xozyhkbi","slide":13,"name":"s04_c5_node4_title","text":"TRACK / GIT","textPreview":"TRACK / GIT","textChars":11,"textLines":1,"bbox":[976,294,140,34]}
+{"kind":"textbox","id":"sh/q18f65cr","slide":13,"name":"s04_c5_node4_detail","text":"状态摘要\n历史追溯","textPreview":"状态摘要 | 历史追溯","textChars":9,"textLines":2,"bbox":[976,344,140,60]}
+{"kind":"shape","id":"sh/9cv6l4vy","slide":13,"name":"s04_c5_feedback_return_line","bbox":[150,462,960,0.03]}
+{"kind":"shape","id":"sh/m9kna9w7","slide":13,"name":"s04_c5_feedback_up_line","bbox":[150,438,0.03,24]}
+{"kind":"textbox","id":"sh/p0zyd0b6","slide":13,"name":"s04_c5_feedback_label","text":"feedback 原件继续保留；后续问题再创建新的 change","textPreview":"feedback 原件继续保留；后续问题再创建新的 change","textChars":32,"textLines":1,"bbox":[390,478,510,34]}
+{"kind":"textbox","id":"sh/2xof2lcv","slide":13,"name":"s04_c6_track","text":"默认 history.mode=git：无 archive；仅在需要内嵌历史时启用 embedded","textPreview":"默认 history.mode=git：无 archive；仅在需要内嵌历史时启用 embedded","textChars":50,"textLines":1,"bbox":[262,560,760,52]}
+{"kind":"notes","id":"nt/hgzapcr6","slide":13,"text":"【建议时长】2.5分钟\n\n【开场句】\nAZ-SDD 给 AI 建立的不是一条单向流水线，而是规范、实现、验证和反馈之间的闭环。\n\n【核心讲述】\nSpec 回答做什么、怎样验收，给 AI 一份明确的功能契约。复杂功能再通过 Arch 明确技术边界，避免 AI 在局部实现中破坏整体架构。Coder 只实现已经批准的范围。Tester 根据验收条件组织验证并留下证据。Feedback 把测试结果、缺陷或新变化重新写回需求与架构，驱动下一轮开发。最后由 STATUS 和 TRACK 保存依据、证据和下一步。这样即使更换会话或换一个 AI 接手，也不需要从头理解。双向可追溯就体现在这里：需求指导测试，测试结果也能反向更新需求和项目状态。\n\n【动画 / 翻页提示】\nClick 1：出现 Spec。\nClick 2：出现 Arch。\nClick 3：出现 Coder。\nClick 4：出现 Tester。\nClick 5：出现 Feedback 和回写路径。\nClick 6：最后出现 STATUS / TRACK 的持续交接价值。\n\n【转场句】\n基础流程回顾到这里。下面不继续讲概念，而是用三个真实项目验证它。\n\n[Sources]\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-spec/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-coder/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-tester/SKILL.md\n- C:/JPZ_Workspace/笔记仓库-jpz/hq-jpz/AZ-SKILLS/skills/az-sdd.v3/az-sdd-feedback/SKILL.md\n[/Sources]\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/6lsnupw7","slide":14,"title":"CASE 01 · AZKITS","textShapes":12}
+{"kind":"textbox","id":"sh/z650byxo","slide":14,"name":"s12_base_section","text":"CASE 01 · AZKITS","textPreview":"CASE 01 · AZKITS","textChars":16,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/xc7eds76","slide":14,"name":"s12_base_title","text":"azKits 展示了完整 AZ-SDD 流程的四个落点","textPreview":"azKits 展示了完整 AZ-SDD 流程的四个落点","textChars":27,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/wbydknq1","slide":14,"name":"s12_base_page","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/jepwf2pc","slide":14,"name":"s12_c1_v0_box","bbox":[116,216,504,164]}
+{"kind":"textbox","id":"sh/idgvmx8r","slide":14,"name":"s12_c1_v0_label","text":"功能规范明确化","textPreview":"功能规范明确化","textChars":7,"textLines":1,"bbox":[140,234,456,34]}
+{"kind":"textbox","id":"sh/5grehs7i","slide":14,"name":"s12_c1_v0_detail","text":"baseline/spec 保持当前功能真相","textPreview":"baseline/spec 保持当前功能真相","textChars":22,"textLines":1,"bbox":[140,278,456,86]}
+{"kind":"shape","id":"sh/kfidonqx","slide":14,"name":"s12_c2_v1_box","bbox":[660,216,504,164]}
+{"kind":"textbox","id":"sh/zi5c3y98","slide":14,"name":"s12_c2_v1_label","text":"功能实现更准确","textPreview":"功能实现更准确","textChars":7,"textLines":1,"bbox":[684,234,456,34]}
+{"kind":"textbox","id":"sh/ehwvat8n","slide":14,"name":"s12_c2_v1_detail","text":"技术边界按复杂度进入 baseline/arch","textPreview":"技术边界按复杂度进入 baseline/arch","textChars":24,"textLines":1,"bbox":[684,278,456,86]}
+{"kind":"shape","id":"sh/c3e1gjyd","slide":14,"name":"s12_c3_v2_box","bbox":[116,426,504,164]}
+{"kind":"textbox","id":"sh/x4ni9ofy","slide":14,"name":"s12_c3_v2_label","text":"需求 ⇄ 测试可追溯","textPreview":"需求 ⇄ 测试可追溯","textChars":10,"textLines":1,"bbox":[140,444,456,34]}
+{"kind":"textbox","id":"sh/a1wze9g7","slide":14,"name":"s12_c3_v2_detail","text":"change acceptance 与 evidence 可追溯","textPreview":"change acceptance 与 evidence 可追溯","textChars":32,"textLines":1,"bbox":[140,488,456,86]}
+{"kind":"shape","id":"sh/b2507exs","slide":14,"name":"s12_c4_v3_box","bbox":[660,426,504,164]}
+{"kind":"textbox","id":"sh/kre1k3y9","slide":14,"name":"s12_c4_v3_label","text":"工作效率提高","textPreview":"工作效率提高","textChars":6,"textLines":1,"bbox":[684,444,456,34]}
+{"kind":"textbox","id":"sh/ls7idofu","slide":14,"name":"s12_c4_v3_detail","text":"接手只需读取 baseline + TRACK","textPreview":"接手只需读取 baseline + TRACK","textChars":23,"textLines":1,"bbox":[684,488,456,86]}
+{"kind":"textbox","id":"sh/y5wjitgj","slide":14,"name":"s12_c5_bridge","text":"下一个案例：当错误代价更高，规范要深入到什么程度？","textPreview":"下一个案例：当错误代价更高，规范要深入到什么程度？","textChars":25,"textLines":1,"bbox":[218,602,844,40]}
+{"kind":"notes","id":"nt/6lsnupw7","slide":14,"text":"【建议时长】1分钟\n\n【开场句】\nazKits 是一个完整闭环案例。\n\n【核心讲述】\n开发前通过 Spec 明确需求与验收，实现阶段受到批准规范和架构约束，测试和 Feedback 形成 Spec、Code、Test 之间的双向映射，最后减少了后续澄清、返工和重复验证。需要强调的是，效率提升并不是因为省略了规范，而是因为规范提前消除了不确定性。接下来把错误代价提高：当一个功能跨进程、跨分层并接触真实硬件时，这套方法是否仍然成立？\n\n【动画 / 翻页提示】\nClick 1：出现规范明确化。\nClick 2：出现实现更准确。\nClick 3：出现需求与测试可追溯。\nClick 4：出现效率提高。\nClick 5：出现下一案例的问题。\n\n【转场句】\n第二个案例是 HSED。\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n[/Sources]\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/vaxsvy10","slide":15,"title":"CASE 02 · PROJECT FIRST","textShapes":18}
+{"kind":"textbox","id":"sh/vixcvu14","slide":15,"name":"s13_base_section","text":"CASE 02 · PROJECT FIRST","textPreview":"CASE 02 · PROJECT FIRST","textChars":23,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/547mhg3m","slide":15,"name":"s13_base_title","text":"HSED：让多个 MPU 进程安全使用同一颗加密芯片","textPreview":"HSED：让多个 MPU 进程安全使用同一颗加密芯片","textChars":26,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/k3y5ov21","slide":15,"name":"s13_base_page","text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"textbox","id":"sh/76p4jqls","slide":15,"name":"s13_c1_clients_title","text":"多个 MPU 应用进程","textPreview":"多个 MPU 应用进程","textChars":11,"textLines":1,"bbox":[64,184,250,40]}
+{"kind":"shape","id":"sh/65gnqlk7","slide":15,"name":"s13_c1_client0_box","bbox":[92,260,188,58]}
+{"kind":"textbox","id":"sh/t87ml0ji","slide":15,"name":"s13_c1_client0_text","text":"应用 A","textPreview":"应用 A","textChars":4,"textLines":1,"bbox":[112,272,148,32]}
+{"kind":"shape","id":"sh/s7y5sv2x","slide":15,"name":"s13_c1_client1_box","bbox":[92,342,188,58]}
+{"kind":"textbox","id":"sh/na5476l8","slide":15,"name":"s13_c1_client1_text","text":"应用 B","textPreview":"应用 B","textChars":4,"textLines":1,"bbox":[112,354,148,32]}
+{"kind":"shape","id":"sh/m9c3e1kn","slide":15,"name":"s13_c1_client2_box","bbox":[92,424,188,58]}
+{"kind":"textbox","id":"sh/wrm9kvep","slide":15,"name":"s13_c1_client2_text","text":"应用 C","textPreview":"应用 C","textChars":4,"textLines":1,"bbox":[112,436,148,32]}
+{"kind":"shape","id":"sh/hsvat0fa","slide":15,"name":"s13_c2_rpc_arrow","bbox":[316,336,92,38]}
+{"kind":"textbox","id":"sh/upkrilwj","slide":15,"name":"s13_c2_rpc_label","text":"SPC 同步 RPC","textPreview":"SPC 同步 RPC","textChars":10,"textLines":1,"bbox":[302,286,120,34]}
+{"kind":"shape","id":"sh/vqdsrqx4","slide":15,"name":"s13_c2_hsed_box","bbox":[442,206,394,286]}
+{"kind":"textbox","id":"sh/4vm9ovel","slide":15,"name":"s13_c2_hsed_title","text":"HSED 硬件加密代理","textPreview":"HSED 硬件加密代理","textChars":11,"textLines":1,"bbox":[484,234,310,42]}
+{"kind":"shape","id":"sh/5wvax0f6","slide":15,"name":"s13_c2_cap0_box","bbox":[480,306,120,54]}
+{"kind":"textbox","id":"sh/it4rm5wv","slide":15,"name":"s13_c2_cap0_text","text":"加密","textPreview":"加密","textChars":2,"textLines":1,"bbox":[490,316,100,32]}
+{"kind":"shape","id":"sh/judsvqxg","slide":15,"name":"s13_c2_cap1_box","bbox":[628,306,120,54]}
+{"kind":"textbox","id":"sh/0z29cbyh","slide":15,"name":"s13_c2_cap1_text","text":"解密","textPreview":"解密","textChars":2,"textLines":1,"bbox":[638,316,100,32]}
+{"kind":"shape","id":"sh/l0bqlgf2","slide":15,"name":"s13_c2_cap2_box","bbox":[480,384,120,54]}
+{"kind":"textbox","id":"sh/1kjyt83e","slide":15,"name":"s13_c2_cap2_text","text":"签名","textPreview":"签名","textChars":2,"textLines":1,"bbox":[490,394,100,32]}
+{"kind":"shape","id":"sh/gjax03m9","slide":15,"name":"s13_c2_cap3_box","bbox":[628,384,170,54]}
+{"kind":"textbox","id":"sh/fi1grylo","slide":15,"name":"s13_c2_cap3_text","text":"公钥导入 / 导出","textPreview":"公钥导入 / 导出","textChars":9,"textLines":1,"bbox":[638,394,150,32]}
+{"kind":"shape","id":"sh/ehsfyt43","slide":15,"name":"s13_c3_chip_arrow","bbox":[866,336,86,38]}
+{"kind":"shape","id":"sh/p8jyx83q","slide":15,"name":"s13_c3_chip_box","bbox":[982,242,214,212]}
+{"kind":"textbox","id":"sh/o7ah4nm5","slide":15,"name":"s13_c3_chip_title","text":"CIU98","textPreview":"CIU98","textChars":5,"textLines":1,"bbox":[1016,274,146,48]}
+{"kind":"textbox","id":"sh/361gvilk","slide":15,"name":"s13_c3_chip_detail","text":"硬件密钥槽位\n串行访问","textPreview":"硬件密钥槽位 | 串行访问","textChars":11,"textLines":2,"bbox":[1016,346,146,66]}
+{"kind":"shape","id":"sh/25sf2d4z","slide":15,"name":"s13_c4_question_box","bbox":[214,542,852,76]}
+{"kind":"textbox","id":"sh/dc3y1s3m","slide":15,"name":"s13_c4_question_text","text":"Thinking：会话、并发、密钥槽位和硬件访问要如何设计代码结构？","textPreview":"Thinking：会话、并发、密钥槽位和硬件访问要如何设计代码结构？","textChars":34,"textLines":1,"bbox":[246,558,788,44]}
+{"kind":"textbox","id":"sh/cbuh8nmh","slide":15,"name":"s13_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[42,646,84,22]}
+{"kind":"textbox","id":"sh/uh4v2pkj","slide":15,"name":"s13_base_link_1","text":"↗ 打开 HSED 项目","textPreview":"↗ 打开 HSED 项目","textChars":12,"textLines":1,"bbox":[132,646,190,22]}
+{"kind":"notes","id":"nt/vaxsvy10","slide":15,"text":"【建议时长】2分钟\n\n【开场句】\n同样先不看答案，只看 HSED 要解决什么问题。\n\n【核心讲述】\n多个 MPU 应用进程需要安全使用同一颗 CIU98 硬件加密芯片，通过 SPC 同步 RPC 调用 HSED，完成加密、解密、签名和公钥导入导出。硬件密钥槽位和访问需要串行控制。大家可以先思考：会话状态放在哪里？多进程并发由哪一层处理？供应商动态库谁负责加载？公共密码接口是否应该知道平台细节？如果直接让 AI 从某个函数开始实现，它很容易得到局部正确、整体错误的结果。\n\n【动画 / 翻页提示】\nClick 1：出现多个 MPU 应用。\nClick 2：出现 SPC、HSED 与密码能力。\nClick 3：出现 CIU98、密钥槽位和串行访问。\nClick 4：显示架构思考题和项目入口。\n\n【转场句】\nHSED 的关键不是多写几个接口，而是先把跨层责任划清。\n\n[Sources]\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/STATUS.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/TRACK.md\n[/Sources]"}
+{"kind":"slide","id":"sl/gny5sjyp","slide":16,"title":"CASE 02 · HSED","textShapes":19}
+{"kind":"textbox","id":"sh/mpgj6t8j","slide":16,"name":"s14_base_section","text":"CASE 02 · HSED","textPreview":"CASE 02 · HSED","textChars":14,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/8z2h8bq1","slide":16,"name":"s14_base_title","text":"HSED：先把跨层风险写清，AI 才不会局部正确、整体错误","textPreview":"HSED：先把跨层风险写清，AI 才不会局部正确、整体错误","textChars":29,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/9kby1g7m","slide":16,"name":"s14_base_page","text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/ytkf2h8j","slide":16,"name":"s14_c1_layer0_box","bbox":[55,210,530,51.39]}
+{"kind":"textbox","id":"sh/zutgvm94","slide":16,"name":"s14_c1_layer0_title","text":"多进程调用","textPreview":"多进程调用","textChars":5,"textLines":1,"bbox":[75.88,220.78,168.64,29.84]}
+{"kind":"textbox","id":"sh/kv2h4rqp","slide":16,"name":"s14_c1_layer0_detail","text":"SPC 同步 RPC","textPreview":"SPC 同步 RPC","textChars":10,"textLines":1,"bbox":[262.18,220.78,297.12,29.84]}
+{"kind":"shape","id":"sh/lwbyxwra","slide":16,"name":"s14_c2_layer1_box","bbox":[55,274.65,530,51.39]}
+{"kind":"textbox","id":"sh/ip4zel83","slide":16,"name":"s14_c2_layer1_title","text":"APP / SPC","textPreview":"APP / SPC","textChars":9,"textLines":1,"bbox":[75.88,285.43,168.64,29.84]}
+{"kind":"textbox","id":"sh/3qdg7qpo","slide":16,"name":"s14_c2_layer1_detail","text":"服务组合与串行访问","textPreview":"服务组合与串行访问","textChars":9,"textLines":1,"bbox":[262.18,285.43,297.12,29.84]}
+{"kind":"shape","id":"sh/fm1gzq5o","slide":16,"name":"s14_c3_layer2_box","bbox":[55,339.3,530,51.39]}
+{"kind":"textbox","id":"sh/e1sf65o3","slide":16,"name":"s14_c3_layer2_title","text":"RTE","textPreview":"RTE","textChars":3,"textLines":1,"bbox":[75.88,350.08,168.64,29.84]}
+{"kind":"textbox","id":"sh/1ojy10ne","slide":16,"name":"s14_c3_layer2_detail","text":"平台适配、动态库、vendor 注入","textPreview":"平台适配、动态库、vendor 注入","textChars":18,"textLines":1,"bbox":[262.18,350.08,297.12,29.84]}
+{"kind":"shape","id":"sh/gnax8v6t","slide":16,"name":"s14_c4_layer3_box","bbox":[55,403.96,530,51.39]}
+{"kind":"textbox","id":"sh/nqlg3a5k","slide":16,"name":"s14_c4_layer3_title","text":"BSC","textPreview":"BSC","textChars":3,"textLines":1,"bbox":[75.88,414.73,168.64,29.84]}
+{"kind":"textbox","id":"sh/2pcfa5oz","slide":16,"name":"s14_c4_layer3_detail","text":"公共密码能力接口","textPreview":"公共密码能力接口","textChars":8,"textLines":1,"bbox":[262.18,414.73,297.12,29.84]}
+{"kind":"shape","id":"sh/ps3y5knq","slide":16,"name":"s14_c5_layer4_box","bbox":[55,468.61,530,51.39]}
+{"kind":"textbox","id":"sh/oruhcf65","slide":16,"name":"s14_c5_layer4_title","text":"CIU98 / SDK","textPreview":"CIU98 / SDK","textChars":11,"textLines":1,"bbox":[75.88,479.38,168.64,29.84]}
+{"kind":"textbox","id":"sh/bulg7u5g","slide":16,"name":"s14_c5_layer4_detail","text":"真实硬件与供应商实现","textPreview":"真实硬件与供应商实现","textChars":10,"textLines":1,"bbox":[262.18,479.38,297.12,29.84]}
+{"kind":"textbox","id":"sh/atczepob","slide":16,"name":"s14_c6_risk","text":"证明①②：边界越明确，实现越不容易破坏整体架构","textPreview":"证明①②：边界越明确，实现越不容易破坏整体架构","textChars":23,"textLines":1,"bbox":[55,535,530,55]}
+{"kind":"textbox","id":"sh/7qp0zepo","slide":16,"name":"s14_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[55,620,84,22]}
+{"kind":"textbox","id":"sh/8by18jq9","slide":16,"name":"s14_base_link_1","text":"↗ 打开 HSED 项目","textPreview":"↗ 打开 HSED 项目","textChars":12,"textLines":1,"bbox":[145,620,180,22]}
+{"kind":"textbox","id":"sh/9c7i1o7u","slide":16,"name":"s14_base_link_2","text":"↗ 查看总体架构","textPreview":"↗ 查看总体架构","textChars":8,"textLines":1,"bbox":[330,620,170,22]}
+{"kind":"textbox","id":"sh/ylwj2987","slide":16,"name":"s14_c7_command_bar","text":"本阶段指令  /az-sdd-arch\n明确 APP/SPC、RTE、BSC、CIU98 职责","textPreview":"本阶段指令  /az-sdd-arch | 明确 APP/SPC、RTE、BSC、CIU98 职责","textChars":47,"textLines":2,"bbox":[55,145,530,48]}
+{"kind":"textbox","id":"sh/zm50veps","slide":16,"name":"s14_c8_screenshot_slot","text":"截图预留区\nArch 架构澄清 / 批准截图\n\n建议截图：AI 对分层责任的复述、疑问与最终批准内容\n\n替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textPreview":"截图预留区 | Arch 架构澄清 / 批准截图 |  | 建议截图：AI 对分层责任的复述、疑问与最终批准内容 |  | 替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textChars":81,"textLines":6,"bbox":[660,190,520,330]}
+{"kind":"image","id":"im/36psju1w","slide":16,"name":"图片 25","bbox":[617.33,171,628.53,355.6]}
+{"kind":"notes","id":"nt/gny5sjyp","slide":16,"text":"【建议时长】2分钟\n\n【开场句】\nHSED 的 Arch 把每一层的职责写成 AI 必须遵守的边界。\n\n【核心讲述】\nAPP 和 SPC 负责多进程调用、服务组合与串行访问；RTE 负责平台适配、动态库加载和 vendor 注入；BSC 只提供公共密码能力接口；CIU98 和 SDK 承担真实硬件与供应商实现。这样分层以后，AI 在修改某一层时能够知道哪些事情不能做。规范明确化在这里不只是用户界面的描述，而是深入到跨层依赖、并发责任和平台机制。它同时证明第一和第二项收益：技术边界越明确，AI 的局部实现越不容易破坏整体架构。\n\n【动画 / 翻页提示】\nClick 1：出现多进程调用。\nClick 2：出现 APP / SPC 职责。\nClick 3：出现 RTE 职责。\nClick 4：出现 BSC 职责。\nClick 5：出现 CIU98 / SDK。\nClick 6：强调边界与实现准确性。\n\n【转场句】\n但架构不是一次就一定正确，测试反馈仍可能推翻早期判断。\n\n[Sources]\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/STATUS.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/TRACK.md\n[/Sources]\n\n\n【实操提示】\n强调 HSED 属于复杂跨层功能，因此必须显式进入 arch；指令后的关键产物不是架构图本身，而是 AI 后续不得突破的职责边界。\n\n\n【截图替换说明】\n本页右侧已预留“Arch 架构澄清与批准”截图区域。补图时删除虚线占位框，将截图裁剪到相同位置和大小；不要移动左侧流程、底部结论及项目跳转链接。"}
+{"kind":"slide","id":"sl/14bup87q","slide":17,"title":"CASE 02 · HSED","textShapes":22}
+{"kind":"textbox","id":"sh/ny5876xc","slide":17,"name":"s15_base_section","text":"CASE 02 · HSED","textPreview":"CASE 02 · HSED","textChars":14,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/1c7e50ni","slide":17,"name":"s15_base_title","text":"HSED：Feedback 让 AI 从修代码升级为修正架构依据","textPreview":"HSED：Feedback 让 AI 从修代码升级为修正架构依据","textChars":32,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/gbedwfmx","slide":17,"name":"s15_base_page","text":"17","textPreview":"17","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"textbox","id":"sh/rm5czq50","slide":17,"name":"s15_c1_before_label","text":"纠偏前","textPreview":"纠偏前","textChars":3,"textLines":1,"bbox":[68.25,210,132.5,33.17]}
+{"kind":"shape","id":"sh/6lwvql4v","slide":17,"name":"s15_c1_before_bsc","bbox":[55,263.07,160.1,190.7]}
+{"kind":"textbox","id":"sh/t8ne10n6","slide":17,"name":"s15_c1_before_title","text":"BSC","textPreview":"BSC","textChars":3,"textLines":1,"bbox":[74.87,284.62,120.35,33.17]}
+{"kind":"textbox","id":"sh/snedsvml","slide":17,"name":"s15_c1_before_items","text":"密码接口\ndlopen\npthread\n平台异常处理","textPreview":"密码接口 | dlopen | pthread | 平台异常处理","textChars":26,"textLines":4,"bbox":[74.87,336.03,120.35,92.86]}
+{"kind":"textbox","id":"sh/jilcvq54","slide":17,"name":"s15_c2_problem","text":"公共组件承担了平台机制","textPreview":"公共组件承担了平台机制","textChars":11,"textLines":1,"bbox":[55,480.3,160.1,31.51]}
+{"kind":"shape","id":"sh/ihcvml4j","slide":17,"name":"s15_c3_rearch_arrow","bbox":[271.42,334.37,68.46,39.8]}
+{"kind":"textbox","id":"sh/4by9or6l","slide":17,"name":"s15_c3_rearch_label","text":"Feedback\n触发 Arch 重审","textPreview":"Feedback | 触发 Arch 重审","textChars":19,"textLines":2,"bbox":[259.27,263.07,92.75,59.7]}
+{"kind":"textbox","id":"sh/pc7qhwn6","slide":17,"name":"s15_c4_after_label","text":"纠偏后","textPreview":"纠偏后","textChars":3,"textLines":1,"bbox":[419.38,210,132.5,33.17]}
+{"kind":"shape","id":"sh/29grm1of","slide":17,"name":"s15_c4_after0_box","bbox":[386.25,249.8,198.75,59.7]}
+{"kind":"textbox","id":"sh/3ap8fm50","slide":17,"name":"s15_c4_after0_title","text":"APP / SPC","textPreview":"APP / SPC","textChars":9,"textLines":1,"bbox":[399.5,263.07,71.77,29.85]}
+{"kind":"textbox","id":"sh/gnepkr69","slide":17,"name":"s15_c4_after0_detail","text":"组合服务","textPreview":"组合服务","textChars":4,"textLines":1,"bbox":[471.27,263.07,99.38,29.85]}
+{"kind":"shape","id":"sh/honqdwnu","slide":17,"name":"s15_c4_after1_box","bbox":[386.25,332.71,198.75,59.7]}
+{"kind":"textbox","id":"sh/ulw7ihoj","slide":17,"name":"s15_c4_after1_title","text":"RTE","textPreview":"RTE","textChars":3,"textLines":1,"bbox":[399.5,345.98,71.77,29.85]}
+{"kind":"textbox","id":"sh/fm58bm54","slide":17,"name":"s15_c4_after1_detail","text":"加载动态库、注入 vendor","textPreview":"加载动态库、注入 vendor","textChars":15,"textLines":1,"bbox":[471.27,345.98,99.38,29.85]}
+{"kind":"shape","id":"sh/0ji9wb6t","slide":17,"name":"s15_c4_after2_box","bbox":[386.25,415.63,198.75,59.7]}
+{"kind":"textbox","id":"sh/14rqpgne","slide":17,"name":"s15_c4_after2_title","text":"BSC","textPreview":"BSC","textChars":3,"textLines":1,"bbox":[399.5,428.89,71.77,29.85]}
+{"kind":"textbox","id":"sh/90nq9gfi","slide":17,"name":"s15_c4_after2_detail","text":"只保留能力虚接口","textPreview":"只保留能力虚接口","textChars":8,"textLines":1,"bbox":[471.27,428.89,99.38,29.85]}
+{"kind":"textbox","id":"sh/8ze9gbyx","slide":17,"name":"s15_c5_after_claim","text":"测试反馈回到 Arch，下一轮 AI 不会重复同类错误","textPreview":"测试反馈回到 Arch，下一轮 AI 不会重复同类错误","textChars":27,"textLines":1,"bbox":[387.35,508.49,196.54,31.51]}
+{"kind":"textbox","id":"sh/mxw7e1gr","slide":17,"name":"s15_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[55,620,84,22]}
+{"kind":"textbox","id":"sh/lwnq5gf6","slide":17,"name":"s15_base_link_1","text":"↗ 查看架构纠偏","textPreview":"↗ 查看架构纠偏","textChars":8,"textLines":1,"bbox":[145,620,170,22]}
+{"kind":"textbox","id":"sh/0vepcbyl","slide":17,"name":"s15_base_link_2","text":"↗ 查看 RTE 实现","textPreview":"↗ 查看 RTE 实现","textChars":11,"textLines":1,"bbox":[315,620,160,22]}
+{"kind":"textbox","id":"sh/zul836xg","slide":17,"name":"s15_base_link_3","text":"↗ 查看 BSC 实现","textPreview":"↗ 查看 BSC 实现","textChars":11,"textLines":1,"bbox":[465,620,160,22]}
+{"kind":"textbox","id":"sh/ytc7a1gv","slide":17,"name":"s15_c6_command_bar","text":"本阶段指令  /az-sdd-feedback → /az-sdd-arch\n记录 BSC 越界并重审架构","textPreview":"本阶段指令  /az-sdd-feedback → /az-sdd-arch | 记录 BSC 越界并重审架构","textChars":53,"textLines":2,"bbox":[55,145,530,48]}
+{"kind":"textbox","id":"sh/d83q1wfa","slide":17,"name":"s15_c7_screenshot_slot","text":"截图预留区\nFeedback 触发 Arch 重审截图\n\n建议截图：发现 BSC 越界、分析根因、重新分配职责的真实对话\n\n替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textPreview":"截图预留区 | Feedback 触发 Arch 重审截图 |  | 建议截图：发现 BSC 越界、分析根因、重新分配职责的真实对话 |  | 替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textChars":91,"textLines":6,"bbox":[660,190,520,330]}
+{"kind":"image","id":"im/j6xsreps","slide":17,"name":"图片 28","bbox":[609.8,148.33,659.13,387.87]}
+{"kind":"notes","id":"nt/14bup87q","slide":17,"text":"【建议时长】2.5分钟\n\n【开场句】\n这个案例最有价值的地方，是 Feedback 没有停留在修代码，而是触发了 Arch 重审。\n\n【核心讲述】\n纠偏前，BSC 除了密码接口，还承担 dlopen、pthread 和平台异常处理，这让公共组件知道了过多平台机制。测试和评审暴露问题后，Feedback 先记录根因和影响，再修改 Arch：APP/SPC 负责组合服务，RTE 负责加载动态库和注入 vendor，BSC 只保留能力虚接口。然后 AI 再按新架构调整代码。这样下一轮 AI 接手时看到的是已经修正的设计依据，而不是只看到一段补丁。双向追溯在这里还表现为：测试不仅验证代码，也能反向纠正架构规范。\n\n【动画 / 翻页提示】\nClick 1：展示纠偏前 BSC 承担过多职责。\nClick 2：出现 Feedback。\nClick 3：出现 Arch 重审。\nClick 4：展示纠偏后的 APP/SPC、RTE、BSC 分层。\nClick 5：强调下一轮 AI 不会重复同类错误。\n\n【转场句】\n架构修正以后，功能是否完成仍然要由完整证据决定。\n\n[Sources]\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/STATUS.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/TRACK.md\n[/Sources]\n\n\n【实操提示】\n展示测试反馈如何触发架构重审：feedback 记录问题和根因，arch 修正技术依据，之后 coder 才按新边界调整代码。\n\n\n【截图替换说明】\n本页右侧已预留“Feedback 触发架构重审”截图区域。补图时删除虚线占位框，将截图裁剪到相同位置和大小；不要移动左侧流程、底部结论及项目跳转链接。"}
+{"kind":"slide","id":"sl/y5wne50z","slide":18,"title":"CASE 02 · HSED","textShapes":18}
+{"kind":"textbox","id":"sh/qh03ql8j","slide":18,"name":"s16_base_section","text":"CASE 02 · HSED","textPreview":"CASE 02 · HSED","textChars":14,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/wrelszu9","slide":18,"name":"s16_base_title","text":"HSED：测试证据必须反查需求，状态才允许关闭","textPreview":"HSED：测试证据必须反查需求，状态才允许关闭","textChars":23,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/hsn2l4bu","slide":18,"name":"s16_base_page","text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/itw3upcf","slide":18,"name":"s16_c1_g0_box","bbox":[55,244.22,109.18,171.56]}
+{"kind":"textbox","id":"sh/je5knut0","slide":18,"name":"s16_c1_g0_label","text":"30/30","textPreview":"30/30","textChars":5,"textLines":1,"bbox":[66.91,262.39,85.36,34.31]}
+{"kind":"textbox","id":"sh/4felwzu5","slide":18,"name":"s16_c1_g0_detail","text":"生命周期断言","textPreview":"生命周期断言","textChars":6,"textLines":1,"bbox":[66.91,306.79,85.36,92.84]}
+{"kind":"shape","id":"sh/5gnmp4bq","slide":18,"name":"s16_c2_g1_box","bbox":[185.02,244.22,109.18,171.56]}
+{"kind":"textbox","id":"sh/6hw3y9sb","slide":18,"name":"s16_c2_g1_label","text":"8×20","textPreview":"8×20","textChars":4,"textLines":1,"bbox":[196.93,262.39,85.36,34.31]}
+{"kind":"textbox","id":"sh/rip4retw","slide":18,"name":"s16_c2_g1_detail","text":"并发循环","textPreview":"并发循环","textChars":4,"textLines":1,"bbox":[196.93,306.79,85.36,92.84]}
+{"kind":"shape","id":"sh/fapkr6pw","slide":18,"name":"s16_c3_g2_box","bbox":[315.04,244.22,109.18,171.56]}
+{"kind":"textbox","id":"sh/upg3i18r","slide":18,"name":"s16_c3_g2_label","text":"AG35","textPreview":"AG35","textChars":4,"textLines":1,"bbox":[326.95,262.39,85.36,34.31]}
+{"kind":"textbox","id":"sh/1cr2tg72","slide":18,"name":"s16_c3_g2_detail","text":"交叉构建","textPreview":"交叉构建","textChars":4,"textLines":1,"bbox":[326.95,306.79,85.36,92.84]}
+{"kind":"shape","id":"sh/gbylkbqh","slide":18,"name":"s16_c4_to_device_arrow","bbox":[438.11,304.77,42.68,38.35]}
+{"kind":"shape","id":"sh/7mpknmp0","slide":18,"name":"s16_c4_device_box","bbox":[493.69,220,91.31,220]}
+{"kind":"textbox","id":"sh/6lg3e18f","slide":18,"name":"s16_c4_device_title","text":"真实设备","textPreview":"真实设备","textChars":4,"textLines":1,"bbox":[505.6,254.31,67.49,40.37]}
+{"kind":"textbox","id":"sh/to72pw76","slide":18,"name":"s16_c4_device_detail","text":"CIU98 + SPC\n尚未验收","textPreview":"CIU98 + SPC | 尚未验收","textChars":16,"textLines":2,"bbox":[505.6,328.99,67.49,70.64]}
+{"kind":"shape","id":"sh/snylgrql","slide":18,"name":"s16_c5_status_box","bbox":[55,470,530,72]}
+{"kind":"textbox","id":"sh/bi94zqp4","slide":18,"name":"s16_c5_status","text":"证明③：自动测试通过 ≠ 需求已完成","textPreview":"证明③：自动测试通过 ≠ 需求已完成","textChars":18,"textLines":1,"bbox":[75,482,490,48]}
+{"kind":"textbox","id":"sh/md4nipsr","slide":18,"name":"s16_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[55,620,84,22]}
+{"kind":"textbox","id":"sh/nedoru9c","slide":18,"name":"s16_base_link_1","text":"↗ 查看验证状态","textPreview":"↗ 查看验证状态","textChars":8,"textLines":1,"bbox":[145,620,160,22]}
+{"kind":"textbox","id":"sh/8zm5kzax","slide":18,"name":"s16_base_link_2","text":"↗ 查看设备验收单","textPreview":"↗ 查看设备验收单","textChars":9,"textLines":1,"bbox":[305,620,180,22]}
+{"kind":"textbox","id":"sh/90v6t4ri","slide":18,"name":"s16_base_link_3","text":"↗ 查看自动化用例","textPreview":"↗ 查看自动化用例","textChars":9,"textLines":1,"bbox":[475,620,180,22]}
+{"kind":"textbox","id":"sh/a14nm9s3","slide":18,"name":"s16_c6_command_bar","text":"本阶段指令  /az-sdd-tester\n自动化通过后继续执行真实设备验收","textPreview":"本阶段指令  /az-sdd-tester | 自动化通过后继续执行真实设备验收","textChars":38,"textLines":2,"bbox":[55,145,530,48]}
+{"kind":"textbox","id":"sh/v2xovu9o","slide":18,"name":"s16_c7_screenshot_slot","text":"截图预留区\nTester 验收状态 / 实机证据截图\n\n建议截图：自动化通过、实机待验收或最终设备测试记录\n\n替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textPreview":"截图预留区 | Tester 验收状态 / 实机证据截图 |  | 建议截图：自动化通过、实机待验收或最终设备测试记录 |  | 替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textChars":84,"textLines":6,"bbox":[660,190,520,330]}
+{"kind":"image","id":"im/nyhk3ypc","slide":18,"name":"图片 25","bbox":[617.33,133.2,636.4,456.13]}
+{"kind":"notes","id":"nt/y5wne50z","slide":18,"text":"【建议时长】2分钟\n\n【开场句】\n这一页要强调：自动化测试通过，不等于需求已经完成。\n\n【核心讲述】\n当前证据包括 30 项生命周期断言、8 组每组 20 次并发循环，以及 AG35 交叉构建。这些能证明大量软件行为，但 HSED 最终依赖 CIU98、SPC 和真实设备。只要实机验收尚未完成，状态就不能关闭。AZ-SDD 让验收门禁来自需求，而不是来自开发者‘感觉差不多了’。现场可以打开验证状态、设备验收单和自动化用例，说明哪些证据已经具备、哪些仍然缺失。这种诚实的未完成状态，也是可追溯的一部分。\n\n【动画 / 翻页提示】\nClick 1：出现生命周期断言。\nClick 2：出现并发循环。\nClick 3：出现交叉构建。\nClick 4：出现真实设备尚未验收。\nClick 5：强调自动测试通过不等于需求完成，并展示跳转入口。\n\n【转场句】\n前两个案例偏向新开发和高风险功能。第三个案例看老项目维护。\n\n[Sources]\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/STATUS.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/TRACK.md\n[/Sources]\n\n\n【实操提示】\n说明 tester 会读取 arch 中的设备、部署和硬件前置条件；缺少 CIU98 实机证据时，状态必须保持未完成。\n\n\n【截图替换说明】\n本页右侧已预留“Tester 验收状态与实机证据”截图区域。补图时删除虚线占位框，将截图裁剪到相同位置和大小；不要移动左侧流程、底部结论及项目跳转链接。"}
+{"kind":"slide","id":"sl/nid43ytk","slide":19,"title":"CASE 03 · PROJECT FIRST","textShapes":16}
+{"kind":"textbox","id":"sh/j2p03m1o","slide":19,"name":"s17_base_section","text":"CASE 03 · PROJECT FIRST","textPreview":"CASE 03 · PROJECT FIRST","textChars":23,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/9gb6xgbi","slide":19,"name":"s17_base_title","text":"mcu_upgrade_app：让一套升级流程适配不同 MPU 平台","textPreview":"mcu_upgrade_app：让一套升级流程适配不同 MPU 平台","textChars":34,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/8v2pobax","slide":19,"name":"s17_base_page","text":"19","textPreview":"19","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"textbox","id":"sh/vitozqt8","slide":19,"name":"s17_c1_requests_title","text":"上层只关心升级行为","textPreview":"上层只关心升级行为","textChars":9,"textLines":1,"bbox":[56,184,286,40]}
+{"kind":"shape","id":"sh/ahk7qls3","slide":19,"name":"s17_c1_group0_box","bbox":[74,258,116,62]}
+{"kind":"textbox","id":"sh/xkbq10be","slide":19,"name":"s17_c1_group0_text","text":"镜像检测","textPreview":"镜像检测","textChars":4,"textLines":1,"bbox":[84,272,96,34]}
+{"kind":"shape","id":"sh/wj2psvat","slide":19,"name":"s17_c1_group1_box","bbox":[210,258,116,62]}
+{"kind":"textbox","id":"sh/jmd83atk","slide":19,"name":"s17_c1_group1_text","text":"校验解包","textPreview":"校验解包","textChars":4,"textLines":1,"bbox":[220,272,96,34]}
+{"kind":"shape","id":"sh/il47u5sz","slide":19,"name":"s17_c1_group2_box","bbox":[74,346,116,62]}
+{"kind":"textbox","id":"sh/cri1gnql","slide":19,"name":"s17_c1_group2_text","text":"刷写升级","textPreview":"刷写升级","textChars":4,"textLines":1,"bbox":[84,360,96,34]}
+{"kind":"shape","id":"sh/dsri9sr6","slide":19,"name":"s17_c1_group3_box","bbox":[210,346,116,62]}
+{"kind":"textbox","id":"sh/qpgjex8f","slide":19,"name":"s17_c1_group3_text","text":"掉电恢复","textPreview":"掉电恢复","textChars":4,"textLines":1,"bbox":[220,360,96,34]}
+{"kind":"shape","id":"sh/rqp07290","slide":19,"name":"s17_c2_to_mcud","bbox":[372,326,90,38]}
+{"kind":"shape","id":"sh/0vi1k7qx","slide":19,"name":"s17_c2_mcud_box","bbox":[496,224,286,236]}
+{"kind":"textbox","id":"sh/1gridcr2","slide":19,"name":"s17_c2_mcud_title","text":"统一升级契约","textPreview":"统一升级契约","textChars":6,"textLines":1,"bbox":[542,258,194,46]}
+{"kind":"textbox","id":"sh/et0jix8r","slide":19,"name":"s17_c2_mcud_detail","text":"初始化 · 镜像路径\n升级 / 备份 / 回滚\n状态 · 进度 · 分区","textPreview":"初始化 · 镜像路径 | 升级 / 备份 / 回滚 | 状态 · 进度 · 分区","textChars":36,"textLines":3,"bbox":[542,338,194,70]}
+{"kind":"shape","id":"sh/zu90b29c","slide":19,"name":"s17_c3_xrpc_arrow","bbox":[814,326,90,38]}
+{"kind":"textbox","id":"sh/oj21o7qt","slide":19,"name":"s17_c3_xrpc_label","text":"编译期选择","textPreview":"编译期选择","textChars":5,"textLines":1,"bbox":[824,286,70,30]}
+{"kind":"shape","id":"sh/9kb2hcre","slide":19,"name":"s17_c3_mcu_box","bbox":[936,224,270,236]}
+{"kind":"textbox","id":"sh/x07i1cji","slide":19,"name":"s17_c3_mcu_title","text":"多平台适配","textPreview":"多平台适配","textChars":5,"textLines":1,"bbox":[980,258,182,46]}
+{"kind":"textbox","id":"sh/wfy1s7ix","slide":19,"name":"s17_c3_mcu_detail","text":"AG35 · AR590\nSIM7805 · N725A\n各自调用厂商 OTA","textPreview":"AG35 · AR590 | SIM7805 · N725A | 各自调用厂商 OTA","textChars":39,"textLines":3,"bbox":[974,330,194,92]}
+{"kind":"shape","id":"sh/vep0z21c","slide":19,"name":"s17_c4_question_box","bbox":[214,542,852,76]}
+{"kind":"textbox","id":"sh/adgjqx0r","slide":19,"name":"s17_c4_question_text","text":"Thinking：新增 N725A 时，如何让 AI 增加独立适配层？","textPreview":"Thinking：新增 N725A 时，如何让 AI 增加独立适配层？","textChars":35,"textLines":1,"bbox":[246,558,788,44]}
+{"kind":"textbox","id":"sh/54ri5wje","slide":19,"name":"s17_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[42,646,84,22]}
+{"kind":"textbox","id":"sh/k3y1wri9","slide":19,"name":"s17_base_link_1","text":"↗ 打开 mcu_upgrade_app","textPreview":"↗ 打开 mcu_upgrade_app","textChars":20,"textLines":1,"bbox":[132,646,260,22]}
+{"kind":"notes","id":"nt/nid43ytk","slide":19,"text":"【建议时长】2分钟\n\n【开场句】\nmcu_upgrade_app 的核心目标，是让上层只关心升级行为，而不关心不同 MPU 平台的厂商差异。\n\n【核心讲述】\n公共流程包括镜像检测、校验解包、刷写升级和掉电恢复。它通过统一升级契约暴露初始化、镜像路径、升级、备份、回滚、状态、进度和分区能力，再由编译期选择 AG35、AR590、SIM7805 或 N725A 的平台适配。请大家先想一下：在一个已经支持多个平台的老项目中新增 N725A，应该修改公共流程，还是增加独立适配层？真正的维护风险不是新代码写不出来，而是为了新平台破坏旧平台行为。\n\n【动画 / 翻页提示】\nClick 1：出现公共升级流程。\nClick 2：出现统一升级契约。\nClick 3：出现多平台适配。\nClick 4：显示 N725A 设计问题和项目入口。\n\n【转场句】\nAZ-SDD 的做法是先识别并固定旧契约，再描述 N725A 的差异。\n\n[Sources]\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/STATUS.md\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/TRACK.md\n[/Sources]"}
+{"kind":"slide","id":"sl/zyxsni5k","slide":20,"title":"CASE 03 · N725A MAINTENANCE","textShapes":24}
+{"kind":"textbox","id":"sh/j6x47ap4","slide":20,"name":"s18_base_section","text":"CASE 03 · N725A MAINTENANCE","textPreview":"CASE 03 · N725A MAINTENANCE","textChars":27,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/qpwjmh8n","slide":20,"name":"s18_base_title","text":"N725A：明确旧契约后，AI 只新增平台差异","textPreview":"N725A：明确旧契约后，AI 只新增平台差异","textChars":23,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/rq50vmp8","slide":20,"name":"s18_base_page","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"textbox","id":"sh/4nu1krqh","slide":20,"name":"s18_c1_legacy_label","text":"旧契约保持不变","textPreview":"旧契约保持不变","textChars":7,"textLines":1,"bbox":[62.09,210,111.47,34.34]}
+{"kind":"shape","id":"sh/po3itc72","slide":20,"name":"s18_c1_code0_box","bbox":[62.09,263.23,56.75,49.8]}
+{"kind":"textbox","id":"sh/2lczih8r","slide":20,"name":"s18_c1_code0_text","text":"初始化","textPreview":"初始化","textChars":3,"textLines":1,"bbox":[67.16,275.25,46.62,25.76]}
+{"kind":"shape","id":"sh/3ml0rmpw","slide":20,"name":"s18_c1_code1_box","bbox":[128.98,263.23,56.75,49.8]}
+{"kind":"textbox","id":"sh/gjuhg7ql","slide":20,"name":"s18_c1_code1_text","text":"镜像路径","textPreview":"镜像路径","textChars":4,"textLines":1,"bbox":[134.04,275.25,46.62,25.76]}
+{"kind":"shape","id":"sh/hk3ipcr6","slide":20,"name":"s18_c1_code2_box","bbox":[62.09,333.64,56.75,49.8]}
+{"kind":"textbox","id":"sh/dkfmp4zy","slide":20,"name":"s18_c1_code2_text","text":"升级状态","textPreview":"升级状态","textChars":4,"textLines":1,"bbox":[67.16,345.66,46.62,25.76]}
+{"kind":"shape","id":"sh/cj65wzyd","slide":20,"name":"s18_c1_code3_box","bbox":[128.98,333.64,56.75,49.8]}
+{"kind":"textbox","id":"sh/rid4nuhs","slide":20,"name":"s18_c1_code3_text","text":"进度回调","textPreview":"进度回调","textChars":4,"textLines":1,"bbox":[134.04,345.66,46.62,25.76]}
+{"kind":"shape","id":"sh/qh4nupg7","slide":20,"name":"s18_c1_code4_box","bbox":[62.09,404.04,56.75,49.8]}
+{"kind":"textbox","id":"sh/pwvmlkzm","slide":20,"name":"s18_c1_code4_text","text":"分区查询","textPreview":"分区查询","textChars":4,"textLines":1,"bbox":[67.16,416.06,46.62,25.76]}
+{"kind":"textbox","id":"sh/4vm5sfy1","slide":20,"name":"s18_c2_problem","text":"准确性约束：原有平台行为保持不变","textPreview":"准确性约束：原有平台行为保持不变","textChars":16,"textLines":1,"bbox":[55,512.22,148.97,37.78]}
+{"kind":"shape","id":"sh/3ud4juhg","slide":20,"name":"s18_c3_reverse_arrow","bbox":[219.17,331.92,57.76,37.78]}
+{"kind":"textbox","id":"sh/2t4nqpgb","slide":20,"name":"s18_c3_reverse_label","text":"Spec + Arch\n确认差异","textPreview":"Spec + Arch | 确认差异","textChars":16,"textLines":2,"bbox":[211.06,256.36,73.98,58.38]}
+{"kind":"shape","id":"sh/hsvmhkzq","slide":20,"name":"s18_c4_spec_box","bbox":[305.31,230.61,128.7,242.12]}
+{"kind":"textbox","id":"sh/grm5ofy5","slide":20,"name":"s18_c4_spec_num","text":"0200","textPreview":"0200","textChars":4,"textLines":1,"bbox":[332.67,264.95,73.98,65.25]}
+{"kind":"textbox","id":"sh/8b654f61","slide":20,"name":"s18_c4_spec_label","text":"批准的验收契约","textPreview":"批准的验收契约","textChars":7,"textLines":1,"bbox":[329.63,342.22,80.06,34.34]}
+{"kind":"textbox","id":"sh/tcz6dk7m","slide":20,"name":"s18_c4_spec_detail","text":"有效包 / 异常路径\n等待重启 / 实机确认","textPreview":"有效包 / 异常路径 | 等待重启 / 实机确认","textChars":22,"textLines":2,"bbox":[329.63,397.17,80.06,51.52]}
+{"kind":"shape","id":"sh/69on25ov","slide":20,"name":"s18_c5_arch_box","bbox":[456.3,230.61,128.7,242.12]}
+{"kind":"textbox","id":"sh/7ax4bapg","slide":20,"name":"s18_c5_arch_num","text":"N725A","textPreview":"N725A","textChars":5,"textLines":1,"bbox":[483.66,264.95,73.98,65.25]}
+{"kind":"textbox","id":"sh/k7650f6p","slide":20,"name":"s18_c5_arch_label","text":"独立平台适配","textPreview":"独立平台适配","textChars":6,"textLines":1,"bbox":[480.62,342.22,80.06,34.34]}
+{"kind":"textbox","id":"sh/l8fm907a","slide":20,"name":"s18_c5_arch_detail","text":"nwy_fota_ua\n厂商结果映射统一状态","textPreview":"nwy_fota_ua | 厂商结果映射统一状态","textChars":22,"textLines":2,"bbox":[480.62,397.17,80.06,51.52]}
+{"kind":"textbox","id":"sh/y5ony58z","slide":20,"name":"s18_c6_claim","text":"证明②③④：边界准确、证据可追溯、维护更高效","textPreview":"证明②③④：边界准确、证据可追溯、维护更高效","textChars":22,"textLines":1,"bbox":[55,560,530,45]}
+{"kind":"textbox","id":"sh/43q5cz69","slide":20,"name":"s18_base_link_label","text":"现场跳转","textPreview":"现场跳转","textChars":4,"textLines":1,"bbox":[55,630,84,22]}
+{"kind":"textbox","id":"sh/54j6l47e","slide":20,"name":"s18_base_link_1","text":"↗ 打开升级项目","textPreview":"↗ 打开升级项目","textChars":8,"textLines":1,"bbox":[145,630,180,22]}
+{"kind":"textbox","id":"sh/za50r2ds","slide":20,"name":"s18_base_link_2","text":"↗ 查看 Spec / Arch","textPreview":"↗ 查看 Spec / Arch","textChars":16,"textLines":1,"bbox":[325,630,170,22]}
+{"kind":"textbox","id":"sh/e9wzyxcn","slide":20,"name":"s18_base_link_3","text":"↗ 查看测试报告","textPreview":"↗ 查看测试报告","textChars":8,"textLines":1,"bbox":[490,630,160,22]}
+{"kind":"textbox","id":"sh/1cnitsvy","slide":20,"name":"s18_c7_command_bar","text":"本阶段指令\n/az-sdd-feedback 新增N725A模组升级功能","textPreview":"本阶段指令 | /az-sdd-feedback 新增N725A模组升级功能","textChars":36,"textLines":2,"bbox":[55,145,530,48]}
+{"kind":"textbox","id":"sh/0beh07ud","slide":20,"name":"s18_c8_screenshot_slot","text":"截图预留区\nN725A Spec / Arch / Coder 截图\n\n建议截图：确认旧契约不变、描述平台差异并开始实现的真实对话\n\n替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textPreview":"截图预留区 | N725A Spec / Arch / Coder 截图 |  | 建议截图：确认旧契约不变、描述平台差异并开始实现的真实对话 |  | 替换方法：删除此占位框 → 插入图片 → 裁剪填充当前区域","textChars":96,"textLines":6,"bbox":[660,190,520,330]}
+{"kind":"image","id":"im/wzu1wju9","slide":20,"name":"图片 33","bbox":[617.33,171,658.67,403.6]}
+{"kind":"notes","id":"nt/zyxsni5k","slide":20,"text":"【建议时长】3分钟\n\n【开场句】\n这个维护案例的核心原则是：公共契约不变，AI 只新增平台差异。\n\n【核心讲述】\n首先从老项目中确认已有契约：初始化、镜像路径、升级状态、进度回调和分区查询等行为都应保持不变。Spec 和 Arch 再描述 N725A 的差异、异常路径和验收条件，例如有效升级包、等待重启以及必须通过实机确认的部分。实现时建立独立 N725A 适配，调用 nwy_fota_ua，并把厂商结果映射回统一状态。这样 AI 不需要重新推测整个升级系统，只需在明确边界内增加差异。需求能够找到对应的测试报告，尚未完成的实机项目也保持开放。这个案例同时证明实现准确、双向追溯和维护效率提高。\n\n【动画 / 翻页提示】\nClick 1：出现已有统一契约。\nClick 2：强调原有平台行为保持不变。\nClick 3：出现 Spec 与 Arch 先确认差异。\nClick 4：出现批准的验收契约。\nClick 5：出现 N725A 独立适配和厂商结果映射。\nClick 6：总结三项收益并展示真实文件入口。\n\n【转场句】\n三个项目类型不同，但它们给出的结论是一致的。\n\n[Sources]\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/STATUS.md\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/TRACK.md\n[/Sources]\n\n\n【实操提示】\n按顺序说明维护老项目时的指令：先用 spec 明确新平台行为，再用 arch 固定不修改公共流程的边界，最后让 coder 只实现 N725A 适配层。\n\n\n【截图替换说明】\n本页右侧已预留“N725A 维护流程真实交互”截图区域。补图时删除虚线占位框，将截图裁剪到相同位置和大小；不要移动左侧流程、底部结论及项目跳转链接。"}
+{"kind":"slide","id":"sl/m1wvqtk3","slide":21,"title":"AZ-SDD PRACTICE","textShapes":14}
+{"kind":"textbox","id":"sh/nm9cru18","slide":21,"name":"s19_base_section","text":"AZ-SDD PRACTICE","textPreview":"AZ-SDD PRACTICE","textChars":15,"textLines":1,"bbox":[42,28,360,26]}
+{"kind":"textbox","id":"sh/1gbmxs7a","slide":21,"name":"s19_base_title","text":"三个案例共同证明：AZ-SDD 管理的是可持续变更","textPreview":"三个案例共同证明：AZ-SDD 管理的是可持续变更","textChars":25,"textLines":1,"bbox":[42,66,1180,74]}
+{"kind":"textbox","id":"sh/0f2lon6p","slide":21,"name":"s19_base_page","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[1186,674,44,18]}
+{"kind":"shape","id":"sh/ra9kryp8","slide":21,"name":"s19_c1_case0_circle","bbox":[193,177,86,86]}
+{"kind":"textbox","id":"sh/qp03yt8n","slide":21,"name":"s19_c1_case0_text","text":"azKits","textPreview":"azKits","textChars":6,"textLines":1,"bbox":[188,201,96,38]}
+{"kind":"shape","id":"sh/dcb2t87y","slide":21,"name":"s19_c1_case1_circle","bbox":[597,177,86,86]}
+{"kind":"textbox","id":"sh/sb2lk36t","slide":21,"name":"s19_c1_case1_text","text":"HSED","textPreview":"HSED","textChars":4,"textLines":1,"bbox":[592,201,96,38]}
+{"kind":"shape","id":"sh/b6d432pc","slide":21,"name":"s19_c1_case2_circle","bbox":[1001,177,86,86]}
+{"kind":"textbox","id":"sh/al43uxor","slide":21,"name":"s19_c1_case2_text","text":"N725A","textPreview":"N725A","textChars":5,"textLines":1,"bbox":[996,201,96,38]}
+{"kind":"shape","id":"sh/4jax4nqd","slide":21,"name":"s19_c2_val0_box","bbox":[96,366,248,170]}
+{"kind":"textbox","id":"sh/5kjydsri","slide":21,"name":"s19_c2_val0_title","text":"功能规范明确化","textPreview":"功能规范明确化","textChars":7,"textLines":1,"bbox":[116,394,208,36]}
+{"kind":"textbox","id":"sh/ixsf2d87","slide":21,"name":"s19_c2_val0_detail","text":"baseline/spec 保持当前功能真相","textPreview":"baseline/spec 保持当前功能真相","textChars":22,"textLines":1,"bbox":[116,458,208,48]}
+{"kind":"shape","id":"sh/jy1gbi9s","slide":21,"name":"s19_c3_val1_box","bbox":[388,366,248,170]}
+{"kind":"textbox","id":"sh/wvax03q1","slide":21,"name":"s19_c3_val1_title","text":"功能实现更准确","textPreview":"功能实现更准确","textChars":7,"textLines":1,"bbox":[408,394,208,36]}
+{"kind":"textbox","id":"sh/hwjy98rm","slide":21,"name":"s19_c3_val1_detail","text":"baseline/arch 把技术边界落实到实现","textPreview":"baseline/arch 把技术边界落实到实现","textChars":24,"textLines":1,"bbox":[408,458,208,48]}
+{"kind":"shape","id":"sh/utsfyt8v","slide":21,"name":"s19_c4_val2_box","bbox":[680,366,248,170]}
+{"kind":"textbox","id":"sh/vu1w7y9g","slide":21,"name":"s19_c4_val2_title","text":"需求 ⇄ 测试可追溯","textPreview":"需求 ⇄ 测试可追溯","textChars":10,"textLines":1,"bbox":[700,394,208,36]}
+{"kind":"textbox","id":"sh/8rqxw3q5","slide":21,"name":"s19_c4_val2_detail","text":"change acceptance 与 evidence 双向追溯","textPreview":"change acceptance 与 evidence 双向追溯","textChars":33,"textLines":1,"bbox":[700,458,208,48]}
+{"kind":"shape","id":"sh/9sze58rq","slide":21,"name":"s19_c5_val3_box","bbox":[972,366,248,170]}
+{"kind":"textbox","id":"sh/porutkje","slide":21,"name":"s19_c5_val3_title","text":"工作效率提高","textPreview":"工作效率提高","textChars":6,"textLines":1,"bbox":[992,394,208,36]}
+{"kind":"textbox","id":"sh/onid0f2t","slide":21,"name":"s19_c5_val3_detail","text":"complete 归并，Git 默认保留历史","textPreview":"complete 归并，Git 默认保留历史","textChars":22,"textLines":1,"bbox":[992,458,208,48]}
+{"kind":"notes","id":"nt/m1wvqtk3","slide":21,"text":"【建议时长】2分钟\n\n【开场句】\n把三个案例放在一起，AZ-SDD 改善的不是某一种项目，而是 AI 参与开发的方式。\n\n【核心讲述】\nazKits 说明新工具开发需要先明确产品规范；HSED 说明高风险功能必须把架构边界和验证门禁写清；N725A 说明老项目维护可以复用已有契约，只增加平台差异。三者共同证明四点：AI 开发前先明确范围、边界和验收；批准规范约束实现边界；需求生成验证，测试结果回写需求和状态；最终通过减少澄清、返工和重复验证提高效率。这里的效率是一种系统效率，而不是一次生成代码的速度。\n\n【动画 / 翻页提示】\nClick 1：先出现三个案例。\nClick 2：出现功能规范明确化。\nClick 3：出现功能实现更准确。\nClick 4：出现需求与测试可追溯。\nClick 5：出现工作效率提高。\n\n【转场句】\n如果只看案例，大家可能仍会问：是不是因为项目或提示词不同？所以最后做一个控制变量实验。\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/STATUS.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/TRACK.md\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/STATUS.md\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/TRACK.md\n[/Sources]\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
+{"kind":"slide","id":"sl/5onypobq","slide":22,"title":"TAKEAWAY","textShapes":7}
+{"kind":"textbox","id":"sh/2honyx8r","slide":22,"name":"s23_base_eyebrow","text":"TAKEAWAY","textPreview":"TAKEAWAY","textChars":8,"textLines":1,"bbox":[42,42,280,30]}
+{"kind":"textbox","id":"sh/6987itcr","slide":22,"name":"s23_base_title","text":"AZ-SDD：让 AI 围绕当前真相完成每一次 change","textPreview":"AZ-SDD：让 AI 围绕当前真相完成每一次 change","textChars":30,"textLines":1,"bbox":[42,154,880,138]}
+{"kind":"shape","id":"sh/7a18rydc","slide":22,"name":"s23_c1_c0_circle","bbox":[107,411,54,54]}
+{"kind":"textbox","id":"sh/k7qpgjul","slide":22,"name":"s23_c1_c0_text","text":"功能规范\nbaseline/spec","textPreview":"功能规范 | baseline/spec","textChars":18,"textLines":2,"bbox":[174,414,190,48]}
+{"kind":"shape","id":"sh/58zqpov6","slide":22,"name":"s23_c2_c1_circle","bbox":[393,411,54,54]}
+{"kind":"textbox","id":"sh/il87etcv","slide":22,"name":"s23_c2_c1_text","text":"技术规范\nbaseline/arch","textPreview":"技术规范 | baseline/arch","textChars":18,"textLines":2,"bbox":[460,414,190,48]}
+{"kind":"shape","id":"sh/jmh8nyd0","slide":22,"name":"s23_c3_c2_circle","bbox":[679,411,54,54]}
+{"kind":"textbox","id":"sh/43u9snu5","slide":22,"name":"s23_c3_c2_text","text":"反馈原件\nfeedback","textPreview":"反馈原件 | feedback","textChars":13,"textLines":2,"bbox":[746,414,190,48]}
+{"kind":"shape","id":"sh/p43q1sva","slide":22,"name":"s23_c4_c3_circle","bbox":[965,411,54,54]}
+{"kind":"textbox","id":"sh/p4z6tcri","slide":22,"name":"s23_c4_c3_text","text":"变更闭环\ncomplete","textPreview":"变更闭环 | complete","textChars":13,"textLines":2,"bbox":[1032,414,190,48]}
+{"kind":"shape","id":"sh/9o7mdkri","slide":22,"name":"s23_c5_final_line","bbox":[44,536,936,0.03]}
+{"kind":"textbox","id":"sh/3ixor29c","slide":22,"name":"s23_c5_action","text":"接手先读 baseline，开发围绕 change，验收后 complete；默认由 Git 留住历史","textPreview":"接手先读 baseline，开发围绕 change，验收后 complete；默认由 Git 留住历史","textChars":51,"textLines":1,"bbox":[42,568,1050,54]}
+{"kind":"notes","id":"nt/5onypobq","slide":22,"text":"【建议时长】1.5分钟\n\n【开场句】\n我的结论是：AZ-SDD 让 AI 开发从生成代码，走向按契约交付。\n\n【核心讲述】\n它首先把模糊想法变成功能规范，让 AI 知道要做什么、不能做什么以及怎样验收；然后用批准规范和架构边界提高实现准确性；再让需求、代码、测试和 Feedback 形成双向可追溯的证据链；最终减少澄清、返工、重复理解和重复验证，提高整体工作效率。AZ-SDD 的价值不是让 AI 多写文档，而是让规范成为 AI 的输入，让代码与测试成为可以回写、可以交接、可以在下一轮继续复用的证据。\n\n【动画 / 翻页提示】\nClick 1：出现功能规范明确化。\nClick 2：出现功能实现更准确。\nClick 3：出现需求与测试可追溯。\nClick 4：出现工作效率提高。\nClick 5：出现最终行动句并停顿收尾。\n\n【转场句】\n我的分享结束，欢迎大家结合自己的项目讨论：哪一类需求最适合先用 AZ-SDD 尝试？\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/STATUS.md\n- C:/JPZ_Workspace/AZ_TOOLS/azKits/az-sdd/TRACK.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/STATUS.md\n- C:/HQ_Workspace/YLB04_A6/code/task-jpz_dev/mpu/app/hsed/az-sdd/TRACK.md\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/STATUS.md\n- C:/HQ_Workspace/gitlab/ctp/src/mpu/app/mcu_upgrade_app/az-sdd/TRACK.md\n[/Sources]\n\n\n[Sources]\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/shared/references/v4-artifact-model.md\n- C:/JPZ_Workspace/AZ_TOOLS/azSdd/docs/workflow.md\n[/Sources]"}
