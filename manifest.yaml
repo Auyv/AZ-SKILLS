@@ -9,16 +9,7 @@ agent_targets:
   - az-pdf2md
   - az-todo-tracker
   - az-issue-tracker
-- enabled: false
-  name: cline
-  path: ~/.agents/skills
-  skills:
-  - az-skill-creator
-  - az-c-macro2ini-config
-  - az-pdf2md
-  - core-dump-analyzer
-  - hq_tester_skills
-  - az-issue-tracker
+
 - aggregate_subdir: ''
   enabled: true
   name: claude_code
@@ -34,6 +25,8 @@ agent_targets:
   - ctp-mpu-debug-build
   - ctp-adb-debug-exec
   - az-api-summary
+  - az-gitlab-merge-request
+  - hq-autobuild-mpu
 - enabled: true
   name: opencode
   path: ~/.config/opencode/skills
