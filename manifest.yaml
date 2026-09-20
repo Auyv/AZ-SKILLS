@@ -41,6 +41,8 @@ agent_targets:
   - ctp-adb-debug-exec
   - ctp-mpu-debug-build
   - hq-autobuild-mpu
+  - hc-ctp-work-ready-workflow
+  - az-workflow-creator
 - enabled: false
   name: openclaw
   path: ~/.openclaw/skills
@@ -64,6 +66,8 @@ agent_targets:
   - az-api-summary
   - az-gitlab-merge-request
   - hq-autobuild-mpu
+  - hc-ctp-work-ready-workflow
+  - az-workflow-creator
 - aggregate_subdir: ''
   enabled: true
   name: pi

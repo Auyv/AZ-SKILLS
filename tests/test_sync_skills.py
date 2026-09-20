@@ -23,6 +23,25 @@ def create_directory_link(link: Path, target: Path) -> None:
 
 
 class PurgeManagedLinksTests(unittest.TestCase):
+    def test_discovers_workflow_skill_from_separate_source_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source_dir = root / "skills"
+            workflow_dir = root / "workflow"
+            normal_skill = source_dir / "normal-skill"
+            workflow_skill = workflow_dir / "release-workflow"
+            normal_skill.mkdir(parents=True)
+            workflow_skill.mkdir(parents=True)
+            (normal_skill / "SKILL.md").write_text("# normal", encoding="utf-8")
+            (workflow_skill / "SKILL.md").write_text("# workflow", encoding="utf-8")
+
+            syncer = SkillSyncer.__new__(SkillSyncer)
+            syncer.source_dir = source_dir
+            syncer.workflow_dir = workflow_dir
+
+            self.assertEqual(["normal-skill", "release-workflow"], syncer._get_source_skills())
+            self.assertEqual(workflow_skill, syncer._get_skill_source("release-workflow"))
+
     def test_replaces_dangling_link_after_source_container_rename(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

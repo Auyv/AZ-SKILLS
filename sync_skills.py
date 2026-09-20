@@ -64,6 +64,7 @@ except ImportError:
 SCRIPT_DIR = Path(__file__).parent.resolve()
 MANIFEST_PATH = SCRIPT_DIR / "manifest.yaml"
 SKILLS_SOURCE_SUBDIR = "skills"
+WORKFLOW_SOURCE_SUBDIR = "workflow"
 
 
 def _simple_yaml_load_manifest(text: str) -> dict:
@@ -245,8 +246,29 @@ class SkillSyncer:
         self.manifest_path = manifest_path
         self.manifest_dir = manifest_path.parent
         self.source_dir = self.manifest_dir / SKILLS_SOURCE_SUBDIR
+        self.workflow_dir = self.manifest_dir / WORKFLOW_SOURCE_SUBDIR
         self.manifest = self._load_manifest()
         self.dry_run = False
+
+    def _get_source_roots(self) -> List[Path]:
+        """返回普通技能与工作流技能的源码目录。"""
+        roots = [self.source_dir]
+        workflow_dir = getattr(self, 'workflow_dir', None)
+        if workflow_dir is not None:
+            roots.append(workflow_dir)
+        return roots
+
+    def _get_skill_source(self, skill_name: str) -> Optional[Path]:
+        """按名称定位唯一的技能源码目录，避免跨目录重名。"""
+        matches = [root / skill_name for root in self._get_source_roots() if (root / skill_name).exists()]
+        if len(matches) == 1:
+            return matches[0]
+        if len(matches) > 1:
+            error(f"技能名称重复，无法确定源码: {skill_name} ({', '.join(str(item) for item in matches)})")
+        return None
+
+    def _source_roots_text(self) -> str:
+        return ', '.join(str(root) for root in self._get_source_roots())
 
     def _load_manifest(self) -> dict:
         """加载 manifest.yaml"""
@@ -376,15 +398,16 @@ class SkillSyncer:
         return None
 
     def _get_source_skills(self) -> List[str]:
-        """获取源目录中的所有 skill"""
-        if not self.source_dir.exists():
-            warning(f"源目录不存在: {self.source_dir}")
-            return []
-
-        skills = []
-        for item in self.source_dir.iterdir():
-            if item.is_dir():
-                skills.append(item.name)
+        """获取普通技能与工作流目录中的所有 skill。"""
+        skills = set()
+        for source_root in self._get_source_roots():
+            if not source_root.exists():
+                continue
+            for item in source_root.iterdir():
+                if item.is_dir():
+                    skills.add(item.name)
+        if not skills:
+            warning(f"源目录不存在或没有技能: {self._source_roots_text()}")
         return sorted(skills)
 
     def _sync_skill_to_target(self, skill_name: str, target_path: Path, target_name: str) -> bool:
@@ -395,10 +418,10 @@ class SkillSyncer:
           把每个含 SKILL.md 的子目录平铺到 target_path（用 child.name 命名）
         - 聚合容器若含 shared/，额外发布为独立的 <容器名>-shared 运行时目录
         """
-        src = self.source_dir / skill_name
+        src = self._get_skill_source(skill_name)
 
-        if not src.exists():
-            warning(f"  源 skill 不存在: {src}")
+        if src is None:
+            warning(f"  源 skill 不存在或名称重复: {skill_name}")
             return False
 
         # 聚合容器：根下无 SKILL.md，递归展开子目录
@@ -495,8 +518,8 @@ class SkillSyncer:
 
         labels: List[str] = []
         for sn in skill_names:
-            src = self.source_dir / sn
-            if not src.exists():
+            src = self._get_skill_source(sn)
+            if src is None:
                 continue
             if (src / 'SKILL.md').exists():
                 labels.append(sn)
@@ -514,7 +537,7 @@ class SkillSyncer:
     ) -> None:
         """删除目标目录中由本仓库管理的旧 link，保留用户自建内容。
 
-        受管项按链接的真实目标判断：只有指向本仓库 ``skills/`` 源目录的
+        受管项按链接的真实目标判断：只有指向本仓库 ``skills/`` 或 ``workflow/`` 源目录的
         symlink/junction 才会删除。不能只按当前 manifest 标签过滤，否则已经
         从目标 skills 清单移除的历史链接永远不会进入清理范围。
 
@@ -524,20 +547,30 @@ class SkillSyncer:
         if not az_skills_path.exists():
             return
 
-        source_root = self.source_dir.resolve()
+        source_roots = [source_root.resolve() for source_root in self._get_source_roots()]
         for entry in az_skills_path.iterdir():
             if not (entry.is_symlink() or entry.is_junction()):
                 continue
 
             try:
-                entry.resolve(strict=False).relative_to(source_root)
-            except (OSError, ValueError):
+                resolved = entry.resolve(strict=False)
+            except OSError:
+                continue
+            if not any(self._is_within_source_root(resolved, source_root) for source_root in source_roots):
                 continue
 
             try:
                 entry.unlink()
             except Exception as e:
                 warning(f"  清理旧 link 失败 {entry.name}: {e}")
+
+    @staticmethod
+    def _is_within_source_root(path: Path, source_root: Path) -> bool:
+        try:
+            path.relative_to(source_root)
+            return True
+        except ValueError:
+            return False
 
     def _get_az_skills_path(self, target_name: str, target_path: Path) -> Path:
         """获取 skill 同步根目录。
@@ -676,7 +709,7 @@ class SkillSyncer:
 
         info(f"\n{'='*50}")
         info(f"同步目标: {target_name}")
-        info(f"源目录: {self.source_dir}")
+        info(f"源目录: {self._source_roots_text()}")
         info(f"目标目录: {az_skills_path}")
         if skill_names is not None:
             info(f"本次 skills (自定义): {len(target_skills)} 个")
@@ -703,9 +736,9 @@ class SkillSyncer:
         info(f"\n同步 skill: {skill_name}")
 
         # 检查源是否存在
-        src = self.source_dir / skill_name
-        if not src.exists():
-            error(f"源 skill 不存在: {src}")
+        src = self._get_skill_source(skill_name)
+        if src is None:
+            error(f"源 skill 不存在或名称重复: {skill_name}")
             return {"success": 0, "skipped": 0, "failed": 0}
 
         # 获取该 skill 的目标列表
@@ -741,7 +774,7 @@ class SkillSyncer:
         """列出当前状态"""
         header("\n📋 AZ-SKILLS 状态概览")
         info(f"\nManifest: {self.manifest_path}")
-        info(f"源目录: {self.source_dir}")
+        info(f"源目录: {self._source_roots_text()}")
 
         # 列出源 skills
         skills = self._get_source_skills()
