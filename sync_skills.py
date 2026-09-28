@@ -64,7 +64,6 @@ except ImportError:
 SCRIPT_DIR = Path(__file__).parent.resolve()
 MANIFEST_PATH = SCRIPT_DIR / "manifest.yaml"
 SKILLS_SOURCE_SUBDIR = "skills"
-WORKFLOW_SOURCE_SUBDIR = "workflow"
 
 
 def _simple_yaml_load_manifest(text: str) -> dict:
@@ -246,17 +245,12 @@ class SkillSyncer:
         self.manifest_path = manifest_path
         self.manifest_dir = manifest_path.parent
         self.source_dir = self.manifest_dir / SKILLS_SOURCE_SUBDIR
-        self.workflow_dir = self.manifest_dir / WORKFLOW_SOURCE_SUBDIR
         self.manifest = self._load_manifest()
         self.dry_run = False
 
     def _get_source_roots(self) -> List[Path]:
-        """返回普通技能与工作流技能的源码目录。"""
-        roots = [self.source_dir]
-        workflow_dir = getattr(self, 'workflow_dir', None)
-        if workflow_dir is not None:
-            roots.append(workflow_dir)
-        return roots
+        """返回技能源码目录；工作流型 Skill 也统一位于 skills/。"""
+        return [self.source_dir]
 
     def _get_skill_source(self, skill_name: str) -> Optional[Path]:
         """按名称定位唯一的技能源码目录，避免跨目录重名。"""
@@ -398,7 +392,7 @@ class SkillSyncer:
         return None
 
     def _get_source_skills(self) -> List[str]:
-        """获取普通技能与工作流目录中的所有 skill。"""
+        """获取 skills/ 目录中的所有 skill。"""
         skills = set()
         for source_root in self._get_source_roots():
             if not source_root.exists():
@@ -537,7 +531,7 @@ class SkillSyncer:
     ) -> None:
         """删除目标目录中由本仓库管理的旧 link，保留用户自建内容。
 
-        受管项按链接的真实目标判断：只有指向本仓库 ``skills/`` 或 ``workflow/`` 源目录的
+        受管项按链接的真实目标判断：只有指向本仓库 ``skills/`` 源目录的
         symlink/junction 才会删除。不能只按当前 manifest 标签过滤，否则已经
         从目标 skills 清单移除的历史链接永远不会进入清理范围。
 

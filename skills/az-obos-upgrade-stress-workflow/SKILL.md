@@ -175,7 +175,7 @@ python rpower_report.py --prefix <前缀> -t <t1,t2,t3> --firmware <包> --versi
 
 ## 仓库与发布门禁
 
-本技能源码位于 AZ-SKILLS 仓库的 `workflow/az-obos-upgrade-stress-workflow/`。
+本技能源码位于 AZ-SKILLS 仓库的 `skills/az-obos-upgrade-stress-workflow/`。
 
 - 修改源码必须在**独立 AI 任务分支**（`jpz_ai-*@<from>`）提交并推送，
   再创建以来源分支为合入目标的 MR；**不得直接向 `master` 等目标分支推送、快进或合并**。

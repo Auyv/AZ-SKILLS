@@ -86,6 +86,6 @@ python rpower_report.py --prefix AT_PH1_20260922 ^
 
 ## 本仓库内的维护约定
 
-- 源码位置：`workflow/az-obos-upgrade-stress-workflow/`（工作流技能，命名带 `-workflow` 后缀）。
+- 源码位置：`skills/az-obos-upgrade-stress-workflow/`（工作流型 Skill，命名带 `-workflow` 后缀）。
 - 改动走独立 AI 任务分支 + MR，不得直接推 `master`。
 - `manifest.yaml` 登记与 `sync_skills.py` 正式同步需用户明确要求。
