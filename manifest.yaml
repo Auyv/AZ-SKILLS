@@ -1,4 +1,4 @@
-last_sync: '2026-09-14T15:33:53.935806'
+last_sync: '2026-09-28T10:29:02.876553'
 agent_targets:
 - aggregate_subdir: ''
   enabled: true
@@ -9,7 +9,6 @@ agent_targets:
   - az-pdf2md
   - az-todo-tracker
   - az-issue-tracker
-
 - aggregate_subdir: ''
   enabled: true
   name: claude_code
@@ -42,7 +41,8 @@ agent_targets:
   - ctp-mpu-debug-build
   - hq-autobuild-mpu
   - hc-ctp-work-ready-workflow
-  - az-workflow-creator
+  - az-ai-handover-workflow
+  - az-obos-upgrade-stress-workflow
 - enabled: false
   name: openclaw
   path: ~/.openclaw/skills
@@ -67,7 +67,8 @@ agent_targets:
   - az-gitlab-merge-request
   - hq-autobuild-mpu
   - hc-ctp-work-ready-workflow
-  - az-workflow-creator
+  - az-ai-handover-workflow
+  - az-obos-upgrade-stress-workflow
 - aggregate_subdir: ''
   enabled: true
   name: pi
