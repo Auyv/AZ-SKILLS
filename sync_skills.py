@@ -16,6 +16,7 @@ AZ-SKILLS 同步脚本
     python sync_skills.py --to codex         # 只同步到 codex
     python sync_skills.py --dry-run          # 模拟运行，不实际复制
     python sync_skills.py --skill az-skill-creator  # 只同步指定 skill
+    python sync_skills.py --skill az-skill-creator --to codex  # 将指定 skill 同步到一个目标
 
 无参数时进入交互式 Shell（命令风格，支持 Tab 补全），可用命令：
     help [cmd]             显示帮助（可指定命令名查看详情）
@@ -725,7 +726,7 @@ class SkillSyncer:
             "failed": failed_count
         }
 
-    def sync_skill(self, skill_name: str) -> Dict[str, int]:
+    def sync_skill(self, skill_name: str, target_name: Optional[str] = None) -> Dict[str, int]:
         """同步指定 skill"""
         info(f"\n同步 skill: {skill_name}")
 
@@ -737,6 +738,11 @@ class SkillSyncer:
 
         # 获取该 skill 的目标列表
         targets = self._get_skill_targets(skill_name)
+        if target_name is not None:
+            if target_name not in targets:
+                error(f"skill 未配置到目标 {target_name}: {skill_name}")
+                return {"success": 0, "skipped": 0, "failed": 0}
+            targets = [target_name]
         if not targets:
             error(f"未在 manifest 中找到 skill: {skill_name}")
             return {"success": 0, "skipped": 0, "failed": 0}
@@ -859,7 +865,7 @@ def main():
 
     if not manifest_path.exists():
         error(f"Manifest 文件不存在: {manifest_path}")
-        info("请先创建 manifest.yaml 文件")
+        info(f"请先复制 {MANIFEST_PATH.name}.demo 为 {MANIFEST_PATH.name}，再按本机平台修改")
         sys.exit(1)
 
     syncer = SkillSyncer(manifest_path)
@@ -880,7 +886,7 @@ def main():
 
     if args.skill:
         # 同步指定 skill
-        result = syncer.sync_skill(args.skill)
+        result = syncer.sync_skill(args.skill, target_name=args.to)
         info(f"\n结果: 成功 {result['success']}, 跳过 {result['skipped']}, 失败 {result['failed']}")
         if not syncer.dry_run:
             syncer.manifest['last_sync'] = datetime.now().isoformat()

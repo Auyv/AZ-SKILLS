@@ -1,80 +1,46 @@
-last_sync: '2026-09-28T10:29:02.876553'
+# AZ-SKILLS 本地 manifest 示例
+#
+# 首次使用：复制为 manifest.yaml，再按本机平台、路径和需要加载的技能修改。
+# manifest.yaml 仅在本地维护，不提交到仓库；不要把用户路径或账号写回本文件。
+
+last_sync: null
 agent_targets:
 - aggregate_subdir: ''
   enabled: true
-  name: hermes
-  path: ~/AppData/Local/hermes/skills
-  skills:
-  - az-skill-creator
-  - az-pdf2md
-  - az-todo-tracker
-  - az-issue-tracker
-- aggregate_subdir: ''
-  enabled: true
-  name: claude_code
-  path: ~/.claude/skills
-  skills:
-  - az-skill-creator
-  - az-c-macro2ini-config
-  - az-pdf2md
-  - core-dump-analyzer
-  - hq_tester_skills
-  - az-keil-build
-  - hq-autobuild-mpu
-  - ctp-mpu-debug-build
-  - ctp-adb-debug-exec
-  - az-api-summary
-  - az-gitlab-merge-request
-  - hq-autobuild-mpu
-- enabled: true
-  name: opencode
-  path: ~/.config/opencode/skills
-  skills:
-  - az-skill-creator
-  - az-c-macro2ini-config
-  - az-pdf2md
-  - core-dump-analyzer
-  - hq_tester_skills
-  - docker-image-build
-  - az-keil-build
-  - ctp-adb-debug-exec
-  - ctp-mpu-debug-build
-  - hq-autobuild-mpu
-  - hc-ctp-work-ready-workflow
-  - az-ai-handover-workflow
-  - az-obos-upgrade-stress-workflow
-- enabled: false
-  name: openclaw
-  path: ~/.openclaw/skills
-  skills:
-  - az-skill-creator
-  - az-pdf2md
-  - az-issue-tracker
-- enabled: true
   name: codex
   path: ~/.codex/skills
   skills:
   - az-skill-creator
-  - az-c-macro2ini-config
-  - az-pdf2md
-  - core-dump-analyzer
-  - hq_tester_skills
-  - az-keil-build
-  - hq-autobuild-mpu
-  - ctp-mpu-debug-build
-  - ctp-adb-debug-exec
-  - az-api-summary
-  - az-gitlab-merge-request
-  - hq-autobuild-mpu
-  - hc-ctp-work-ready-workflow
   - az-ai-handover-workflow
-  - az-obos-upgrade-stress-workflow
+  - hc-ctp-work-ready-workflow
 - aggregate_subdir: ''
   enabled: true
+  name: opencode
+  path: ~/.config/opencode/skills
+  skills:
+  - az-skill-creator
+  - az-ai-handover-workflow
+  - hc-ctp-work-ready-workflow
+- aggregate_subdir: ''
+  enabled: false
+  name: claude_code
+  path: ~/.claude/skills
+  skills:
+  - az-skill-creator
+- aggregate_subdir: ''
+  enabled: false
+  name: hermes
+  path: ~/AppData/Local/hermes/skills
+  skills:
+  - az-skill-creator
+- aggregate_subdir: ''
+  enabled: false
+  name: openclaw
+  path: ~/.openclaw/skills
+  skills:
+  - az-skill-creator
+- aggregate_subdir: ''
+  enabled: false
   name: pi
   path: ~/.pi/agent/skills
-  exclude: []
-- enabled: false
-  name: dsh
-  path: ~/.dsh/skills
   exclude: []

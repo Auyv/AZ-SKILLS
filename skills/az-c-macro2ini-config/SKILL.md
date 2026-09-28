@@ -1,6 +1,7 @@
 ---
 name: az-c-macro2ini-config
 description: 将嵌入式C项目中的编译时宏定义改为通过INI文件加载运行时配置，INI不存在时使用默认值
+version: 1.0.0
 ---
 
 # 嵌入式C宏定义转INI配置

@@ -1,6 +1,7 @@
 ---
 name: hq_adb_srtget
 description: "通过ADB工具快速设置CTP终端内置SRT系统属性，支持srt参数配置，可配合`adb_helper`技能实现全链路设备调试"
+version: 1.1.0
 metadata: {
     "skill_version": "1.1.0",
     "author": "靳普诏",

@@ -73,3 +73,6 @@ AGENTS.md
 .agents/
 .claude_tmp/
 .ai_tmp/
+
+# Local per-user skill manifest; only manifest.yaml.demo is tracked
+/manifest.yaml
