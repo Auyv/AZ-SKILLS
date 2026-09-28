@@ -1,6 +1,6 @@
 {
   "skill_name": "az-skill-creator",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "evals": [
     {
       "id": 1,
@@ -82,6 +82,33 @@
         "不创建非法目录"
       ],
       "pass_score": 3
+    },
+    {
+      "id": 7,
+      "category": "boundary",
+      "description": "评估默认只读",
+      "prompt": "评估现有技能是否适合承载这个已经验证过的重复流程，不要修改任何文件或发布。",
+      "expected_output": "只读取并报告评估结论，不创建或修改 SKILL.md、manifest 或目标平台文件。",
+      "criteria": [
+        "明确评估是只读操作",
+        "不修改技能源码",
+        "不登记或同步 manifest"
+      ],
+      "pass_score": 3
+    },
+    {
+      "id": 8,
+      "category": "workflow",
+      "description": "工作流型 Skill 与 MCP 优先",
+      "prompt": "把一个已验证、包含多个阶段和交接点的重复流程固化为技能；执行能力已有 MCP 提供。",
+      "expected_output": "在 skills/<name>-workflow/ 下创建工作流型 Skill，描述阶段编排和交接，不重复创建本地执行脚本。",
+      "criteria": [
+        "使用 <name>-workflow 命名",
+        "统一放在 skills/ 目录",
+        "Skill 负责编排，MCP 负责执行",
+        "没有为了完整目录而创建包装脚本"
+      ],
+      "pass_score": 4
     }
   ]
 }
