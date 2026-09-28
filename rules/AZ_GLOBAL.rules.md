@@ -198,11 +198,12 @@
 - 用户明确同意后才调用 `az-skill-creator`；未经同意不得创建、修改、登记或同步技能。
 - 失败尝试只作为技能的边界条件和避坑信息，不自动生成 FAQ。
 
-### 7.2 工作流技能命名
+### 7.2 工作流型 Skill 命名
 
 - 工作流性质的技能必须使用全小写连字符命名 `<name>-workflow`，例如 `hc-ctp-work-ready-workflow`。
 - 技能目录名、`SKILL.md` 的 front matter `name` 与清单中的技能引用必须完全一致。
-- 在 AZ-SKILLS 仓库中，工作流源码必须位于相对仓库根目录的 `workflow/<name>-workflow/SKILL.md`；应根据当前环境定位仓库根目录，不得写死本机绝对路径。
+- 在 AZ-SKILLS 仓库中，工作流型 Skill 必须位于相对仓库根目录的 `skills/<name>-workflow/SKILL.md`；应根据当前环境定位仓库根目录，不得写死本机绝对路径。
+- 工作流型 Skill 与普通 Skill 共用同一交付、发现、同步和版本管理机制；执行能力优先由 MCP 提供，Skill 负责阶段编排、判断、交接和停止条件。
 
 ## 8. 领域规则索引（按需加载）
 
