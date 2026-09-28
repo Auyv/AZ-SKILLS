@@ -6,9 +6,8 @@
 
 ```
 AZ-SKILLS/
-├── manifest.yaml         # 中心注册表：技能列表 + 平台目标路径
+├── manifest.yaml.demo    # manifest.yaml 示例；实际 manifest 仅在用户本地维护
 ├── sync_skills.py        # 同步到各 AI 平台
-├── manifest_update.py    # 从 SKILL.md front matter 自动发现并追加到 manifest
 ├── skills/               # 技能源码；工作流型 Skill 使用 <name>-workflow 命名
 │   ├── issue-tracker/    # 每个技能：目录名 = 技能名，含 SKILL.md
 │   └── ...
@@ -19,6 +18,9 @@ AZ-SKILLS/
 ```powershell
 # 依赖
 pip install pyyaml
+
+# 首次使用：复制示例并按本机平台修改（manifest.yaml 不提交）
+Copy-Item manifest.yaml.demo manifest.yaml
 
 # 查看当前同步状态
 python sync_skills.py --list
@@ -35,22 +37,20 @@ python sync_skills.py --full
 # 模拟运行
 python sync_skills.py --dry-run
 
-# 将新技能自动添加到 manifest.yaml
-python manifest_update.py --auto
 ```
 
 ## 工作流
 
-- **新增普通技能**: 在 `skills/<name>/` 下创建含 YAML front matter 的 `SKILL.md` → 更新 `manifest.yaml` → 运行 `sync_skills.py`
-- **新增工作流型 Skill**: 在 `skills/<name>-workflow/` 下创建含 YAML front matter 的 `SKILL.md` → 更新 `manifest.yaml` → 运行 `sync_skills.py`
+- **新增普通技能**: 在 `skills/<name>/` 下创建含 YAML front matter 的 `SKILL.md` → 经用户授权后更新本地 `manifest.yaml` → 运行 `sync_skills.py`
+- **新增工作流型 Skill**: 在 `skills/<name>-workflow/` 下创建含 YAML front matter 的 `SKILL.md` → 经用户授权后更新本地 `manifest.yaml` → 运行 `sync_skills.py`
 - **更新技能**: 直接修改对应源码目录下的文件 → 运行 `sync_skills.py`（增量同步，只复制变更的文件）
 
 ## 结构要点
 
 - AZ-SDD 已迁移到独立仓库 `git@gitee.com:AZ-TOOLS/azSdd.git`，不再由本仓库同步。
-- 子技能目录如 `hq_tester_skills/hq_adb_srtget/` 也能被 `manifest_update.py` 正确发现（递归扫描 SKILL.md）。
 - `sync_skills.py` 只发现 `skills/`；工作流型 Skill 与普通 Skill 使用同一套同步、加载和交接机制。
-- 没有 .gitignore。`manifest.yaml` 的 `last_sync` 字段会被 `sync_skills.py` 自动更新。
+- `manifest.yaml` 仅用于当前用户的平台适配，仓库只保留 `manifest.yaml.demo`；`last_sync` 由本地同步脚本自动更新。
+- 技能源码中的 `.bak`、`archive` 和临时产物不得作为技能资源提交；备份统一放在 `.ai_tmp/bak/`。
 
 ## 平台目标
 
@@ -66,7 +66,6 @@ python manifest_update.py --auto
 
 - 每个 SKILL.md 必须有 YAML front matter 包含 `name`、`description`、`version`。
 - 同步基于 mtime 比较，只在源文件较新时复制。`--full` 跳过增量检查。
-- `manifest_update.py` 跳过 `template/`、`templates/` 目录及名称为 `skill-name` 的技能（模板占位符）。
 - 写入中间文件时使用 `./.claude_tmp` 而非 `.claude/plans/`（az-sdd 约定）。
 - 生成或修改 Windows `.bat` 脚本时，必须强制使用 `CRLF` 换行符，避免 `cmd.exe` 解析异常。
 
