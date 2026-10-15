@@ -1,0 +1,56 @@
+{
+  "_comment": "声明式用例配置模板。id=用例标识(也是证据目录名)；kind=判定规则(types/consistency/integrity/login_sequence/history/activation)；duration=窗口秒数；driver_args 注入给测试进程 serve 的激励参数；基准值必须实测校准并在 *_note 注明来源与容差。",
+  "cases": [
+    {
+      "id": "report_types",
+      "kind": "types",
+      "duration": 60,
+      "driver_args": [
+        "--set-int", "7=<采集掩码>",
+        "--set-int", "8=1",
+        "--set-int", "9=1",
+        "--set-int", "10=1",
+        "--set-int", "17=0"
+      ],
+      "types": ["<预期数据类型号>"],
+      "allow_warmup": true,
+      "warmup_reason": "采集配置在通道 init 时快照，首个采集周期仍用默认值；被测库侧禁改，用例侧豁免并单独记录"
+    },
+    {
+      "id": "data_consistency",
+      "kind": "consistency",
+      "duration": 60,
+      "driver_args": ["--diag-trace-ms", "0"],
+      "expected": {
+        "<类型号>.<字段名>": "<驱动样本构造值>"
+      },
+      "baseline_note": "字段基准取自驱动 BuildSample；用第 2 个有效包核对基准本身"
+    },
+    {
+      "id": "data_integrity",
+      "kind": "integrity",
+      "duration": 60,
+      "driver_args": ["--diag-trace-ms", "0"],
+      "expected_records": 59,
+      "record_tolerance": 2,
+      "baseline_note": "59 为 60s 窗口实测；±2 覆盖登入/窗口边界对齐"
+    },
+    {
+      "id": "login_sequence",
+      "kind": "login_sequence",
+      "duration": 90,
+      "driver_args": ["--relogin-at", "30"],
+      "min_count": 2,
+      "step": 1,
+      "baseline_note": "断连重连依赖链路中间件感知（实测 300s+ 无感），改用显式 Logout→Login 驱动同一状态机"
+    },
+    {
+      "id": "history",
+      "kind": "history",
+      "duration": 90,
+      "driver_args": [],
+      "baseline": null,
+      "baseline_note": "需独立 baseline（先制造断点再恢复上报）；baseline 为 null 时判定 BLOCKED"
+    }
+  ]
+}

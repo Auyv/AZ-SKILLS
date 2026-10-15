@@ -5,10 +5,12 @@ param(
     [string]$ProductName = "YLB04_A6",
     [string]$BuildModel = "ag35_cetda",
     [string]$ProjectName = "",
-    [string]$ContainerName = "YLB04_A6",
     [string]$ContainerId = "",
     [string]$MpuRelativePath = "",
     [string]$ContainerWorkDir = "",
+    [string]$StagingDir = "/home/sdk/ql-sysroots",
+    [ValidateSet("ON", "OFF")]
+    [string]$CanServerPerfTestEnable = "OFF",
     [switch]$Confirmed
 )
 
@@ -89,170 +91,115 @@ if ([string]::IsNullOrWhiteSpace($ContainerWorkDir)) {
 }
 
 $safeAppName = $AppName -replace '[^A-Za-z0-9_.-]', '_'
-$linuxScriptPath = Join-Path $mpuDir "az_build_linux_app_$safeAppName.sh"
 $batScriptPath = Join-Path $mpuDir "az_build_linux_$safeAppName.bat"
 $logDir = Join-Path $Workspace "ai_tmp\mpu_debug_build"
-$dockerConfigDir = Join-Path $Workspace "ai_tmp\docker_config"
-
-$linuxScript = @"
-#!/bin/bash
-
-SCRIPT_DIR=`$(dirname "`$(readlink -f "`$0")")
-
-_CHECK_ERRORLEVEL() {
-    local errorlevel=`$1
-    local prompt="`${2:-}"
-    local force_exit="`${3:-false}"
-    force_exit=`$(echo "`$force_exit" | tr '[:upper:]' '[:lower:]')
-
-    if [ `$errorlevel -eq 0 ]; then
-        echo "   `${prompt} succeeded"
-    else
-        echo "ERROR: `${prompt} failed with errorlevel `$errorlevel"
-        if [ "`$force_exit" = "true" ]; then
-            exit `$errorlevel
-        fi
-    fi
-    return `$errorlevel
-}
-
-if [ -f /home/ql-ol-sdk/utils/gdb/usr/bin/gdbserver ]; then
-    cp /home/ql-ol-sdk/utils/gdb/usr/bin/gdbserver "`$SCRIPT_DIR" >/dev/null 2>&1 || true
-fi
-
-echo ============Jpz: mpu app build: $AppName============
-
-export G_PROJECT_NAME=$ProjectName
-export G_PRODUCT_NAME=$ProductName
-export G_BUILD_MODEL=$BuildModel
-export BUILD_PROJECT_NAME=`$G_PROJECT_NAME
-export BUILD_PRODUCT_NAME=`$G_PRODUCT_NAME
-export BUILD_PLATFORM_NAME=`$G_BUILD_MODEL
-echo G_PROJECT_NAME=`$G_PROJECT_NAME
-echo G_PRODUCT_NAME=`$G_PRODUCT_NAME
-echo G_BUILD_MODEL=`$G_BUILD_MODEL
-
-STAGING_DIR=`${PROJECT_DIR}/temp
-export STAGING_DIR
-echo STAGING_DIR=`$STAGING_DIR
-
-APP_NAME=$AppName
-"`$SCRIPT_DIR/app/`$APP_NAME/build/build.sh"
-_CHECK_ERRORLEVEL `$? "`$APP_NAME" "true"
-
-BUILD_TIME=`$(date "+%Y-%m-%d %H:%M:%S")
-echo ============ Build Time:`${BUILD_TIME} ============
-"@
 
 $batScript = @"
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
-set "DOCKER_CONTAINER_NAME=$ContainerName"
+rem Fixed Docker target; no container-name lookup or Docker CLI config directory.
 set "DOCKER_CONTAINER_ID=$ContainerId"
 set "CONTAINER_WORK_DIR=$ContainerWorkDir"
-set "LINUX_BUILD_SCRIPT=./az_build_linux_app_$safeAppName.sh"
-set "DOCKER_CONFIG=$dockerConfigDir"
+set "G_PROJECT_NAME=$ProjectName"
+set "G_PRODUCT_NAME=$ProductName"
+set "G_BUILD_MODEL=$BuildModel"
+set "CAN_SERVER_PERF_TEST_ENABLE=$CanServerPerfTestEnable"
+set "STAGING_DIR=$StagingDir"
+set "BUILD_LOG_DIR=$logDir"
+
+if not exist "%BUILD_LOG_DIR%" mkdir "%BUILD_LOG_DIR%"
+for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmmss"') do set "BUILD_TIMESTAMP=%%i"
+if not defined BUILD_TIMESTAMP set "BUILD_TIMESTAMP=unknown"
+set "BUILD_LOG_PATH=%BUILD_LOG_DIR%\${safeAppName}_%BUILD_TIMESTAMP%.log"
+echo MPU app: $AppName > "%BUILD_LOG_PATH%"
+echo Container ID: %DOCKER_CONTAINER_ID% >> "%BUILD_LOG_PATH%"
+echo Product: %G_PRODUCT_NAME%  Model: %G_BUILD_MODEL% >> "%BUILD_LOG_PATH%"
 
 echo ============= Build MPU app: $AppName =============
+echo Container ID: %DOCKER_CONTAINER_ID%
+echo Product: %G_PRODUCT_NAME%  Model: %G_BUILD_MODEL%
+echo Log: %BUILD_LOG_PATH%
 echo.
 
 where docker >nul 2>nul
-if !errorlevel! neq 0 (
+if errorlevel 1 (
     echo ERR_DOCKER_NOT_FOUND: docker command not found or Docker Desktop is not running.
     set "BUILD_RESULT=1"
     goto :fail
 )
 
-for /f %%i in ('docker ps -a -q -f "name=^%DOCKER_CONTAINER_NAME%$"') do set "DOCKER_CONTAINER_ID=%%i"
-
-if "%DOCKER_CONTAINER_ID%"=="" (
-    echo ERR_CONTAINER_NOT_FOUND: %DOCKER_CONTAINER_NAME%
+docker inspect --type container "%DOCKER_CONTAINER_ID%" >nul 2>nul
+if errorlevel 1 (
+    echo ERR_CONTAINER_NOT_FOUND: %DOCKER_CONTAINER_ID%
     set "BUILD_RESULT=1"
     goto :fail
 )
 
-docker exec %DOCKER_CONTAINER_ID% /bin/true >nul 2>nul
-if !errorlevel! neq 0 (
-    echo [INFO] Start Docker container %DOCKER_CONTAINER_ID% ...
-    docker start %DOCKER_CONTAINER_ID%
-    set "START_RESULT=!errorlevel!"
-    if !START_RESULT! neq 0 (
-        echo ERR_CONTAINER_START_FAILED: %DOCKER_CONTAINER_ID%
-        set "BUILD_RESULT=!START_RESULT!"
+set "CONTAINER_RUNNING="
+for /f "delims=" %%i in ('docker inspect --type container -f "{{.State.Running}}" "%DOCKER_CONTAINER_ID%"') do set "CONTAINER_RUNNING=%%i"
+if /i not "!CONTAINER_RUNNING!"=="true" (
+    echo [INFO] Starting container %DOCKER_CONTAINER_ID% ...
+    docker start "%DOCKER_CONTAINER_ID%" >nul
+    if errorlevel 1 (
+        set "BUILD_RESULT=!errorlevel!"
         goto :fail
     )
-    timeout /t 3 /nobreak >nul
-    docker exec %DOCKER_CONTAINER_ID% /bin/true >nul 2>nul
-    if !errorlevel! neq 0 (
-        echo ERR_CONTAINER_START_FAILED: %DOCKER_CONTAINER_ID%
-        call :dump_container_diag
+)
+
+set /a WAIT_ATTEMPTS=0
+:wait_container
+    docker exec "%DOCKER_CONTAINER_ID%" /bin/true >nul 2>nul
+    if !errorlevel! equ 0 goto :container_ready
+    set /a WAIT_ATTEMPTS+=1
+    if !WAIT_ATTEMPTS! geq 15 (
+        echo ERR_CONTAINER_NOT_READY: %DOCKER_CONTAINER_ID%
         set "BUILD_RESULT=1"
         goto :fail
     )
-)
+    timeout /t 1 /nobreak >nul
+goto :wait_container
 
-docker exec -i %DOCKER_CONTAINER_ID% /bin/sh -c "cd %CONTAINER_WORK_DIR% && chmod +x %LINUX_BUILD_SCRIPT% && %LINUX_BUILD_SCRIPT%"
+:container_ready
+echo Running MPU build inside container...
+docker exec "%DOCKER_CONTAINER_ID%" /bin/bash -lc "set -e; cd '%CONTAINER_WORK_DIR%'; if [ -f /home/ql-ol-sdk/utils/gdb/usr/bin/gdbserver ]; then cp /home/ql-ol-sdk/utils/gdb/usr/bin/gdbserver . >/dev/null 2>&1 || true; fi; export G_PROJECT_NAME=%G_PROJECT_NAME% G_PRODUCT_NAME=%G_PRODUCT_NAME% G_BUILD_MODEL=%G_BUILD_MODEL% BUILD_PROJECT_NAME=%G_PROJECT_NAME% BUILD_PRODUCT_NAME=%G_PRODUCT_NAME% BUILD_PLATFORM_NAME=%G_BUILD_MODEL% CAN_SERVER_PERF_TEST_ENABLE=%CAN_SERVER_PERF_TEST_ENABLE% STAGING_DIR=%STAGING_DIR%; bash app/$AppName/build/build.sh Debug" >>"%BUILD_LOG_PATH%" 2>&1
 set "BUILD_RESULT=!errorlevel!"
-if "!BUILD_RESULT!"=="0" (
-    rem keep success
-) else (
-    goto :fail
-)
+type "%BUILD_LOG_PATH%"
+if not "!BUILD_RESULT!"=="0" goto :fail
 
 echo.
-if !BUILD_RESULT! equ 0 (
-    echo ============= Build succeeded: $AppName =============
-) else (
-    echo ============= Build failed: $AppName return !BUILD_RESULT! =============
-)
-
-exit /b !BUILD_RESULT!
+echo ============= Build succeeded: $AppName =============
+echo Artifact: $selectedMpuRelativePath/build_output/app/debug/$AppName
+echo Log: %BUILD_LOG_PATH%
+exit /b 0
 
 :fail
+echo.
 echo ============= Build failed: $AppName return !BUILD_RESULT! =============
+echo Log: %BUILD_LOG_PATH%
+docker ps -a --filter "id=%DOCKER_CONTAINER_ID%" --format "table {{.ID}}\t{{.Names}}\t{{.Status}}" 2>nul
+docker logs --tail 40 "%DOCKER_CONTAINER_ID%" 2>nul
 exit /b !BUILD_RESULT!
-
-:dump_container_diag
-echo ----- docker ps status -----
-docker ps -a --filter "id=%DOCKER_CONTAINER_ID%" --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
-echo ----- docker inspect status -----
-docker inspect --format="Name={{.Name}} Status={{.State.Status}} Running={{.State.Running}} ExitCode={{.State.ExitCode}} Error={{.State.Error}} FinishedAt={{.State.FinishedAt}}" %DOCKER_CONTAINER_ID%
-echo ----- docker logs tail -----
-docker logs --tail 80 %DOCKER_CONTAINER_ID%
-echo ----- end docker diag -----
-exit /b 0
 "@
 
-[System.IO.File]::WriteAllText($linuxScriptPath, $linuxScript, [System.Text.UTF8Encoding]::new($false))
 [System.IO.File]::WriteAllText($batScriptPath, ($batScript -replace "`r?`n", "`r`n"), [System.Text.UTF8Encoding]::new($false))
-
-# .sh 保持 LF（Linux 容器需要 LF 换行）
-[System.IO.File]::WriteAllText($linuxScriptPath, $linuxScript, [System.Text.UTF8Encoding]::new($false))
-
-# .bat 必须 CRLF（Windows cmd 解析 .bat 需要 CRLF；WriteAllText 默认写 LF 会导致中文 Windows / cmd 解析异常）
-Write-Host "BAT template length: $($batScript.Length)"
-[System.IO.File]::WriteAllText($batScriptPath, ($batScript -replace "`r?`n", "`r`n"), [System.Text.UTF8Encoding]::new($false))
-
 Write-Host "Generated Windows script: $batScriptPath"
-Write-Host "Generated Linux script:   $linuxScriptPath"
 Write-Host "Detected MPU root:        $mpuDir"
 Write-Host "Container work directory: $ContainerWorkDir"
-
 if ($Execute) {
     Write-Host "Confirmed build parameters:"
     Write-Host "  Docker Id:    $ContainerId"
     Write-Host "  Build Model:  $BuildModel"
     Write-Host "  Product Name: $ProductName"
     Write-Host "  Project Name: $ProjectName"
-    New-Item -ItemType Directory -Force -Path $dockerConfigDir | Out-Null
-    New-Item -ItemType Directory -Force -Path $logDir | Out-Null
-    $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-    $logPath = Join-Path $logDir "$safeAppName`_$timestamp.log"
-    Write-Host "Build log: $logPath"
-    & cmd.exe /c "call `"$batScriptPath`" > `"$logPath`" 2>&1"
+    & cmd.exe /c "call `"$batScriptPath`""
     $exitCode = $LASTEXITCODE
-    Get-Content -LiteralPath $logPath -Tail 80
+    $latestLog = Get-ChildItem -LiteralPath $logDir -Filter "$safeAppName`_*.log" -File |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($null -ne $latestLog) {
+        Write-Host "Build log: $($latestLog.FullName)"
+        Get-Content -LiteralPath $latestLog.FullName -Tail 80
+    }
     Write-Host "ExitCode: $exitCode"
     exit $exitCode
 }
