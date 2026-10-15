@@ -29,6 +29,26 @@
 | 局部变量 | 全小写+下划线    | `file_handle`, `cmdparams`      |
 | 静态变量 | 与全局变量相同    | `g_file_log_cache_buf`          |
 
+#### 数据流向命名
+
+- 变量名先表达业务用途。业务已定义上下行时，上行使用完整的 `upload`，下行使用完整的 `download`，避免 `upld` 等缩写。
+- 在模块注释中明确上下行的业务方向，并在两端保持一致。例如 XCU CAN 上行是 MCU → MPU，下行是 MPU → MCU；MPU 接收上行数据时仍命名为 `upload`。
+- 同一方向的队列、缓存、解析状态、会话、序号和统计使用一致的方向词。全局/静态变量采用 `g_<模块>_<方向>_<用途>`，末尾下划线沿用所在模块习惯；结构体成员采用 `<方向>_<用途>`。
+- 底层驱动、物理接口的发送/接收状态可使用 `tx`/`rx`；业务上下行队列和缓存应使用 `upload`/`download` 表达其用途。共用状态不强行归入某一方向。
+- 对应配置宏采用 `<模块>_UPLOAD_<用途>` / `<模块>_DOWNLOAD_<用途>`。名称区分单块上限、队列总容量和单轮处理预算；字节数、记录数、时间等单位在名称或注释中明确。
+
+```c
+static TOfRingBuf g_xcu_can_download_queue_;
+static UInt8 g_xcu_can_upload_buffer_[1024];
+static UInt32 g_xcu_can_download_sequence_;
+
+/* 结构体成员示例：upload_buffer、download_parser、download_stats。 */
+
+#define RTE_XCU_CAN_DOWNLOAD_BLOCK_MAX       (1024) ///< 单次接收块上限，字节。
+#define RTE_XCU_CAN_DOWNLOAD_QUEUE_CAPACITY  (4144) ///< 队列总容量，字节，含内部块头。
+#define RTE_XCU_CAN_DOWNLOAD_RUN_BYTE_BUDGET (4096) ///< 每轮消费预算，字节，含内部块头。
+```
+
 ### 类型命名
 
 | 类别 | 风格 | 示例 |
@@ -36,6 +56,7 @@
 | 结构体 | `T`前缀+Tag+typedef | `typedef struct TNfUpgradeAppTag TNfUpgradeApp` |
 | 枚举 | `enum TxxxTag { ... }; typedef enum TxxxTag Txxx;` | `enum TNfUpgradeStateTag { ... }; typedef enum TNfUpgradeStateTag TNfUpgradeState;` |
 | 枚举值 | `k`前缀+模块+描述 | `kNfUpgradeStateIdle` |
+| 固定位宽的枚举标识 | enum 常量 + 固定宽度整数 typedef；见第4节 | `typedef /*enum TXxxTag*/ UInt32 TXxx;` |
 
 ### 宏定义
 - 全大写字母 + 下划线分隔
@@ -68,6 +89,44 @@ else
 - 运算符前后有空格：`result = 0;`, `i + 1`
 - 逗号后有空格：`func(a, b, c)`
 - 括号内无空格：`if (condition)`
+
+### 空行与定义分组
+
+- 独立的结构体、枚举定义组前后保留一行空行，相邻定义组之间共用这一行，避免连续多行空白。
+- 枚举定义与其后对应的 typedef（枚举类型或固定宽度整数）紧邻；结构体前置 `typedef struct` 与对应定义紧邻，组内不插入空行。
+- 函数定义之间保留一行空行；带注释的函数声明组之间也保留一行空行。说明注释与对应声明或定义紧邻，空行放在上一组结尾与下一组注释之间。
+- 同一结构体的成员、同一枚举的枚举值默认连续排列；仅在确有不同用途的分组时增加空行。
+
+```c
+enum TDemoModeTag
+{
+    kDemoModeMessage = 0,
+    kDemoModeDigest  = 1,
+};
+typedef enum TDemoModeTag TDemoMode;
+
+typedef struct TDemoBufferTag TDemoBuffer;
+struct TDemoBufferTag
+{
+    UInt8 *buf;
+    UInt32 buf_size;
+};
+
+/**
+ * @brief 初始化模块。
+ */
+Int32 DemoInit(void)
+{
+    return 0;
+}
+
+/**
+ * @brief 关闭模块。
+ */
+void DemoDone(void)
+{
+}
+```
 
 ### 行长度限制
 - 建议：80-120字符
@@ -111,6 +170,26 @@ extern "C"
 - 字符串：`char *` 或 `const char *`
 - 句柄类型：`THandle`
 
+### 固定位宽的枚举标识
+
+- 公共 ABI、跨平台接口、协议或持久化字段需要稳定宽度时，使用 `enum TXxxTag` 定义具名常量，再使用固定宽度整数定义语义类型 `TXxx`。枚举常量、接口参数和字段统一围绕这一类型命名，避免为同一概念再定义另一套类型名。
+- 标准写法为 `typedef /*enum TXxxTag*/ UInt32 TXxx;`，紧邻枚举定义之后。注释保留常量与语义类型的对应关系，实际类型是 UInt32；这不会固定 enum TXxxTag 本身的位宽。
+- 函数参数、返回值及结构体字段使用 `TXxx`，不直接使用 `enum TXxxTag`。该类型不受编译器短枚举选项影响；`typedef enum TXxxTag TXxx` 本身不保证固定宽度。
+- 按范围选择 UInt8、UInt16、UInt32 等固定宽度类型；包含负值时选择对应的 Int 类型。全部常量必须落在所选整数类型的范围内，外部输入仍需检查合法取值。
+- 修改已有接口时检查类型宽度、结构体布局和调用方兼容性；有变化时同步接口版本。需要稳定 ABI 的类型应在目标编译环境检查 sizeof，必要时同时检查成员偏移。
+- 无固定宽度要求的模块内部枚举可继续使用普通 enum typedef。本约定也不代表可以直接复制结构体作为通信报文，协议字节序和序列化另行定义。
+
+```c
+enum TDemoAlgorithmIdTag
+{
+    kDemoAlgorithmAes128 = 0x1101,
+    kDemoAlgorithmSm2    = 0x2320,
+};
+typedef /*enum TDemoAlgorithmIdTag*/ UInt32 TDemoAlgorithmId;
+
+TDemoAlgorithmId algorithm_id = kDemoAlgorithmSm2;
+```
+
 ### 结构体定义方式
 ```c
 typedef struct TNfUpgradeAppTag TNfUpgradeApp;
@@ -134,6 +213,40 @@ struct TNfUpgradeAppTag
 ### 参数数量限制
 - 建议：不超过5个参数
 - 复杂函数使用结构体封装参数
+
+### 输入输出参数与缓冲区
+
+- 输入参数与输出结果不得混在同一个传参结构体中。需要封装时，输入命名为 `TXxxIParam`，输出命名为 `TXxxOParam`，函数使用 `const TXxxIParam *in`、`TXxxOParam *out`。
+- IParam 保存调用方提供的操作配置、只读数据及结果存储配置；OParam 只保存函数返回的长度、状态等结果，不要求调用方预填存储地址或大小。
+- 只读数据使用 `const UInt8 *`。结果存储使用 `UInt8 *xxx_buf` 和 `UInt32 xxx_buf_size`，放在 IParam；实际字节数使用 `UInt32 xxx_len`，放在 OParam。避免以 capacity、length 两个含糊字段混合表达调用前配置与调用后结果。
+- `const IParam *` 保证结构体字段不变；其中的可写 buf 仍允许写入。不得修改原输入数据或通过去除 const 写入字段；需要调整存储地址时复制一份输入配置后修改副本。
+- buf_size 表示最多可写的字节数，len 表示成功时的实际字节数，单位在注释中明确。结果存储不足时返回对应错误，len 回填所需字节数，不写入部分数据；其他失败时结果长度清零。不得超过 buf_size 写入。
+- 输入结构、原输入数据和结果存储由调用方管理，调用期间保持有效。接口说明必须明确空指针、输入输出重叠及异步调用的生命周期要求。简单接口可使用分开的普通参数，无需为单个标量强行建结构体。
+
+```c
+typedef struct TDemoProcessIParamTag TDemoProcessIParam;
+struct TDemoProcessIParamTag
+{
+    const UInt8 *input_data;      ///< 调用期间只读的原始数据。
+    UInt32       input_len;       ///< 输入字节数。
+    UInt8       *output_buf;      ///< 调用方提供的可写结果存储。
+    UInt32       output_buf_size; ///< 最多可写的字节数。
+};
+
+typedef struct TDemoProcessOParamTag TDemoProcessOParam;
+struct TDemoProcessOParamTag
+{
+    UInt32 output_len; ///< 实际字节数，结果存储不足时为所需字节数。
+};
+
+/**
+ * @brief 处理输入数据，将结果写入调用方提供的存储。
+ * @param[in] in 操作配置和结果存储配置，结构体字段不变。
+ * @param[out] out 实际或所需结果长度，其他失败时为零。
+ * @return 0 成功，负值为错误码。
+ */
+Int32 DemoProcess(const TDemoProcessIParam *in, TDemoProcessOParam *out);
+```
 
 ### 返回值处理
 - 成功/失败：返回 `int` 或 `Int32`，0表示成功，负值表示失败
