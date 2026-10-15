@@ -1,37 +1,13 @@
 # Build Script Template Notes
 
-The generated `.bat` follows the existing project entry pattern. The helper supports:
+The generator creates one self-contained Windows BAT for an app under either `code\task-mpu` or legacy `code\task-jpz_dev\mpu`. Set `-MpuRelativePath` for a non-standard workspace layout.
 
-```text
-code\task-mpu
-code\task-jpz_dev\mpu (legacy)
-```
+The BAT:
 
-It chooses the first supported root containing `app/<AppName>/build/build.sh`. A non-standard
-workspace-relative root can be selected with `-MpuRelativePath`.
+- uses the confirmed fixed Docker container ID without name lookup
+- starts a stopped container and waits for readiness
+- passes the build environment into the container and invokes `app/<AppName>/build/build.sh`
+- writes the build output to `ai_tmp\mpu_debug_build`
+- does not create a companion `.sh` or Docker CLI config directory
 
-Key improvements for generated per-app scripts:
-
-- resolve the Docker container by name first (`FOTON-G11`), then optional id
-- start the container when it exists but is stopped
-- use `docker exec -i` for automation-friendly execution
-- run an app-specific shell script, avoiding edits to shared `az_build_linux_app.sh`
-- keep build logs under `ai_tmp\mpu_debug_build`
-
-The generated `.sh` exports:
-
-- `G_PROJECT_NAME`
-- `G_PRODUCT_NAME`
-- `G_BUILD_MODEL`
-- `BUILD_PROJECT_NAME`
-- `BUILD_PRODUCT_NAME`
-- `BUILD_PLATFORM_NAME`
-- `STAGING_DIR`
-
-Then it calls:
-
-```bash
-${SCRIPT_DIR}/app/${APP_NAME}/build/build.sh
-```
-
-and exits non-zero when that app build fails.
+The single-BAT execution path was verified on 2026-10-08 with the non-standard workspace layout supplied through `-MpuRelativePath`. The `can_server_app` build completed with exit code 0 and produced an ARM ELF32 executable. Product-macro whitespace warnings were present; no compiler errors were reported.

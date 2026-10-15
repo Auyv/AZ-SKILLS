@@ -1,17 +1,17 @@
 {
   "skill_name": "ctp-mpu-debug-build",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "evals": [
     {
       "id": 1,
       "category": "normal",
       "description": "Generate and run mcud local build scripts",
       "prompt": "给 mcud 生成 mpu app 本地编译脚本并执行验证",
-      "expected_output": "Asks the user to confirm docker id, build model, product name, and project name; after confirmation creates az_build_linux_mcud.bat and az_build_linux_app_mcud.sh, runs the bat, reports exit code and log path.",
+      "expected_output": "Asks the user to confirm docker id, build model, product name, and project name; after confirmation creates one self-contained az_build_linux_mcud.bat, runs the bat, reports exit code and log path.",
       "criteria": [
         "asks for confirmation of docker id, build model, product name, and project name before execution",
         "validates app/mcud/build/build.sh before writing",
-        "generates both Windows and Linux scripts",
+        "generates one BAT with Docker startup, build setup, invocation, and log capture",
         "runs the generated bat only with confirmed parameters",
         "reports log path and exit code"
       ],
@@ -22,7 +22,7 @@
       "category": "normal",
       "description": "Generate only without executing",
       "prompt": "只生成 can_server_app 的 MPU 本地编译脚本，不要执行",
-      "expected_output": "Creates app-specific scripts and does not run Docker.",
+      "expected_output": "Creates one app-specific BAT and does not run Docker.",
       "criteria": [
         "sets execute=false",
         "does not call generated bat",
@@ -33,14 +33,14 @@
     {
       "id": 3,
       "category": "normal",
-      "description": "Use custom container id fallback",
+      "description": "Use fixed container ID",
       "prompt": "用容器 id 6e10b5571b75d05d434742663a15b0188157d431b8e13c6d93a09585e4ac9986 给 mcud 生成并编译",
-      "expected_output": "Generated bat contains the provided container id as fallback while still preferring container name.",
+      "expected_output": "Generated bat uses the provided container ID directly.",
       "criteria": [
         "passes ContainerId to helper",
         "uses AppName as ProjectName by default when both are the same",
         "passes -Confirmed after user confirmation",
-        "keeps YLB04_A6 as default container name unless overridden",
+        "does not look up containers by name",
         "executes generated bat"
       ],
       "pass_score": 5
@@ -106,12 +106,12 @@
       "category": "normal",
       "description": "Auto-detect current code/task-mpu layout",
       "prompt": "给 code/task-mpu/app/atserver_app 生成本地编译脚本",
-      "expected_output": "Detects code/task-mpu, writes both scripts there, and derives /home/sei/code/task-mpu as the container work directory.",
+      "expected_output": "Detects code/task-mpu, writes one BAT there, and derives /home/sei/code/task-mpu as the container work directory.",
       "criteria": [
         "detects code/task-mpu from the app build script",
         "does not require the legacy code/task-jpz_dev/mpu directory",
         "derives the matching container work directory",
-        "generates both app-specific scripts"
+        "generates one self-contained app-specific BAT"
       ],
       "pass_score": 4
     },
