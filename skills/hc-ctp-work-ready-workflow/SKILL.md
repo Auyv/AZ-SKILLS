@@ -6,7 +6,7 @@ description: |
   产品名不同；需要按仓库分支和 manifest 记录核实映射，不得仅凭目录名猜测。
   统一完成工作目录隔离、manifest 拉取、HUBS SDK 下载、仓库状态核验与后续开发交付门禁；
   在用户给出具体任务前不修改业务代码。
-version: 2.6.0
+version: 2.7.0
 ---
 
 > **授权边界（先于一切流程）**
@@ -72,7 +72,7 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
 2. `<config_repo_dir>/config/<config_profile>/list.env` 含 HUBS 产品、PCB、BOOM、软件版本键及五个 `G_PROJ_LIST_HUBS_*` 清单键。
 3. `<project_root>/autobuild/<platform>/manifests/{mpu,mcu}_<manifest_product>.xml` 两份都存在且可解析；
    `manifest_product` 与 `config_profile` 不同的情况必须有唯一、可复核的分支映射证据。
-4. `git_pull_xml.py` 工具可定位（优先级：本次 workspace 内 `.ai_tmp/git_pull_xml/git_pull_xml.py` → 历史 workspace 中同名路径 → 用户在本次会话提供的绝对路径 → 询问）。
+4. 本 Skill 随附的 `scripts/hcCtpWorkReady.py` 存在；运行环境提供 Python 3.9+ 和原生 Git CLI（含 SSH 凭据）。不依赖 `git_pull_xml.py`、curl、unzip 或第三方 Python 包。
 
 完整读取当前环境提供的全局规则、工作区与目标仓库的 `AGENTS.md`。涉及分支、提交或 MR 时，再读取适用的 Git 规则。
 
@@ -143,10 +143,9 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
 **是否需要下载 HUBS SDK** 由 `NeedHubsSdk()` 函数判定（参考该产品实际使用的 `build/mpu/build_<model>.sh` 中的同名函数；优先按 `G_PRODUCT_BUILD_MPU_MODEL` 选择）：上述五个 `G_PROJ_LIST_HUBS_*` 中任一非空即返回 0，
 全部为空返回 1。返回 0 才在步骤 6 中**向用户申请**执行下载；skill 不自动开始下载。
 
-注意：`list.env` 在 Windows 上可能带 CRLF；解析时需按行去除 `\r`，否则键值末尾残留 `\r` 会导致
-HUBS URL 拼接失败、curl 请求失败。
+注意：`list.env` 在 Windows 上可能带 CRLF；按行解析时需规范化换行并去除值两侧空白。
 
-### 4. 定位 manifest 与拉取工具
+### 4. 定位 manifest 与专用工具
 
 按 `manifest_product` 与步骤 1 得到的 `platform` 定位：
 
@@ -156,40 +155,33 @@ HUBS URL 拼接失败、curl 请求失败。
 读取 manifest 的 `<default>` 节点记录默认 `<remote>` 与 `<revision>`；逐项扫描 `<project>` 节点的
 `path`、`name`、`remote`、`revision`、`upstream`，作为后续核验基线。
 
-`git_pull_xml.py` 工具按以下优先级定位：
-
-1. 本次 workspace 内的 `.ai_tmp/git_pull_xml/git_pull_xml.py`。
-2. 历史 workspace（同一 `workspace_root` 下其它任务）中同名路径。
-3. 用户在本次会话提供的绝对路径。
-4. 询问用户并禁止自行 clone / fetch。
-
-定位与解析均为只读操作，可直接进行；调用 `git_pull_xml.py` 实际写盘前需获得用户授权。
+使用本 Skill 自带的 `<skill_root>/scripts/hcCtpWorkReady.py`。若文件缺失，停止并报告 Skill 安装不完整；不得回退到外部拉取脚本或临时拼接 curl/unzip 命令。执行环境只需 Python 3.9+ 标准库和原生 Git CLI；Git/SSH 凭据沿用用户现有配置。
 
 ### 5. 按 manifest 拉取 MPU / MCU 仓库
 
-调用前需在本次会话取得用户对"按 manifest 拉取 MPU 与 MCU 仓库"以及"在哪个 workspace 中执行"的明确同意。建议的命令模板：
+调用前需在本次会话取得用户对"按 manifest 拉取 MPU 与 MCU 仓库"以及"在哪个 workspace 中执行"的明确同意。专用工具以父路径优先、单线程方式处理项目，避免 MCU 父仓库与其嵌套子仓库并发创建造成目录竞争：
 
-```bash
-python <git_pull_xml.py> -b <workspace_root>/<workspace> -x <project_root>/autobuild/<platform>/manifests/mpu_<manifest_product>.xml  [-j <N>]
-python <git_pull_xml.py> -b <workspace_root>/<workspace> -x <project_root>/autobuild/<platform>/manifests/mcu_<manifest_product>.xml  [-j <N>]
+```powershell
+python <skill_root>/scripts/hcCtpWorkReady.py pull `
+  --workspace <workspace_root>/<workspace> `
+  --manifest <project_root>/autobuild/<platform>/manifests/mpu_<manifest_product>.xml `
+  --manifest <project_root>/autobuild/<platform>/manifests/mcu_<manifest_product>.xml
+# 每个本次已获用户批准忽略的项目增加一个精确标识：
+# --ignore "<remote>|<project-name>"
 ```
 
-参数约定：
+工具行为与约束：
 
-- `-b`：基础目录 = workspace 根（所有 manifest `path` 的拼接锚点）。
-- `-x`：manifest 路径；优先使用本地绝对路径而非 URL，便于离线 / 未登录环境运行。
-- `-j`：并发线程数，参考 `git_pull_xml.py` 内置上限 ≤ 16。
-- MPU 与 MCU manifest 都包含的项目（典型为项目仓库自身），第二次调用命中已存在目录后由脚本自动按 update 分支继续；不会覆盖未提交改动。
+- 同一 `(remote, name, path)` 项目跨 manifest 去重；同一仓库身份出现在不同 path 时分别核验落位。结果 JSON 保留每项 path、name、remote、revision、HEAD/branch 或原始错误，并统计成功、失败、忽略数及不同仓库数。
+- 按 manifest 路径深度从浅到深串行执行，父项目先于嵌套子项目；不启用并发参数。
+- 目标路径不存在时执行 `git clone --no-checkout`；目标已存在时必须是 Git 仓库、origin 与 manifest URL 相符且工作区干净，否则该仓库失败并保留现场。
+- 分支 revision 用 fetch + checkout / `pull --ff-only`；SHA 或 tag revision 用 detached checkout。脚本不执行 reset、清理目录或强制覆盖。
+- manifest project 的 URL 由 remote fetch 与 project name 拼接；如企业 manifest 使用特殊 URL 规则，应先核实并修正输入，不要猜测。
 
-拉取过程中：
+拉取过程中，逐仓库检查 JSON 结果：
 
-- 任一项目失败时保留原始错误、已创建目录和已完成仓库范围；不删除 workspace 掩盖失败。
-- 每次拉取完成后记录逐仓库结果（`path`、`name`、`remote`、`revision`、错误原文），分别统计成功、失败和跳过数量；不能只看脚本总退出码。
-- `git_pull_xml.py` 返回非零时，默认停止并向用户报告失败清单。用户可以明确指定忽略其中哪些仓库；该授权仅覆盖清单中明确列出的仓库，不自动扩展到后续 manifest 新出现的失败。
-- 用户明确忽略部分仓库后，继续流程前将这些仓库加入本次任务的忽略清单，并按 `(remote, name)` 识别跨 MPU/MCU manifest 的同一仓库，即使两份 XML 的 `path` 不同也不得再次拉取。若其余拉取结果全成功，可继续后续阶段，并在最终基线中标明不完整仓库。
-- 如使用 `git_pull_xml.py --path` 过滤，必须确认工具打印的过滤后待拉取数量等于预期 allowlist 数量，并确认忽略项未被尝试。若过滤结果不符或仍拉取了忽略项，停止并报告；不得把全量重试冒充为已跳过指定仓库。
-- 若 manifest 中某仓库已 pin 到 commit SHA，按 `git_pull_xml.py` 的 SHA 分支处理（fetch + checkout 到 detached HEAD），不执行 `git pull`。
-- 目标工作目录已存在且为合法 Git 仓库时，脚本按 update 分支（fetch + checkout + pull）继续；不会覆盖未提交改动。
+- 任一项目失败时停止后续阶段，保留原始错误、已创建目录和已完成仓库范围；不删除 workspace 掩盖失败。向用户报告失败项后，只有用户明确指定精确 `(remote, name)` 忽略项后才可重跑或继续。
+- `--ignore` 只接受引号包裹的 `"REMOTE|PROJECT_NAME"` 精确身份（PowerShell 中竖线需引用）；忽略项不会扩展到新失败项目，且在 MPU/MCU 两份清单间按身份一致生效。
 - **不要**为了"统一分支"而对已存在的本地仓库执行 `git reset --hard`、`git checkout -B`、强制推送等破坏性操作；任何此类操作都需用户额外明确同意。
 
 ### 6. 参考 build 脚本拉取 HUBS SDK
@@ -198,11 +190,11 @@ python <git_pull_xml.py> -b <workspace_root>/<workspace> -x <project_root>/autob
 
 先从 workspace 权威 `list.env` 读取产品模型并检查对应 build 脚本，计算实际 URL、package mode、MPU/MCU build model、缓存目录和两个落位目录。把这些具体值复述给用户后再下载；若 `list.env` / build 脚本不完整，或下载脚本无法处理该模型、版本模式或凭据来源，先排除输入问题再重试，不得把一次可恢复的 `Error_CredMissing` 直接当成网络失败。
 
-仅当步骤 3 中 `NeedHubsSdk()` 返回 0 且 MPU `<workspace>/<platform>/sdk/` 与 MCU `<workspace>/<platform>/mcu/sdk/` 两个目标都不存在时执行；若目标已存在，分别核验布局并报告，不得默认覆盖。`--force` 只在用户明确同意替换时使用。
+仅当步骤 3 中 `NeedHubsSdk()` 返回 0 且 MPU `<workspace>/<platform>/sdk/` 与 MCU `<workspace>/<platform>/mcu/sdk/` 两个目标都不存在时执行；若目标已存在，分别核验布局并报告，不得默认覆盖。专用工具没有覆盖选项；替换需另行设计并获得用户明确同意。
 
 #### 目录布局
 
-下载与解压的中间产物落到本次 workspace 的 `.ai_tmp/hubs-sdk/` 缓存区。**最终 SDK 副本按 `build_ag35_ceraa.sh` 第 214 行同款语义铺平到两个目标**（MPU 一个、MCU 一个）：
+下载与解压的中间产物落到本次 workspace 的 `.ai_tmp/hubs-sdk/` 缓存区。专用 Python 工具使用标准库 `urllib.request` 下载、`zipfile` 解压，并对 ZIP 成员做路径穿越与符号链接校验；无需 curl/unzip。**最终 SDK 副本按产品实际 build 脚本语义铺平到两个目标**（MPU 一个、MCU 一个）：
 
 | 角色 | 路径 | 备注 |
 |:---|:---|:---|
@@ -221,7 +213,7 @@ staging 中的其它 build_model（如 `s32k312_boot`）**不参与铺平**，�
 | MPU `<platform>/sdk/` | `bin/` `lib/` `include/` `ko/` `env/` `tool/` `version.json` | `plug/`（除非 `G_PROJ_LIST_HUBS_PLUG` 非空） |
 | MCU `<platform>/mcu/sdk/` | `bin/` `lib/` `include/` `env/` `tool/` | `ko/`、`plug/`（MCU 无内核模块概念） |
 
-`--hubs-cache-dir <path>` 可覆盖默认缓存根，便于把缓存放到其它盘 / 外部存储。所有中间目录（含 zip 与 staging）**默认保留**，由用户人工手动清理 `.ai_tmp/` 目录；脚本**不**自动删除。
+`--cache-dir <path>` 可覆盖默认缓存根，便于把缓存放到其它盘 / 外部存储。所有中间目录（含 zip 与 staging）**默认保留**，由用户人工手动清理 `.ai_tmp/` 目录；脚本**不**自动删除。
 
 #### 包路径与凭据
 
@@ -229,7 +221,7 @@ HUBS 包路径规则与该产品实际使用的 `build/mpu/build_<model>.sh` 保
 
 - 默认（latest）包名 `<hubs_product>_<pcb><boom>.zip`，URL `<base>/<hubs_product>/<pcb><boom>/<name>`。
 - 固定（pinned）包名 `<hubs_product>_<pcb><boom>_<softver>.zip`，URL `<base>/<hubs_product>/<pcb><boom>/history/<name>`，其中版本取 `list.env` 的 `G_PROJ_HUBS_SOFT_VERSION`。
-- 下载前检查所选 `build/mpu/build_<G_PRODUCT_BUILD_MPU_MODEL>.sh` 的包命名逻辑：若脚本明确使用 `history/<softver>`，调用 downloader 时传 `--soft-version <softver>`；若脚本取 latest，则不传。不得只因 `SOFT_VERSION` 非空就推断下载模式。
+- 下载前检查所选 `build/mpu/build_<G_PRODUCT_BUILD_MPU_MODEL>.sh` 的包命名逻辑：若脚本明确使用 `history/<softver>`，调用 `hcCtpWorkReady.py download-sdk` 时传 `--soft-version <softver>`；若脚本取 latest，则不传。不得只因 `SOFT_VERSION` 非空就推断下载模式。
 - 默认 base URL `http://172.16.1.99:8081/artifactory/sei/project`；build model 以配置和对应 build 脚本为准，`ag35_ceraa` / `s32k312` 只是 downloader 默认值。
 
 凭据来源（仅记录来源，不在脚本中硬编码）：
@@ -239,50 +231,56 @@ HUBS 包路径规则与该产品实际使用的 `build/mpu/build_<model>.sh` 保
 3. workspace 内配置仓库 `build/mpu/build_<model>.sh` 中 `curl -u...` 段；
 4. 命令行 `--cred user:password`。
 
-若 downloader 只会自动扫描固定脚本名（例如 `build_ag35_ceraa.sh`），而当前产品使用 `build_ag35_cetda.sh` 等变体：从与模型匹配的脚本读取凭据并仅在当前进程设置 `HUBS_ARTIFACTORY_CRED` 后重试；不得将凭据写入 skill、命令文件、日志或最终报告，也不得把原始 `curl -u...` 行打印到输出。
+专用工具按 `--config-repo` 与实际 build model 自动检查对应脚本中的静态凭据。若脚本使用动态 shell 变量、凭据来源不可解析或需要命令行凭据，先由用户选择已配置的环境变量或传 `--cred`；不得将凭据写入 skill、命令文件、日志或最终报告，也不得打印原始 `curl -u...` 行。
 
 #### 调用模板
 
-```bash
-python <skill_root>/scripts/hcHubSdkDownload.py \
-  --list-env <workspace>/<platform>/<config_repo_dir>/config/<config_profile>/list.env \
-  --workspace <workspace> --platform <platform> \
-  --build-model <G_PRODUCT_BUILD_MPU_MODEL> \
+```powershell
+python <skill_root>/scripts/hcCtpWorkReady.py download-sdk `
+  --list-env <workspace>/<platform>/<config_repo_dir>/config/<config_profile>/list.env `
+  --workspace <workspace> --platform <platform> --config-repo <config_repo_dir> `
+  --profile <config_profile> `
+  --build-model <G_PRODUCT_BUILD_MPU_MODEL> `
   --mcu-build-model <G_PRODUCT_BUILD_MCU_MODEL>
-# 可选：--hubs-cache-dir <path>    覆盖默认 <workspace>/.ai_tmp/hubs-sdk
-# 可选：--build-model <m>          MPU build_model；优先取 list.env 中 G_PRODUCT_BUILD_MPU_MODEL
-# 可选：--mpu-target <dir>         MPU 落地目录，默认 <workspace>/<platform>/sdk
-# 可选：--mcu-build-model <m>      MCU build_model；优先取 list.env 中 G_PRODUCT_BUILD_MCU_MODEL
-# 可选：--mcu-target <dir>         MCU 落地目录，默认 <workspace>/<platform>/mcu/sdk
-# 可选：--base-url <u>             默认 http://172.16.1.99:8081/artifactory/sei/project
-# 可选：--soft-version <v>         固定到 history/ 下的 pinned 包
-# 可选：--cred <user:password>     仅在其它三个来源都失效时使用
-# 可选：--force                    同时替换已存在的 MPU / MCU 目标
+# 可选：--cache-dir <path>          覆盖默认 <workspace>/.ai_tmp/hubs-sdk
+# 可选：--mpu-target <dir>          MPU 落地目录，默认 <workspace>/<platform>/sdk
+# 可选：--mcu-target <dir>          MCU 落地目录，默认 <workspace>/<platform>/mcu/sdk
+# 可选：--base-url <url>            默认 http://172.16.1.99:8081/artifactory/sei/project
+# 可选：--soft-version <version>    选择 history 下的 pinned 包；latest 不传此参数
+# 可选：--cred <user:password>      仅在自动凭据来源均失效时使用，工具不会回显
 ```
 
-#### 脚本职责（详见脚本内文档字符串）
+#### 工具职责
 
-1. 解析 `<list-env>`：要求 `G_PROJ_HUBS_PRODUCT_NAME/PCB_VERSION/BOOM_VERSION/SOFT_VERSION` 全部非空；
-   复用 `NeedHubsSdk()`（五个 `G_PROJ_LIST_HUBS_*` 任一非空才下载），缺失则直接报错退出。
-2. 计算 `<package_name>` / `<download_url>`；默认拉 latest；带 `--soft-version <v>` 时拉 history 下的 pinned。
-3. 按上述顺序解析凭据并仅报告来源；全失败时报 `Error_CredMissing` 退出。
-4. `curl -f -s -S -u <cred> -o <cache_root>/downloads/<package_name> <download_url>`；非零退出或空文件时报 `Error_Download` 退出。
-5. 解压到 `<cache_root>/staging_<config_profile>/`，从 `sdk/<mpu-build-model>/` 铺平到 MPU 目标、从 `sdk/<mcu-build-model>/` 重命名为 `sdk` 后铺平到 MCU 目标；任一源子目录缺失时报 `Error_BuildModel`。
-6. **不清理** `<cache_root>/downloads/<package_name>` 与 `<cache_root>/staging_<config_profile>/`；下次任务/用户手动决定是否复用或删除。
+1. 解析 `<list-env>` 并校验 HUBS 关键字段；五个 `G_PROJ_LIST_HUBS_*` 全空时拒绝下载。
+2. 根据 build model 检查产品对应的 `build/mpu/build_<model>.sh`；latest/pinned 模式由执行者先按构建脚本确认，pinned 时传入 `--soft-version`。
+3. 凭据按 list.env 候选键、`HUBS_ARTIFACTORY_CRED`、对应模型 build 脚本中的静态 `curl -u`、`--cred` 顺序读取；不执行 shell、不输出凭据内容。
+4. ZIP 与 staging 已存在时仅复用可读的完整产物；空缓存、损坏或不完整 staging 保留并报错，不覆盖或清理。
+5. 两个来源模型均存在且 MPU/MCU 目标均不存在时才复制。任一目标已存在即停止，不提供自动覆盖选项。
+6. 返回 JSON，包含 URL、包模式、凭据来源、缓存路径、模型、落位目录和目录项；不包含凭据。
 
 #### 退出码
 
 | 码 | 含义 |
 |:---|:---|
-| `0` | 成功；打印 `credential_source`、`package_mode`、`download_url`、`mpu_target`、`mcu_target`、两侧 `sdk_layout` 等 |
-| `1` | 输入错误（缺键、不需要 HUBS、MPU/MCU 目标已存在、找不到凭据、平台无法推断等） |
-| `2` | 网络/解压错误 |
-
-如脚本不可用或被用户禁用，回到内联 curl/unzip/cp 流程（同 `build_ag35_ceraa.sh`），但仍受同样的授权门禁、缓存目录布局与凭据约束。
+| `0` | 成功；JSON 输出含 manifest 逐仓库结果或 SDK 下载摘要 |
+| `1` | 输入错误、项目拉取失败、已有目标、缺凭据、网络/解压错误等；以 JSON `error` 或逐项 `failed` 结果为准 |
 
 ### 7. 交付可开发基线
 
 对本次相关仓库检查 `git status --short`、当前 HEAD / 分支与 manifest 指定 `revision`；报告任何未提交改动、拉取遗漏或分支偏差。这些检查为只读操作，可直接进行。
+
+可先用工具生成机器可读的清单，再由执行者按下列规则复核：
+
+```powershell
+python <skill_root>/scripts/hcCtpWorkReady.py baseline `
+  --workspace <workspace_root>/<workspace> `
+  --manifest <project_root>/autobuild/<platform>/manifests/mpu_<manifest_product>.xml `
+  --manifest <project_root>/autobuild/<platform>/manifests/mcu_<manifest_product>.xml
+# 本次获授权忽略项可重复传入：--ignore "<remote>|<project-name>"
+```
+
+`baseline` 只读并输出 JSON；脚本不会代替执行者读取 `AGENTS.md`、判断嵌套目录是否为预期内容或决定基线是否完整。
 
 - 对 MPU/MCU 两份 manifest 的每个 `project path` 检查仓库是否存在、HEAD、当前分支和 `git status --short`；显式 `revision` 优先，否则按项目 remote revision，再回退到 default revision。SHA revision 与 HEAD 比较；分支 revision 与当前分支名比较。
 - 分开统计 manifest 项目条目数、成功、失败、用户批准忽略数和不同仓库数；同一 `(remote, name)` 在 MPU/MCU 两份清单重复时按一个仓库报告，但保留两侧 path/revision 差异。
@@ -319,14 +317,13 @@ python <skill_root>/scripts/hcHubSdkDownload.py \
 - `<config_repo_dir>/config/<config_profile>/list.env` 缺失或不含 HUBS 关键键（`G_PROJ_HUBS_PRODUCT_NAME / PCB_VERSION / BOOM_VERSION / SOFT_VERSION`）。
 - 扫描 `<project_root>/autobuild/*/manifests/{mpu,mcu}_<manifest_product>.xml` 得到 0 个或 ≥2 个匹配；无法唯一确定 `platform`。
 - 只能通过"配置路径反推"确定 `workspace`（优先级 3），且该目录已有内容——此时必须让用户确认目标目录，不得默认拉入。
-- `git_pull_xml.py` 在优先级 1～3 中找不到，且用户拒绝提供路径。
+- Skill 自带 `scripts/hcCtpWorkReady.py` 缺失、Python 版本低于 3.9，或系统找不到原生 Git CLI。
 - 目标工作目录存在可能被覆盖的数据（无关文件、未提交修改或来源不明的仓库）。
-- `git_pull_xml.py` 拉取失败且包含任何尚未由用户明确批准忽略的仓库；若所有失败都在本次明确忽略清单中，可按步骤 5 继续，但必须保留失败原文并在最终基线标记不完整。
-- `--path` 过滤未按预期生效、忽略仓库被再次尝试，或无法逐仓库区分已批准忽略项与新失败项。
+- `hcCtpWorkReady.py pull` 拉取失败且包含任何尚未由用户明确批准忽略的仓库；失败原文必须保留，且只有精确批准忽略的身份可跳过。
+- 工具报告 origin 不匹配、目标路径是非 Git 目录、仓库工作区不干净，或某目标路径无法安全落在 workspace 中。
 - MPU/MCU manifest XML 不可解析，或其配置仓库项目/分支与临时探测结果不一致。
-- curl 下载失败、unzip / copy 任一步骤返回非零，或 SDK 来源 build_model 缺失。
-- `scripts/hcHubSdkDownload.py` 调用返回非零退出码且不能通过使用产品匹配的 build 脚本、正确模型参数或当前进程凭据变量修复；若是已有目标、缓存冲突或网络/解压错误，停止并保留原始报错。
-- HUBS SDK 缓存 `<workspace>/.ai_tmp/hubs-sdk/` 已存在但携带不同 `<hubs_product>_<pcb><boom>[_<softver>]` 的旧产物，且本次不是显式 `--force`；需向用户报告并要求明确指示（保留/替换/复用）。
+- `hcCtpWorkReady.py download-sdk` 返回错误、HTTP 下载失败、ZIP 校验/解压失败或 SDK 来源 build_model 缺失；保留缓存和原始报错，修正输入后再决定是否重试。
+- HUBS SDK 缓存中同名 ZIP 为空、损坏，或 staging 不完整；不得自动覆盖或清理，由用户决定如何处理。
 - 准备流程或后续开发任务中需要执行任何 manifest 拉取、SDK 下载、git / MR / commit / push、临时检出、目录清理或强制推送动作而未获得用户明确同意。对明确授权忽略的仓库及已授权删除的精确临时探测目录，仅按本次授权范围继续。
 
 不得删除目录、重置仓库或猜测分支来继续。
