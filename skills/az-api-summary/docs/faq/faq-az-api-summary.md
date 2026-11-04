@@ -45,5 +45,5 @@
 
 ## 8. 输出文件已存在
 
-默认返回 `ERR_OUTPUT_EXISTS`。只有用户明确允许覆盖时才继续，并先识别编码、读取目标和备份到 `.ai_tmp/bak/`。
+默认返回 `ERR_OUTPUT_EXISTS`。
 
