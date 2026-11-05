@@ -6,7 +6,7 @@ description: |
   产品名不同；需要按仓库分支和 manifest 记录核实映射，不得仅凭目录名猜测。
   统一完成工作目录隔离、manifest 拉取、HUBS SDK 下载、仓库状态核验与后续开发交付门禁；
   在用户给出具体任务前不修改业务代码。
-version: 2.7.0
+version: 2.8.0
 ---
 
 > **授权边界（先于一切流程）**
@@ -16,12 +16,13 @@ version: 2.7.0
 > git commit / git push / git reset --hard / 强制推送`）以及 `az-gitlab-merge-request`
 > 等既有 skill 的授权约定。
 >
-> - 每一个可能产生对外副作用的动作（创建/切换/推送分支、创建/更新 MR、commit、reset、
+> - 每一个可能产生对外副作用的动作（创建或切换开发任务分支、推送分支、创建/更新 MR、commit、reset、
 >   强制推送、删除 workspace 等）都必须**在本次会话中取得用户明确同意**后才能执行。
 > - 即使获得一次同意，也**仅对该次会话内的同一次动作有效**；不形成持久默认、不构成
 >   后续操作的预授权、不允许在不同任务间复用。
-> - "准备流程"中所有 manifest 拉取、HUBS SDK 下载、目录清理动作同样需要用户授权；
->   仅路径校验、文件读取、变量解析等纯只读操作可直接进行。
+> - 用户明确要求在指定目录部署该产品开发环境，视为授权该次准备所必需的分支探测、manifest
+>   拉取和 SDK 下载；执行前说明范围。此授权不包括忽略失败、覆盖、清理或其他破坏性操作。
+>   若用户只要求分析或预检，则不得据此写盘或下载。
 > - 与全局 Git 规则冲突时，以全局 Git 规则为准；本 skill 不得绕过。
 
 # 鸿泉 MPU 工程准备与交付工作流（路径驱动版）
@@ -49,7 +50,7 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
   仅当本地配置目录名与唯一匹配的 manifest 后缀一致时，才可把两者视为同一标识。
 - `config_repo_dir`：配置 Git 仓库在 workspace 中的目录名；从 manifest 中 `name="RDprojects/<repo>"`
   的项目及其 `path` 识别，不要假定它与 `<platform>` 同名。
-- `source_branch`：GitLab URL 中 `/-/tree/<branch>/config/<profile>` 的 `<branch>`。
+- `source_branch`：GitLab URL 中 `/-/tree/` 或 `/-/blob/` 后的分支；blob URL 可指向 `config/<profile>/list.env`。
 - `project_root`：项目根，即当前登记的 CTP 产品工程根；`autobuild/` 与 `workspace/` 都挂在它下面。
 - `workspace_root`：`<project_root>/workspace`，工作空间父目录。
 - `workspace`：**本次任务要拉取代码的目标目录名**，识别优先级如下（关键：不要从配置路径反推）：
@@ -59,9 +60,10 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
   > 配置路径所在的 workspace 与代码要拉入的 workspace **可以不是同一个**。常见情形是用户提供
   > 另一个任务 workspace 中已拉好的 `config/<config_profile>/list.env` 作为配置参考，而代码要拉进
   > 当前任务的新 workspace。两者不得混淆。
-- `platform`：不依赖路径结构假设，优先由扫描 `<project_root>/autobuild/*/manifests/{mpu,mcu}_<manifest_product>.xml`
-  命中得到。若 `<config_profile>` 没有同名 manifest，按“GitLab 分支与 manifest 映射”核对配置仓库项目及
-  revision；只有唯一匹配时才能确定 `manifest_product` 和 `platform`。
+- 用户明确指定当前目录或其他绝对路径时，目标可在产品工程的 `workspace/` 之外；将其直接作为
+  `workspace`，不得移动或反推目标。配置仓库来源与 manifest 来源单独定位，不因目录布局不符猜测产品。
+- `platform`：URL 场景由已核验的分支 manifest 中配置仓库的 project path 确定；本地场景从适用的
+  `<project_root>/autobuild/*/manifests/` 扫描。若 `<config_profile>` 没有同名 manifest，按“GitLab 分支与 manifest 映射”核对配置仓库项目及 revision，只有唯一匹配时才能确定 `manifest_product` 和 `platform`。
 
 > ⚠️ `autobuild` 是 `<workspace_root>` 的**兄弟**目录，不是它的子目录。基准路径必须写成
 > `<project_root>/autobuild/...`；写成 `<workspace_root>/autobuild/...` 会因目录不存在而失败。
@@ -70,7 +72,7 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
 
 1. 配置路径可读；若为 GitLab 链接且本机无对应副本，必须先按授权流程临时检出分支，再验证 profile 下的 `list.env`。
 2. `<config_repo_dir>/config/<config_profile>/list.env` 含 HUBS 产品、PCB、BOOM、软件版本键及五个 `G_PROJ_LIST_HUBS_*` 清单键。
-3. `<project_root>/autobuild/<platform>/manifests/{mpu,mcu}_<manifest_product>.xml` 两份都存在且可解析；
+3. 已核验的配置仓库分支或 `<project_root>/autobuild/<platform>/manifests/` 中对应的 MPU、MCU manifest 均存在且可解析；
    `manifest_product` 与 `config_profile` 不同的情况必须有唯一、可复核的分支映射证据。
 4. 本 Skill 随附的 `scripts/hcCtpWorkReady.py` 存在；运行环境提供 Python 3.9+ 和原生 Git CLI（含 SSH 凭据）。不依赖 `git_pull_xml.py`、curl、unzip 或第三方 Python 包。
 
@@ -84,24 +86,24 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
 - 对 GitLab URL，提取 GitLab 主机、项目路径、`source_branch` 和 `config_profile`。若 URL 不含完整项目/分支信息，停止并询问缺少的精确部分。
 - 对本地路径，确认它确实位于 `<project_root>` 之下（`workspace/` 或 `autobuild/`）；不在则停止，避免误读别处同名目录。对 URL，核对 GitLab 主机与项目路径，不将 URL 当作本地文件路径。
 - 按"输入与边界"中的优先级确定 `workspace`，并在报告中显式区分：`config_profile` / `manifest_product` / `platform` / `workspace` / 配置来源 / 目标拉取目录。
-- 先尝试直接扫描 `<project_root>/autobuild/*/manifests/{mpu,mcu}_<config_profile>.xml`。同一平台必须同时命中 MPU 与 MCU 清单且无其他平台候选，才可把 profile 作为 `manifest_product`。若用户还提供了 `source_branch`，即使 profile 同名也必须核对配置仓库项目的有效 revision；不匹配时按 GitLab 分支映射规则重新唯一匹配或停止询问。
+- 对 URL，先核验来源分支的新鲜度并取得该分支的 manifest 和配置，再判断是否存在同名清单或映射歧义；不得仅因旧本地副本缺少同名清单而提前询问。对本地路径则扫描适用的 `autobuild/*/manifests/`。同一来源必须同时命中一对 MPU/MCU 清单，且其配置仓库项目及有效 revision 与 URL 一致，才可把 profile 作为 `manifest_product`。
 
 #### GitLab 分支与 manifest 映射
 
-当用户给出 GitLab `/-/tree/<source_branch>/config/<config_profile>` 链接，且 profile 没有同名 manifest 时：
+当用户给出 GitLab `/-/tree/` 目录链接或 `/-/blob/` 的 `list.env` 链接时：
 
-1. 在 `<project_root>/autobuild/*/manifests/` 中解析 MPU/MCU XML，查找配置仓库项目（`name` 对应 URL 的项目路径，通常为 `RDprojects/<config_repo_dir>`），并比较其有效 revision 与 `<source_branch>`。有效 revision 按项目 `revision` → 对应 remote 的 `revision` → manifest `<default>` 顺序解析。解析 URL 时按 URL 规则解码 branch segment（例如 `%2F`），但保留精确分支名。
-2. 只有恰好一组 MPU/MCU manifest 同时指向该配置仓库和分支时，才将该组文件名后缀记为 `manifest_product`；配置目录名仍保留为 `config_profile`。不得只根据型号相似、旧共享 `list.env`、相邻目录或用户口头描述猜测映射。
-3. 若本地 manifest 没有唯一映射，停止并报告候选项；不得自行创建 manifest 或改写现有 manifest。
-4. 若该分支的仓库副本尚未在可读位置，且用户已明确授权临时检出该指定分支，可仅用 URL 对应的 GitLab 项目 clone URL 检出该仓库的指定分支到 `<workspace>/.ai_tmp/branch_probe/<config_repo_dir>/`，读取 `config/<config_profile>/list.env` 和所需 build 脚本。临时检出前确认目标路径不存在；禁止为探测而克隆整个 MPU/MCU manifest 或改用其他分支。
-5. 临时检出也是写盘动作，未获授权时先询问。仅在完整拉取、SDK 下载和基线检查成功后，且用户明确授权清理时，删除精确的 `branch_probe` 目录；流程失败时保留它以便诊断。不得连带删除 `.ai_tmp/hubs-sdk/`。
-6. 完成 manifest 拉取后，改用目标 workspace 内配置仓库中的 `list.env` 作为权威来源。确认它与临时检出读取的 profile 一致（可比较关键键或文件哈希）；不一致时暂停 SDK 下载并报告差异。
+1. 解析 URL 和精确分支名；分支含 `/` 时按 URL 编码或 GitLab 的分支信息确认边界，不猜测。只读查询远端分支 HEAD，核对本地副本的 origin、分支及 commit；仅分支名相同不足以证明副本是最新的。远端不可访问或 HEAD 无法核实时报告，不把旧副本当作最新版本。
+2. 本地没有与远端 HEAD 一致的可读副本时，在获授权后仅将 URL 对应仓库的指定分支检出到 `<workspace>/.ai_tmp/branch_probe/<config_repo_dir>/`，读取其中的 `config/<config_profile>/list.env`、`manifests/` 和所需 build 脚本。先确认目标不存在；不得更改共享副本或为了探测克隆所有 manifest 项目。记录探测 commit；目标仓库最终拉取的 commit 与探测 commit 不同时暂停并重新核验输入。
+3. 优先检查该分支的 `mpu_<config_profile>.xml` 与 `mcu_<config_profile>.xml`。两份均可解析且都指向 URL 对应配置仓库与精确分支时使用这对同名 manifest，即使同一分支还有其他产品清单也不因此产生歧义。按配置仓库 project 的 path 确认 platform 与落位。
+4. 同名清单缺失或不匹配时，才在该分支的 manifest 中按配置仓库项目及有效 revision 查找成对候选。有效 revision 按项目 `revision` → 对应 remote 的 `revision` → manifest `<default>` 顺序解析；只有恰好一对匹配时采用其后缀。否则报告候选并询问，不得创建或改写 manifest，也不得根据型号相似猜测。
+5. 仅在完整拉取、SDK 下载和基线检查成功后，且用户明确授权清理时，删除精确的 `branch_probe` 目录；流程失败时保留它以便诊断。不得连带删除 `.ai_tmp/hubs-sdk/`。
+6. 拉取目标 workspace 的配置仓库后，改用其中的 `list.env` 作为权威来源；其他项目失败时必须按步骤 5 取得忽略批准。核对目标配置仓库 commit 和两份 manifest、`list.env` 的哈希与步骤 1～4 采用的已核验来源一致；任何一项不一致均暂停 SDK 下载并报告，避免分支在准备期间前移造成混合基线。
 
 若本地路径不在 `<project_root>` 下，或不符合 `config/<profile>` 形态，且无法由给定 GitLab URL 明确定位时，停止并请用户确认目录布局。
 
 ### 2. 隔离工作空间
 
-- 使用 `<workspace_root>/<workspace>/` 作为本次任务独立工作目录（即步骤 1 确定的 `workspace`，**不是**配置路径所在的那个 workspace）。
+- 使用步骤 1 确定的目标目录作为本次任务独立工作目录；它可以是用户明确指定的绝对路径，**不是**配置参考副本所在目录。
 - 不复用其他任务目录，不将生成物写入共享父目录。
 - 目标目录已存在时，先检查其内容与 Git 状态；存在无关文件、未提交修改或来源不明的仓库时停止并请用户决定。**任何目录覆盖、清理或重置动作都需用户在本次会话中明确同意**，禁止 skill 自动执行。
 - 若目录内仅有本流程此前创建且获授权的 `.ai_tmp/branch_probe/`，可以在其余目标路径无冲突的前提下继续；不得将探测仓库误当成完整 manifest 拉取结果。
@@ -117,7 +119,7 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
 
 | 副本 | 路径 | 角色 |
 |:---|:---|:---|
-| 拉入副本 | `<workspace_root>/<workspace>/<platform>/<config_repo_dir>/config/<config_profile>/list.env` | **权威来源**，随代码版本走 |
+| 拉入副本 | `<workspace>/<platform>/<config_repo_dir>/config/<config_profile>/list.env` | **权威来源**，随代码版本走 |
 | 共享工作区副本 | `<project_root>/autobuild/<platform>/config/<config_profile>/list.env` | 仅用于定位候选 manifest，不作为下载来源 |
 
 规则：
@@ -141,13 +143,13 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
 - `G_PRODUCT_BUILD_MPU_MODEL` 与 `G_PRODUCT_BUILD_MCU_MODEL`：产品实际使用的 MPU/MCU build model。若存在且非空，下载时必须覆盖 downloader 的默认值；不能假定所有产品都是 `ag35_ceraa` / `s32k312`。
 
 **是否需要下载 HUBS SDK** 由 `NeedHubsSdk()` 函数判定（参考该产品实际使用的 `build/mpu/build_<model>.sh` 中的同名函数；优先按 `G_PRODUCT_BUILD_MPU_MODEL` 选择）：上述五个 `G_PROJ_LIST_HUBS_*` 中任一非空即返回 0，
-全部为空返回 1。返回 0 才在步骤 6 中**向用户申请**执行下载；skill 不自动开始下载。
+全部为空返回 1。返回 0 才按开头授权边界执行步骤 6。
 
 注意：`list.env` 在 Windows 上可能带 CRLF；按行解析时需规范化换行并去除值两侧空白。
 
 ### 4. 定位 manifest 与专用工具
 
-按 `manifest_product` 与步骤 1 得到的 `platform` 定位：
+按 `manifest_product` 与步骤 1 确定的来源定位；URL 场景使用已核验的分支副本中的 `manifests/`，本地场景通常使用：
 
 - MPU manifest：`<project_root>/autobuild/<platform>/manifests/mpu_<manifest_product>.xml`
 - MCU manifest：`<project_root>/autobuild/<platform>/manifests/mcu_<manifest_product>.xml`
@@ -159,13 +161,13 @@ workspace（可由当前工作目录按既定优先级推导）。本地路径�
 
 ### 5. 按 manifest 拉取 MPU / MCU 仓库
 
-调用前需在本次会话取得用户对"按 manifest 拉取 MPU 与 MCU 仓库"以及"在哪个 workspace 中执行"的明确同意。专用工具以父路径优先、单线程方式处理项目，避免 MCU 父仓库与其嵌套子仓库并发创建造成目录竞争：
+按开头授权边界确认目标与动作；明确部署请求已覆盖常规拉取。专用工具以父路径优先、单线程方式处理项目，避免 MCU 父仓库与其嵌套子仓库并发创建造成目录竞争：
 
 ```powershell
 python <skill_root>/scripts/hcCtpWorkReady.py pull `
-  --workspace <workspace_root>/<workspace> `
-  --manifest <project_root>/autobuild/<platform>/manifests/mpu_<manifest_product>.xml `
-  --manifest <project_root>/autobuild/<platform>/manifests/mcu_<manifest_product>.xml
+  --workspace <workspace> `
+  --manifest <已核验来源>/manifests/mpu_<manifest_product>.xml `
+  --manifest <已核验来源>/manifests/mcu_<manifest_product>.xml
 # 每个本次已获用户批准忽略的项目增加一个精确标识：
 # --ignore "<remote>|<project-name>"
 ```
@@ -180,13 +182,17 @@ python <skill_root>/scripts/hcCtpWorkReady.py pull `
 
 拉取过程中，逐仓库检查 JSON 结果：
 
-- 任一项目失败时停止后续阶段，保留原始错误、已创建目录和已完成仓库范围；不删除 workspace 掩盖失败。向用户报告失败项后，只有用户明确指定精确 `(remote, name)` 忽略项后才可重跑或继续。
+- 执行前为本次运行在 `<workspace>/.ai_tmp/` 准备不覆盖已有文件的唯一结果路径；将完整 JSON stdout 和原始 stderr 分别保存，记录进程退出码，再读取 JSON 统计与每个失败项，避免工具显示截断导致丢失错误。报告中不要泄露凭据；若原始输出可能包含凭据，限制访问且不要直接展示敏感内容。
+- 任一项目失败时停止 SDK 等后续阶段，保留原始错误、已创建目录和已完成仓库范围；不删除 workspace 掩盖失败。报告完整精确 `(remote, name)`、路径及错误。只有用户在本次会话批准具体失败项或明确批准已展示的整组项目后，才可将对应精确身份传给 `--ignore`；不将批准扩展到尚未展示的新失败。
+- GitLab 的 `project could not be found` / `Could not read from remote repository` 可能是无权限、仓库不存在或路径错误，不能断定是权限问题；若用户只批准“无权限项目”而原因未区分，应展示这些不确定项目并请用户明确是否包含它们。网络、凭据、分支不存在等其他错误不得归入权限失败。
+- 本工具会继续处理后续项目，失败的父项目目录可能被成功的嵌套子项目创建为非 Git 目录。重跑前检查每个父路径、子仓库和未提交内容；不得删除、覆盖或把非 Git 父目录当作干净仓库。修复访问后如遇此冲突，保留现场并与用户确定安全迁移或重建方案。
+- 对已批准忽略且无需重拉的项目，可直接运行 `baseline --ignore` 审核已有结果，再在配置仓库、manifest 和 SDK 条件均满足时继续；不必为登记忽略项重跑所有成功项目。
 - `--ignore` 只接受引号包裹的 `"REMOTE|PROJECT_NAME"` 精确身份（PowerShell 中竖线需引用）；忽略项不会扩展到新失败项目，且在 MPU/MCU 两份清单间按身份一致生效。
 - **不要**为了"统一分支"而对已存在的本地仓库执行 `git reset --hard`、`git checkout -B`、强制推送等破坏性操作；任何此类操作都需用户额外明确同意。
 
 ### 6. 参考 build 脚本拉取 HUBS SDK
 
-**执行前需在本次会话取得用户对"拉取 HUBS SDK 预编译包"的明确同意**，并向用户复述即将下载的 URL、目标目录与解压路径。
+按开头授权边界确认下载已获授权，并在执行前向用户说明 URL、目标目录与解压路径。
 
 先从 workspace 权威 `list.env` 读取产品模型并检查对应 build 脚本，计算实际 URL、package mode、MPU/MCU build model、缓存目录和两个落位目录。把这些具体值复述给用户后再下载；若 `list.env` / build 脚本不完整，或下载脚本无法处理该模型、版本模式或凭据来源，先排除输入问题再重试，不得把一次可恢复的 `Error_CredMissing` 直接当成网络失败。
 
@@ -274,9 +280,9 @@ python <skill_root>/scripts/hcCtpWorkReady.py download-sdk `
 
 ```powershell
 python <skill_root>/scripts/hcCtpWorkReady.py baseline `
-  --workspace <workspace_root>/<workspace> `
-  --manifest <project_root>/autobuild/<platform>/manifests/mpu_<manifest_product>.xml `
-  --manifest <project_root>/autobuild/<platform>/manifests/mcu_<manifest_product>.xml
+  --workspace <workspace> `
+  --manifest <已核验来源>/manifests/mpu_<manifest_product>.xml `
+  --manifest <已核验来源>/manifests/mcu_<manifest_product>.xml
 # 本次获授权忽略项可重复传入：--ignore "<remote>|<project-name>"
 ```
 
@@ -289,10 +295,10 @@ python <skill_root>/scripts/hcCtpWorkReady.py baseline `
 - 找到并读取各仓库的 `AGENTS.md`，确认构建入口、测试方式和额外约束。
 - 校验 HUBS SDK 是否成功铺平到 MPU 目标 `<workspace>/<platform>/sdk/` 与 MCU 目标 `<workspace>/<platform>/mcu/sdk/` 下；两侧布局不同，按步骤 6 的"预期布局"表分别核对，不要用同一套判据。
 - 汇总 workspace、manifest、已拉取仓库、HUBS SDK 状态和异常项。
-- 若仍有用户批准忽略的仓库，基线只能标为“可开发但仓库不完整”，准确列出失败/跳过仓库；不得无条件宣称所有 manifest 项目均已就绪。
+- 若仍有用户批准忽略的仓库，标为“环境已准备但仓库不完整”，准确列出失败/跳过仓库；能否开发取决于具体任务与缺失仓库的关系，未执行构建时不得宣称构建通过。
 - 若本次使用临时分支探测，只有在仓库拉取、SDK 下载和基线检查均完成且用户已明确授权删除后，才删除 `.ai_tmp/branch_probe/<repo>/`；保留 `.ai_tmp/hubs-sdk/` 下载缓存与 staging。
 
-只有拉取与基线检查完成后，才向用户确认"准备好"并等待具体工作内容。
+只有拉取阶段和基线检查完成、所有失败均按上述规则处理后，才向用户报告准备结果并等待具体工作内容；有忽略项时必须说明仓库不完整及适用限制。
 
 在用户给出具体任务前，不修改业务代码、产品配置、manifest、构建脚本或远端分支，也不启动无关构建。
 
@@ -313,17 +319,17 @@ python <skill_root>/scripts/hcCtpWorkReady.py baseline `
 在以下情况发生时停止并向用户报告事实与所需决定：
 
 - 用户提供的本地配置路径不在 `<project_root>` 下或无法定位 `config/<config_profile>`；若是 GitLab URL，则 URL 缺少项目、分支或 profile 信息。
-- `config_profile` 没有同名 manifest，且不能通过唯一匹配“配置仓库项目 + source_branch revision”确定 `manifest_product/platform`；不得猜测。
+- 已核验的来源分支没有同名 manifest，且不能通过唯一匹配“配置仓库项目 + source_branch revision”确定 `manifest_product/platform`；不得猜测。
 - `<config_repo_dir>/config/<config_profile>/list.env` 缺失或不含 HUBS 关键键（`G_PROJ_HUBS_PRODUCT_NAME / PCB_VERSION / BOOM_VERSION / SOFT_VERSION`）。
-- 扫描 `<project_root>/autobuild/*/manifests/{mpu,mcu}_<manifest_product>.xml` 得到 0 个或 ≥2 个匹配；无法唯一确定 `platform`。
+- 已核验来源中无法找到唯一适用的 MPU/MCU manifest 对或无法唯一确定 `platform`。
 - 只能通过"配置路径反推"确定 `workspace`（优先级 3），且该目录已有内容——此时必须让用户确认目标目录，不得默认拉入。
 - Skill 自带 `scripts/hcCtpWorkReady.py` 缺失、Python 版本低于 3.9，或系统找不到原生 Git CLI。
 - 目标工作目录存在可能被覆盖的数据（无关文件、未提交修改或来源不明的仓库）。
-- `hcCtpWorkReady.py pull` 拉取失败且包含任何尚未由用户明确批准忽略的仓库；失败原文必须保留，且只有精确批准忽略的身份可跳过。
+- `hcCtpWorkReady.py pull` 拉取失败且包含任何尚未由用户明确批准忽略的仓库；失败原文必须保留，且仅将批准范围转换为精确身份跳过。
 - 工具报告 origin 不匹配、目标路径是非 Git 目录、仓库工作区不干净，或某目标路径无法安全落在 workspace 中。
 - MPU/MCU manifest XML 不可解析，或其配置仓库项目/分支与临时探测结果不一致。
 - `hcCtpWorkReady.py download-sdk` 返回错误、HTTP 下载失败、ZIP 校验/解压失败或 SDK 来源 build_model 缺失；保留缓存和原始报错，修正输入后再决定是否重试。
 - HUBS SDK 缓存中同名 ZIP 为空、损坏，或 staging 不完整；不得自动覆盖或清理，由用户决定如何处理。
-- 准备流程或后续开发任务中需要执行任何 manifest 拉取、SDK 下载、git / MR / commit / push、临时检出、目录清理或强制推送动作而未获得用户明确同意。对明确授权忽略的仓库及已授权删除的精确临时探测目录，仅按本次授权范围继续。
+- 准备流程或后续开发任务中需要执行超出本次请求授权范围的操作。对明确授权忽略的仓库及已授权删除的精确临时探测目录，仅按本次授权范围继续。
 
 不得删除目录、重置仓库或猜测分支来继续。
